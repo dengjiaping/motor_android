@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#E7E7E7"
+    android:orientation="vertical" >
+	<RelativeLayout
+        android:id="@+id/live_titlebg"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip" >
+        
+    <include 
+        layout="@layout/title"
+        />
+
+    <TextView    
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:textSize="26sp"
+        android:layout_centerInParent="true"
+        android:text="@string/mypost"
+        />
+    <include 
+        android:id="@+id/user_numpost_return"
+        layout="@layout/back"
+        />
+	</RelativeLayout>
+	<TextView 
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#AFAFAF"
+        />
+	<ListView 
+	    android:id="@+id/user_numpost_listview"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:dividerHeight="1dp"
+        android:divider="#AFAFAF"
+        android:scrollbars="none"
+	    />
+	<TextView 
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#AFAFAF"
+        />
+</LinearLayout>

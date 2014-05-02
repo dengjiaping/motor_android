@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#EAEAEA"
+    android:id="@+id/contact_id_layout"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/write_titlebg"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip" >
+
+    <include 
+        layout="@layout/title"
+        />
+    <include 
+        android:id="@+id/return_contact"
+        layout="@layout/back"
+        />
+
+    <TextView
+        android:id="@+id/live_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:textColor="#ffffff"
+        android:textSize="25sp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/contact"
+        />
+	</RelativeLayout>
+	
+    <TextView 
+  	    android:layout_width="fill_parent"
+  	    android:layout_height="1dp"
+  	    android:background="#AFAFAF"
+  	    />
+
+    <com.moto.contact.ClearEditText
+        android:id="@+id/filter_edit"
+        android:layout_margin="12dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/search_bar_edit_selector"
+        android:drawableLeft="@drawable/search_bar_icon_normal"
+        android:hint="@string/searchcontact"
+        android:singleLine="true"
+        android:textSize="15.0dip" />
+    
+    <TextView 
+  	    android:layout_width="fill_parent"
+  	    android:layout_height="1dp"
+  	    android:background="#AFAFAF"
+  	    />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+        android:background="#ffffff"
+        >
+
+        <ListView
+            android:id="@+id/country_lvcountry"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:divider="@null" />
+
+        <TextView
+            android:id="@+id/dialog"
+            android:layout_width="80.0dip"
+            android:layout_height="80.0dip"
+            android:layout_gravity="center"
+            android:background="@drawable/show_head_toast_bg"
+            android:gravity="center"
+            android:textColor="#ffffffff"
+            android:textSize="30.0dip"
+            android:visibility="invisible" />
+
+        <com.moto.contact.SideBar
+            android:id="@+id/sidrbar"
+            android:layout_width="30.0dip"
+            android:layout_height="fill_parent"
+            android:layout_gravity="right|center" />
+    </FrameLayout>
+
+</LinearLayout>

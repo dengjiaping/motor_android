@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#E7E7E7"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip" >
+    <include 
+        layout="@layout/title"
+        />
+	<include 
+        android:id="@+id/inform_private_friends_return"
+        layout="@layout/back"
+        />
+    <com.moto.contact.ClearEditText
+        android:id="@+id/filter_edit"
+        android:layout_width="fill_parent"
+        android:layout_toRightOf="@id/inform_private_friends_return"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/search_bar_edit_selector"
+        android:drawableLeft="@drawable/search_bar_icon_normal"
+        android:hint="@string/search"
+        android:singleLine="true"
+        android:textSize="15.0dip" />
+	</RelativeLayout>
+	<ListView 
+	    android:id="@+id/inform_private_friends_listview"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:dividerHeight="1dp"
+        android:divider="#CCCCCC"
+        android:scrollbars="none"
+	    />
+</LinearLayout>

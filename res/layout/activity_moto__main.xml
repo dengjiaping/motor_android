@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/tabhost"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+		<TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            />
+        <LinearLayout
+            android:id="@+id/console_line_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:background="#b2b2b2"
+            android:alpha="0.8"
+            android:orientation="horizontal" >
+
+            <RadioGroup
+                android:id="@+id/main_tab_group"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="bottom"
+                android:background="#b2b2b2"
+                android:gravity="bottom"
+                android:orientation="horizontal"
+                 >
+
+                <RadioButton
+                    android:id="@+id/main_tab_hot"
+                    android:checked="true"
+                    style="@style/MMTabButton"
+                    android:layout_gravity="center"
+                    android:background="#b2b2b2"
+                    android:gravity="center"
+                    android:layout_weight="1.0"    
+                    android:drawableTop="@drawable/bg_checkbox_icon_menu_0"
+                    android:text="@string/square" />
+
+                <RadioButton
+                    android:id="@+id/main_tab_live"
+                    style="@style/MMTabButton"
+                    android:layout_weight="1.0"
+                    android:gravity="center"
+                    android:background="#b2b2b2"
+                    android:layout_gravity="center"
+                    android:drawableTop="@drawable/bg_checkbox_icon_menu_1"
+                    android:text="@string/live" />
+
+                <RadioButton
+                    android:id="@+id/main_tab_square"
+                    style="@style/MMTabButton"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/bg_checkbox_icon_menu_2"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:drawableTop="@drawable/add_tabbar"
+                    />
+
+                <RadioButton
+                    android:id="@+id/main_tab_inform"
+                    style="@style/MMTabButton"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="#b2b2b2"
+                    android:layout_weight="1.0" 
+                    android:drawableTop="@drawable/bg_checkbox_icon_menu_3"
+                    android:text="@string/inform" />
+                
+                <RadioButton
+                    android:id="@+id/main_tab_user"
+                    style="@style/MMTabButton"
+                    android:gravity="center"
+                    android:background="#b2b2b2"
+                    android:layout_gravity="center"
+                    android:layout_weight="1.0"   
+                    android:drawableTop="@drawable/bg_checkbox_icon_menu_4"
+                    android:text="@string/user" />
+            </RadioGroup>
+        </LinearLayout>>
+            
+            
+        </FrameLayout>
+
+        
+        </LinearLayout>
+</TabHost>

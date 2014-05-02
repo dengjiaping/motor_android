@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#E9E9E9"
+    android:orientation="vertical">
+    <FrameLayout
+        android:id="@+id/live_titlebg"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip" >
+        
+    <include 
+        layout="@layout/title"
+        />
+    <ProgressBar
+        android:id="@+id/inform_loading_progressBar"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="20dp"
+        android:indeterminateDrawable="@drawable/progressbar_loading" />
+    <TextView 
+        android:id="@+id/inform_new"
+        android:layout_width="wrap_content"
+        android:clickable="true"
+        android:layout_gravity="right"
+        android:textColor="@drawable/text_press_style"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="4dp"
+        android:gravity="center_horizontal|bottom"
+        android:textSize="17sp"
+        android:text="@string/write_private"
+        />
+    <LinearLayout
+        android:layout_width="190dp"
+        android:layout_height="33dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        >
+        <RelativeLayout 
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:id="@+id/inform_bar1"
+            android:layout_weight="1"
+            >
+            <TextView
+          		android:id="@+id/inform_response"
+            	android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"
+            	android:gravity="center"
+            	android:textSize="17sp"
+            	android:text="@string/response" />
+        </RelativeLayout>
+
+        <RelativeLayout 
+            android:id="@+id/inform_bar2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="1"
+            >
+            <TextView
+            	android:id="@+id/inform_touchme"
+            	android:layout_width="wrap_content"
+            	android:layout_height="fill_parent"
+            	android:gravity="center"
+            	android:textSize="17sp"
+            	android:text="@string/touch_me" />
+        </RelativeLayout>
+
+        <RelativeLayout 
+            android:id="@+id/inform_bar3"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            >
+            <TextView
+            	android:id="@+id/inform_private"
+            	android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"
+            	android:gravity="center"
+            	android:textSize="17sp"
+            	android:text="@string/private_letter" />
+        </RelativeLayout>
+        </LinearLayout>
+        
+    </FrameLayout>
+	<android.support.v4.view.ViewPager
+       	android:id="@+id/viewPager"
+       	android:background="#E9E9E9"
+       	android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+</LinearLayout>

@@ -1,0 +1,157 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    <style name="AppBaseTheme" parent="android:Theme.Light"></style>
+    <style name="text_25_000000">
+        <item name="android:textSize">25.0dip</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="text_16_666666">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">#ff666666</item>
+    </style>
+
+    <style name="sdw_white">
+        <item name="android:shadowColor">#7fffffff</item>
+        <item name="android:shadowDx">0.0</item>
+        <item name="android:shadowDy">0.65</item>
+        <item name="android:shadowRadius">1.0</item>
+    </style>
+
+    <style name="sdw_79351b">
+        <item name="android:shadowColor">#ff79351b</item>
+        <item name="android:shadowDx">0.0</item>
+        <item name="android:shadowDy">1.0</item>
+        <item name="android:shadowRadius">1.0</item>
+    </style>
+
+    <style name="text_15_f51601_sdw" parent="@style/sdw_79351b">
+        <item name="android:textSize">15.0dip</item>
+        <item name="android:textColor">#f51601</item>
+    </style>
+
+    <style name="text_15_666666_sdw" parent="@style/sdw_white">
+        <item name="android:textSize">15.0dip</item>
+        <item name="android:textColor">#ff666666</item>
+    </style>
+
+    <style name="Dialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+    
+    <style name="checkbox" parent="@android:style/Widget.CompoundButton.CheckBox">
+		<item name="android:textSize">12.0dip</item>
+		<item name="android:gravity">center</item>
+		<item name="android:button">@null</item>
+		<item name="android:textColor">@drawable/kids_text_style</item>
+		<item name="android:paddingBottom">2.0dip</item>
+		<item name="android:paddingTop">2.0dip</item>
+	</style>
+	
+    <style name="CustomDialog" parent="@android:style/Theme.Dialog">
+		<item name="android:windowFrame">@null</item>
+    	<item name="android:windowIsFloating">true</item>
+    	<item name="android:windowContentOverlay">@null</item>
+    	<item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    	<item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+	</style>
+	
+	<style name="CustomProgressDialog" parent="@style/CustomDialog">
+		<item name="android:windowBackground">@android:color/transparent</item>
+    	<item name="android:windowNoTitle">true</item>
+	</style>
+	
+	<style name="PhotoPickerBaseTheme" parent="android:Theme.Light.NoTitleBar"></style>
+
+    <style name="PhotoPickerTheme" parent="PhotoPickerBaseTheme">
+       
+    </style>
+
+    <!-- TextView Service Name -->
+    <style name="textViewServiceName" parent="android:Widget.TextView">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">1dp</item>
+        <item name="android:paddingRight">1dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:visibility">visible</item>
+    </style>
+
+    <!-- TextView Asset Fragment Label -->
+    <style name="textViewFragmentLabel" parent="android:Widget.TextView">
+        <item name="android:gravity">center</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+    
+    <!-- TextView Sign Out Label -->
+    <style name="textViewSignOut" parent="android:Widget.TextView">
+        <item name="android:gravity">center</item>
+    </style>
+    
+    <!-- TextView Default Small -->
+    <style name="textViewDefaultSmall" parent="android:Widget.TextView">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmallInverse</item>
+    </style>
+
+    <!-- TextView Progress Dialog -->
+    <style name="textViewProgressDialog" parent="textViewDefaultSmall">
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
+    <!-- TextView Notification Dialog -->
+    <style name="textViewNotificationDialog" parent="textViewDefaultSmall">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- LinearLayout Empty Fragment Label -->
+    <style name="linearLayoutEmptyFragmentLabel" parent="android:Widget.TextView">
+    </style>
+
+    <!-- LinearLayout Progress Dialog -->
+    <style name="linearLayoutProgressDialog">
+        <item name="android:padding">20dp</item>
+        <item name="android:background">@drawable/progress_bar_window</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <!-- LinearLayout Notification Dialog -->
+    <style name="linearLayoutNotificationDialog" parent="linearLayoutProgressDialog">
+        <item name="android:background">@drawable/notification_window</item>
+    </style>
+
+    <!-- RelativeLayout Assets Adapter Item Holder -->
+    <style name="relativeLayoutAdapterItemHolder">
+        <item name="android:padding">1dp</item>
+    </style>
+
+    <!-- RelativeLayout Asset Fragment -->
+    <style name="relativeLayoutAssetFragment">
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <!-- ImageView Default Assets -->
+    <style name="imageViewDefaultAssets">
+        <item name="android:background">@drawable/photo_placeholder</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+    
+    <style name="Theme.HalfTranslucent" parent="@android:style/Theme.Translucent">
+        <item name="android:windowBackground">@color/half_transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@style/Animation.Translucent</item>
+        <item name="android:windowContentOverlay">@null</item> 
+    </style>
+     <style name="Animation" />
+    <style name="Animation.Translucent" parent="@style/Animation">
+        <item name="android:windowEnterAnimation">@anim/translucent_zoom_out</item>
+        <item name="android:windowExitAnimation">@anim/translucent_zoom_exit</item>
+    </style>
+</resources>

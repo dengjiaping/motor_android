@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#E7E7E7"
+    android:orientation="vertical" >
+
+   <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip" >       
+    <include 
+        layout="@layout/title"
+        />
+
+    <TextView   
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:textSize="26sp"
+        android:id="@+id/discuss_kids_title"
+        android:layout_centerInParent="true"
+        />
+    
+    <TextView 
+        android:id="@+id/sqare_theme"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:text="@string/write_post"
+        android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:textColor="@drawable/text_press_style"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        />
+	</RelativeLayout>
+
+	<com.moto.listview.CustomScrollView 
+	    android:id="@+id/discuss_kids_scrollview"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    >
+	    <LinearLayout 
+	        android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:orientation="vertical"
+	        >
+	    <RelativeLayout 
+	        android:layout_width="fill_parent"
+	        android:layout_height="125dp"
+	        >
+	        <com.moto.square.JazzyViewPager
+                android:id="@+id/square_images_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white" />
+        
+        	<LinearLayout
+                android:id="@+id/square_images_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal" />
+   	</RelativeLayout>
+   		<com.moto.listview.NoScrollListview
+		    	android:id="@+id/square_listview"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_margin="10dp"
+		        android:dividerHeight="10dp"
+		        android:divider="#E7E7E7"
+		        android:scrollbars="none"/>
+	    </LinearLayout>
+	</com.moto.listview.CustomScrollView>
+</LinearLayout>
