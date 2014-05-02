@@ -38,7 +38,7 @@ public class Moto_MainActivity extends TabActivity {
         intent=new Intent().setClass(this, SquareActivity.class);
         spec=tabHost.newTabSpec("square").setIndicator("square").setContent(intent);
         tabHost.addTab(spec);
-        
+
         intent=new Intent().setClass(this,LiveActivity.class);
         spec=tabHost.newTabSpec("live").setIndicator("live").setContent(intent);
         tabHost.addTab(spec);
@@ -46,12 +46,12 @@ public class Moto_MainActivity extends TabActivity {
         intent=new Intent().setClass(this, Live_Kids_Own.class);
         spec=tabHost.newTabSpec("liveown").setIndicator("liveown").setContent(intent);
         tabHost.addTab(spec);
-        
-        
+
+
         intent=new Intent().setClass(this, InformActivity.class);
         spec=tabHost.newTabSpec("inform").setIndicator("inform").setContent(intent);
         tabHost.addTab(spec);
-        
+
         intent=new Intent().setClass(this, UserActivity.class);
         spec=tabHost.newTabSpec("me").setIndicator("me").setContent(intent);
         tabHost.addTab(spec);

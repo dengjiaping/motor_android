@@ -1,6 +1,7 @@
 package com.moto.inform;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.moto.main.Moto_RootActivity;
@@ -222,7 +223,40 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
     @Override
     public void handleNetworkDataWithSuccess(JSONObject jsonObject) throws JSONException {
         JSONArray jsonArray = jsonObject.getJSONArray("pm");
-        for (int i = 0; i < jsonArray.length(); i++) {
+
+        String firstListTimestamp = chatList.size() > 0 ? chatList.get(0).getUtcTimeStamp():"1990-12-12TH12:12:12Z";
+        String lastListTimestamp  = chatList.size() > 0 ? chatList.get(chatList.size()-1).getUtcTimeStamp():"1990-12-12TH12:12:12Z";
+
+        String firstJsonTimestamp = jsonArray.getJSONObject(0).getString("created_at");
+        String lastJsonTimestamp = jsonArray.getJSONObject(jsonArray.length()-1).getString("created_at");
+
+        if (DateUtils.compareUTCTimestamp(firstJsonTimestamp,lastListTimestamp) > 0)
+        {
+            for (int i = jsonArray.length()-1; i > -1 ; i--) {
+                jsonObject = jsonArray.getJSONObject(i);
+                String username = jsonObject.getString("username");
+                String utcTimestamp = jsonObject.getString("created_at");
+                String timestamp = DateUtils.timestampToDeatil(utcTimestamp);
+                String message = jsonObject.getString("message");
+                ChatEntity chatEntity = new ChatEntity();
+                chatEntity.setComeMsg(isMe(username));
+                chatEntity.setContent(message);
+                chatEntity.setChatTime(timestamp);
+                chatEntity.setUtcTimeStamp(utcTimestamp);
+
+
+                String firstTimestamp = chatList.size() > 0 ? chatList.get(0).getUtcTimeStamp():"1990-12-12TH12:12:12Z";
+                String lastTimestamp  = chatList.size() > 0 ? chatList.get(chatList.size()-1).getUtcTimeStamp():"1990-12-12TH12:12:12Z";
+                if (DateUtils.compareUTCTimestamp(utcTimestamp,lastTimestamp) > 0){
+                    chatList.add(chatEntity);
+                }
+
+                if (DateUtils.compareUTCTimestamp(utcTimestamp,firstTimestamp) < 0){
+                    chatList.add(0, chatEntity);
+                }
+            }
+        }else{
+            for (int i = 0; i < jsonArray.length(); i++) {
                 jsonObject = jsonArray.getJSONObject(i);
                 String username = jsonObject.getString("username");
                 String utcTimestamp = jsonObject.getString("created_at");
@@ -234,7 +268,17 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
                 chatEntity.setContent(message);
                 chatEntity.setChatTime(timestamp);
                 chatEntity.setUtcTimeStamp(utcTimestamp);
-                chatList.add(chatEntity);
+
+                String firstTimestamp = chatList.size() > 0 ? chatList.get(0).getUtcTimeStamp():"1990-12-12TH12:12:12Z";
+                String lastTimestamp  = chatList.size() > 0 ? chatList.get(chatList.size()-1).getUtcTimeStamp():"1990-12-12TH12:12:12Z";
+                if (DateUtils.compareUTCTimestamp(utcTimestamp,lastTimestamp) > 0){
+                    chatList.add(chatEntity);
+                }
+
+                if (DateUtils.compareUTCTimestamp(utcTimestamp,firstTimestamp) < 0){
+                    chatList.add(0, chatEntity);
+                }
+            }
         }
         chatAdapter.notifyDataSetChanged();
     }

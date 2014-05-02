@@ -30,6 +30,12 @@ public class DateUtils {
         return timestamp;
     }
 
+    public static int compareUTCTimestamp(String beforeTimestamp, String afterTimestamp)
+    {
+        Date beforeDate = timestampToLocalDate(beforeTimestamp);
+        Date afterDate = timestampToLocalDate(afterTimestamp);
+        return beforeDate.compareTo(afterDate);
+    }
 
     /**
      * 根据传入的时间计算距离该时间是几分钟前，几小时前，还是显示具体时间
