@@ -135,7 +135,6 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 		mapView = (MapView) findViewById(R.id.live_kids_map);
 		mapView.onCreate(savedInstanceState);// 此方法必须重写
 		init();
-		
 		WindowManager wm = this.getWindowManager();
         
 		screenWidth = wm.getDefaultDisplay().getWidth();
