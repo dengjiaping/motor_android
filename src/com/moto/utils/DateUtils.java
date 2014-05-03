@@ -21,6 +21,20 @@ public class DateUtils {
 		return date;
 	}
 
+    public static Date timestampToLocalDateWithMillisecond(String timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        Date date = new Date();
+        try {
+            date = sdf.parse(timestamp);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return date;
+    }
+
     public static String getUTCCurrentTimestamp()
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -30,11 +44,13 @@ public class DateUtils {
         return timestamp;
     }
 
-    public static int compareUTCTimestamp(String beforeTimestamp, String afterTimestamp)
+    public static boolean compareUTCTimestamp(String beforeTimestamp, String afterTimestamp)
     {
-        Date beforeDate = timestampToLocalDate(beforeTimestamp);
-        Date afterDate = timestampToLocalDate(afterTimestamp);
-        return beforeDate.compareTo(afterDate);
+        Date beforeDate = timestampToLocalDateWithMillisecond(beforeTimestamp);
+        Date afterDate = timestampToLocalDateWithMillisecond(afterTimestamp);
+        long a = beforeDate.getTime();
+        long b = afterDate.getTime();
+        return beforeDate.getTime() > afterDate.getTime();
     }
 
     /**

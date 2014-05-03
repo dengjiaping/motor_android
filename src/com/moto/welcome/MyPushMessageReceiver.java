@@ -168,7 +168,6 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 * 
 	 * @param context ���������
 	 * @param errorCode ������������0������������tag������������������������0������������tag���������������������
-	 * @param successTags ���������������tag
 	 * @param failTags ���������������tag
 	 * @param requestId ���������������������������������id
 	 */
@@ -189,7 +188,6 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 	 * 
 	 * @param context ���������
 	 * @param errorCode ������������0������������tag������������������������0������������tag������������������
-	 * @param successTags ���������������tag
 	 * @param failTags ���������������tag
 	 * @param requestId ���������������������������������id
 	 */

@@ -50,8 +50,7 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
         super.onCreate(savedInstanceState);
         addContentView(R.layout.inform_chat, "聊天",barButtonIconType.barButtonIconType_None, barButtonIconType.barButtonIconType_None);
         init();
-        chatList = new ArrayList<ChatEntity>();
-
+        chatList = new ArrayList<ChatEntity>(8);
         Intent intent = this.getIntent();
         Bundle extras = getIntent().getExtras();
         otherUserName = extras.getString("otherUserName");
@@ -224,13 +223,13 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
     public void handleNetworkDataWithSuccess(JSONObject jsonObject) throws JSONException {
         JSONArray jsonArray = jsonObject.getJSONArray("pm");
 
-        String firstListTimestamp = chatList.size() > 0 ? chatList.get(0).getUtcTimeStamp():"1990-12-12TH12:12:12Z";
-        String lastListTimestamp  = chatList.size() > 0 ? chatList.get(chatList.size()-1).getUtcTimeStamp():"1990-12-12TH12:12:12Z";
+        String firstListTimestamp = chatList.size() > 0 ? chatList.get(0).getUtcTimeStamp():"1990-12-12T12:12:12.123Z";
+        String lastListTimestamp  = chatList.size() > 0 ? chatList.get(chatList.size()-1).getUtcTimeStamp():"1990-12-12T12:12:12.123Z";
 
         String firstJsonTimestamp = jsonArray.getJSONObject(0).getString("created_at");
         String lastJsonTimestamp = jsonArray.getJSONObject(jsonArray.length()-1).getString("created_at");
 
-        if (DateUtils.compareUTCTimestamp(firstJsonTimestamp,lastListTimestamp) > 0)
+        if (DateUtils.compareUTCTimestamp(firstJsonTimestamp,lastListTimestamp))
         {
             for (int i = jsonArray.length()-1; i > -1 ; i--) {
                 jsonObject = jsonArray.getJSONObject(i);
@@ -245,13 +244,13 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
                 chatEntity.setUtcTimeStamp(utcTimestamp);
 
 
-                String firstTimestamp = chatList.size() > 0 ? chatList.get(0).getUtcTimeStamp():"1990-12-12TH12:12:12Z";
-                String lastTimestamp  = chatList.size() > 0 ? chatList.get(chatList.size()-1).getUtcTimeStamp():"1990-12-12TH12:12:12Z";
-                if (DateUtils.compareUTCTimestamp(utcTimestamp,lastTimestamp) > 0){
+                String firstTimestamp = chatList.size() > 0 ? chatList.get(0).getUtcTimeStamp():"1990-12-12T12:12:12.122Z";
+                String lastTimestamp  = chatList.size() > 0 ? chatList.get(chatList.size()-1).getUtcTimeStamp():"1990-12-12T12:12:12.122Z";
+                if (DateUtils.compareUTCTimestamp(utcTimestamp,lastTimestamp)){
                     chatList.add(chatEntity);
                 }
 
-                if (DateUtils.compareUTCTimestamp(utcTimestamp,firstTimestamp) < 0){
+                if (!DateUtils.compareUTCTimestamp(utcTimestamp,firstTimestamp)){
                     chatList.add(0, chatEntity);
                 }
             }
@@ -269,13 +268,13 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
                 chatEntity.setChatTime(timestamp);
                 chatEntity.setUtcTimeStamp(utcTimestamp);
 
-                String firstTimestamp = chatList.size() > 0 ? chatList.get(0).getUtcTimeStamp():"1990-12-12TH12:12:12Z";
-                String lastTimestamp  = chatList.size() > 0 ? chatList.get(chatList.size()-1).getUtcTimeStamp():"1990-12-12TH12:12:12Z";
-                if (DateUtils.compareUTCTimestamp(utcTimestamp,lastTimestamp) > 0){
+                String firstTimestamp = chatList.size() > 0 ? chatList.get(0).getUtcTimeStamp():"1990-12-12T12:12:12.122Z";
+                String lastTimestamp  = chatList.size() > 0 ? chatList.get(chatList.size()-1).getUtcTimeStamp():"1990-12-12T12:12:12.122Z";
+                if (DateUtils.compareUTCTimestamp(utcTimestamp,lastTimestamp)){
                     chatList.add(chatEntity);
                 }
 
-                if (DateUtils.compareUTCTimestamp(utcTimestamp,firstTimestamp) < 0){
+                if (!DateUtils.compareUTCTimestamp(utcTimestamp,firstTimestamp)){
                     chatList.add(0, chatEntity);
                 }
             }
