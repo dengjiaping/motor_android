@@ -72,13 +72,16 @@
     <orderEntry type="library" exported="" name="android-support-v4" level="project" />
     <orderEntry type="library" exported="" name="commons-codec-1.4" level="project" />
     <orderEntry type="library" exported="" name="mail" level="project" />
-    <orderEntry type="library" exported="" name="Android_Location_V1.1.0" level="project" />
     <orderEntry type="library" exported="" name="pushservice-3.2.0" level="project" />
+    <orderEntry type="library" exported="" name="Android_Location_V1.1.0" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-19.0.1" level="project" />
     <orderEntry type="library" exported="" name="additionnal" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-19.0.1" level="project" />
     <orderEntry type="library" exported="" name="chute-sdk-v2-android-2.2.7-SNAPSHOT-sources" level="project" />
     <orderEntry type="library" exported="" name="chute-sdk-v2-android-2.2.7-SNAPSHOT-with-dependencies" level="project" />
     <orderEntry type="library" exported="" name="nineoldandroids" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.9.1-SNAPSHOT-with-sources" level="project" />
+    <orderEntry type="library" exported="" name="android-segmented-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="Android_Services_V2.2.0" level="project" />
     <orderEntry type="library" exported="" name="activation" level="project" />
     <orderEntry type="library" exported="" name="Android_Map_V2.2.0" level="project" />
