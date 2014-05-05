@@ -1,0 +1,82 @@
+package com.moto.inform;
+
+import android.app.TabActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Window;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.TabHost;
+
+import com.moto.live.LiveActivity;
+import com.moto.live.Live_Kids_Own;
+import com.moto.main.R;
+import com.moto.square.SquareActivity;
+
+import info.hoang8f.android.segmented.SegmentedGroup;
+
+/**
+ * Created by chen on 2014/5/5.
+ */
+public class Inform_main extends TabActivity{
+    /** Called when the activity is first created. */
+    private TabHost tabHost;
+    public static SegmentedGroup radioGroup;
+    //	private TextView main_tab_new_message;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.informtest);
+        tabHost=this.getTabHost();
+        TabHost.TabSpec spec;
+        Intent intent;
+
+        intent=new Intent().setClass(this, InformResponseActivity.class);
+        spec=tabHost.newTabSpec("response").setIndicator("response").setContent(intent);
+        tabHost.addTab(spec);
+
+        intent=new Intent().setClass(this,InformTouchmeActivity.class);
+        spec=tabHost.newTabSpec("touch").setIndicator("touch").setContent(intent);
+        tabHost.addTab(spec);
+
+        intent=new Intent().setClass(this, InformPrivateActivity.class);
+        spec=tabHost.newTabSpec("private").setIndicator("private").setContent(intent);
+        tabHost.addTab(spec);
+
+        tabHost.setCurrentTab(0);
+        final LinearLayout layout =(LinearLayout)findViewById(R.id.console_line_bottom);
+        radioGroup = (SegmentedGroup) this.findViewById(R.id.inform_segmented);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // TODO Auto-generated method stub
+                switch (checkedId) {
+                    case R.id.inform_button1://response
+                        tabHost.setCurrentTabByTag("response");
+                        layout.bringToFront();
+                        break;
+                    case R.id.inform_button2://touch
+                        tabHost.setCurrentTabByTag("touch");
+                        layout.bringToFront();
+
+                        break;
+                    //				case R.id.main_tab_square:
+                    //					tabHost.setCurrentTabByTag("liveown");
+                    //					layout.bringToFront();
+                    //					break;
+                    case R.id.inform_button3://private
+                        tabHost.setCurrentTabByTag("private");
+                        layout.bringToFront();
+                        break;
+                    default:
+
+                        break;
+                }
+            }
+        });
+
+        layout.bringToFront();
+    }
+}

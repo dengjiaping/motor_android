@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/tabhost"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            />
+            <LinearLayout
+                android:id="@+id/console_line_bottom"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="top"
+                android:background="#b2b2b2"
+                android:gravity="center"
+                android:alpha="0.8"
+                android:orientation="horizontal" >
+
+                <info.hoang8f.android.segmented.SegmentedGroup
+                    android:id="@+id/inform_segmented"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    >
+
+                    <RadioButton
+                        android:id="@+id/inform_button1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/response"
+                        style="@style/RadioButton" />
+
+                    <RadioButton
+                        android:id="@+id/inform_button2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/touch_me"
+                        style="@style/RadioButton" />
+
+                    <RadioButton
+                        android:id="@+id/inform_button3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/private_letter"
+                        style="@style/RadioButton" />
+                </info.hoang8f.android.segmented.SegmentedGroup>
+            </LinearLayout>>
+
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+</TabHost>

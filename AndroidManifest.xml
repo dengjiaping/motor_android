@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.moto.main"
     android:versionCode="8"
-    android:versionName="7.0" >
+    android:versionName="8.0" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -15,8 +15,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS"/>  
 	<uses-permission android:name="android.permission.WRITE_CONTACTS"/> 
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
-    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
@@ -78,11 +77,6 @@
             android:theme="@android:style/Theme.NoTitleBar" />
         
         <activity 
-            android:name="com.moto.hot.HotActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" />
-        
-        <activity 
             android:name="com.moto.inform.InformActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
@@ -124,16 +118,6 @@
             android:name="com.moto.square.Publish_post"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        
-         <activity 
-            android:name="com.moto.square.Discuss_kids"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" />
-         
-         <activity 
-            android:name="com.moto.square.Discuss_Activity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" />
          
          <activity 
             android:name="com.moto.square.Theme_Post"
@@ -162,6 +146,26 @@
             android:name="com.moto.inform.Inform_Friends"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
+
+        <activity
+            android:name="com.moto.inform.Inform_main"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+
+        <activity
+            android:name="com.moto.inform.InformPrivateActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+
+        <activity
+            android:name="com.moto.inform.InformResponseActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+
+        <activity
+            android:name="com.moto.inform.InformTouchmeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
           
           <activity 
             android:name="com.moto.inform.Chat_privateActivity"
@@ -180,11 +184,6 @@
           
           <activity 
             android:name="com.moto.user.User_feedbackSetting"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" />
-          
-          <activity 
-            android:name="com.moto.result_img.CropImageActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
           
@@ -230,23 +229,6 @@
             android:name="com.moto.tryimage.ImageFactoryActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-          
-          <activity
-            android:name="com.chute.android.photopickerplus.ui.activity.ServicesActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/PhotoPickerTheme" >
-        	</activity>
-        	<activity
-            android:name="com.chute.android.photopickerplus.ui.activity.AlbumsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/PhotoPickerTheme" >
-        </activity>
-        <activity
-            android:name="com.chute.android.photopickerplus.ui.activity.AssetActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/PhotoPickerTheme" >
-        </activity>
         <activity
             android:name="com.chute.sdk.v2.api.authentication.AuthenticationActivity"
             android:screenOrientation="portrait"
@@ -269,7 +251,7 @@
             android:name="com.moto.select_morephoto.AlbumActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        
+
         <!-- push service rich media display -->
      	<activity
          	android:name="com.baidu.android.pushservice.richmedia.MediaViewActivity"
