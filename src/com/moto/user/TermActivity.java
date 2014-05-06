@@ -1,8 +1,6 @@
 package com.moto.user;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import com.moto.main.Moto_RootActivity;
