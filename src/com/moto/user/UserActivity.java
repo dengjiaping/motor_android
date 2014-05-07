@@ -78,9 +78,9 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 	private Handler handler;
 	private DisplayImageOptions options;
 	private DisplayImageOptions Originaloptions;
-	private EditText login_name;
-	private EditText login_password;
-	private Button login_button;
+	private BootstrapEditText login_name;
+	private BootstrapEditText login_password;
+	private BootstrapButton login_button;
 	private String nameString;
 	private String passwordString;
 	private String emailString = "";
@@ -117,6 +117,7 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 				{
 				//获取成功
 				case Constant.MSG_SUCCESS:
+                    DialogMethod.stopProgressDialog();
 					user();
 					break;
 				case Constant.MSG_NULL:
@@ -138,8 +139,6 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 					{
 						no_dongtai.setVisibility(View.VISIBLE);
 					}
-					SignNetWorkModel signNetWorkModel = new SignNetWorkModel(UserActivity.this, UserActivity.this);
-					signNetWorkModel.registerBpush(UserActivity.this);
 					adapter.notifyDataSetChanged();
 					
 					break;
@@ -244,9 +243,9 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 	
 	private void login_init(){
 		user_register = (TextView)findViewById(R.id.user_login_register);
-		login_name = (EditText)findViewById(R.id.user_login_name);
-		login_password = (EditText)findViewById(R.id.user_login_password);
-		login_button = (Button)findViewById(R.id.user_login_button);
+		login_name = (BootstrapEditText)findViewById(R.id.user_login_name);
+		login_password = (BootstrapEditText)findViewById(R.id.user_login_password);
+		login_button = (BootstrapButton)findViewById(R.id.user_login_button);
 		login_button.setOnClickListener(this);
 		user_register.setOnClickListener(this);
 	}

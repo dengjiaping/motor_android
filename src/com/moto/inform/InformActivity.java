@@ -299,7 +299,6 @@ public class InformActivity extends tabActivity implements OnClickListener {
 							JSONObject jsonObject2 = (JSONObject) responsearray.get(i);
 							responseList.add(GetReaponseMap(jsonObject2));
 						}
-						
 						String private_details = jsonObject1
                         .getString("conversation_list");
 						JSONArray privatearray = new JSONArray(private_details);

@@ -42,7 +42,7 @@
         android:layout_margin="12dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/search_bar_edit_selector"
+        android:background="@drawable/myedit_style"
         android:drawableLeft="@drawable/search_bar_icon_normal"
         android:hint="@string/searchcontact"
         android:singleLine="true"

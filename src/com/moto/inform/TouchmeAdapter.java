@@ -6,6 +6,7 @@ import com.moto.constant.Constant;
 import com.moto.constant.ImageMethod;
 import com.moto.main.R;
 import com.moto.mymap.MyMapApplication;
+import com.moto.utils.DateUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -59,7 +60,7 @@ public class TouchmeAdapter extends BaseAdapter{
 			holder = new ViewHolder();
 			holder.inform_touchme_username = (TextView)convertView.findViewById(R.id.inform_touchme_username);
 			holder.inform_touchme_details = (TextView)convertView.findViewById(R.id.inform_touchme_details);
-			holder.inform_touchme_data = (TextView)convertView.findViewById(R.id.inform_touchme_data);
+			holder.inform_touchme_theme = (TextView)convertView.findViewById(R.id.inform_touchme_theme);
 			holder.inform_touchme_time = (TextView)convertView.findViewById(R.id.inform_touchme_time);
 			holder.inform_touchme_userimg = (ImageView)convertView.findViewById(R.id.inform_touchme_userimg);
 			convertView.setTag(holder);
@@ -70,10 +71,10 @@ public class TouchmeAdapter extends BaseAdapter{
 		
 		
 		map = list.get(position);
-		holder.inform_touchme_username.setText((CharSequence)map.get("author"));
-        holder.inform_touchme_details.setText((CharSequence)map.get("message"));
-        holder.inform_touchme_data.setText((CharSequence)map.get("2013"));
-        holder.inform_touchme_time.setText((CharSequence) map.get("03:12"));
+		holder.inform_touchme_username.setText(map.get("author"));
+        holder.inform_touchme_details.setText(map.get("at_message"));
+        holder.inform_touchme_theme.setText(map.get("subject"));
+        holder.inform_touchme_time.setText(DateUtils.timestampToDeatil(map.get("dateline")));
         MyMapApplication.imageLoader.displayImage(Constant.imgPath+map.get("avatar")+"?imageView2/1/w/40/h/40",  holder.inform_touchme_userimg,options,null);
         return convertView;
 	}
@@ -82,7 +83,7 @@ public class TouchmeAdapter extends BaseAdapter{
 	class ViewHolder{
 		TextView inform_touchme_username;
 		TextView inform_touchme_details;
-		TextView inform_touchme_data;
+        TextView inform_touchme_theme;
 		TextView inform_touchme_time;
 		ImageView inform_touchme_userimg;
 	}

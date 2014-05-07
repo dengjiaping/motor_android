@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bootstrapbutton="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/moto_background"
+    android:background="#E2EBB4"
     android:orientation="vertical" >
 	<RelativeLayout
         android:layout_width="fill_parent"
@@ -25,69 +26,55 @@
         layout="@layout/back"
         />
 	</RelativeLayout>
-	<EditText
-	    android:id="@+id/user_register_name"
-	    android:layout_marginTop="30dp"
-     	android:layout_width="fill_parent"
-        android:layout_height="50dip"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/login_input"
-        android:drawableLeft="@drawable/login_icon_account"
-        android:drawablePadding="25dip"
-        android:hint="@string/name_condition"
-        android:paddingLeft="25dip"
-        android:textColor="#ff98bede"
-        android:textColorHint="#ffdddddd" 
-        />
 
-    <EditText
+    <com.moto.user.BootstrapEditText
+        android:id="@+id/user_register_name"
+        android:layout_width="fill_parent"
+        android:layout_height="60dip"
+        android:textSize="18sp"
+        android:drawableLeft="@drawable/login_icon_account"
+        bootstrapbutton:be_state="success"
+        android:textColor="#ff98bede"
+        android:drawablePadding="20dip"
+        android:textColorHint="#ffdddddd"
+        android:hint="@string/name_condition"
+        />
+    <com.moto.user.BootstrapEditText
         android:id="@+id/user_register_password"
         android:layout_width="fill_parent"
-        android:layout_height="50dip"
-        android:layout_marginBottom="8dip"
-        android:layout_marginLeft="8dip"
-        android:layout_marginRight="8dip"
-        android:background="@drawable/login_input"
+        android:layout_height="60dip"
+        android:textSize="18sp"
         android:drawableLeft="@drawable/login_icon_password"
-        android:drawablePadding="25dip"
-        android:hint="@string/password_condition"
-        android:paddingLeft="25dip"
-        android:inputType="textPassword"
         android:textColor="#ff98bede"
-        android:textColorHint="#ffdddddd" />
-    <EditText
+        bootstrapbutton:be_state="success"
+        android:textColorHint="#ffdddddd"
+        android:drawablePadding="20dip"
+        android:hint="@string/password_condition"
+        android:inputType="textPassword"
+        />
+
+    <com.moto.user.BootstrapEditText
         android:id="@+id/user_register_email"
         android:layout_width="fill_parent"
-        android:layout_height="50dip"
-        android:layout_marginBottom="8dip"
-        android:layout_marginLeft="8dip"
-        android:layout_marginRight="8dip"
-        android:background="@drawable/login_input"
+        android:layout_height="60dip"
+        android:textSize="18sp"
         android:drawableLeft="@drawable/register_email"
-        android:drawablePadding="25dip"
-        android:hint="@string/email_input"
-        android:paddingLeft="25dip"
-        android:inputType="textEmailAddress"
+        bootstrapbutton:be_state="success"
         android:textColor="#ff98bede"
-        android:textColorHint="#ffdddddd" />
-	
-	<Button
-       	android:id="@+id/user_register_button"
+        android:textColorHint="#ffdddddd"
+        android:drawablePadding="20dip"
+        android:hint="@string/email_input"
+        android:inputType="textEmailAddress"
+        />
+
+    <com.moto.user.BootstrapButton
+        android:id="@+id/user_register_button"
+        android:layout_marginTop="20dp"
         android:layout_width="fill_parent"
-        android:layout_height="45dip"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="8dip"
-        android:layout_marginRight="8dip"
-        android:background="@drawable/login_btn"
-        android:shadowColor="#7f000000"
-        android:shadowDx="0.0"
-        android:shadowDy="1.0"
-        android:shadowRadius="1.0"
+        android:layout_height="70dip"
+        android:clickable="true"
         android:text="@string/register"
-        android:textColor="#ffffff"
-        android:textSize="20sp" 
-        android:enabled="true"/>
+        bootstrapbutton:bb_text_gravity="center"
+        bootstrapbutton:bb_type="success" />
 	
 </LinearLayout>

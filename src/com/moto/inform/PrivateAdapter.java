@@ -4,6 +4,8 @@ import java.util.LinkedList;
 
 import com.moto.constant.Constant;
 import com.moto.constant.ImageMethod;
+import com.moto.date.DateUtils;
+import com.moto.main.MotorApplication;
 import com.moto.main.R;
 import com.moto.mymap.MyMapApplication;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -59,6 +61,7 @@ public class PrivateAdapter extends BaseAdapter{
             holder.inform_private_username = (TextView)convertView.findViewById(R.id.inform_private_username);
             holder.inform_private_details = (TextView)convertView.findViewById(R.id.inform_private_details);
             holder.inform_private_userimg = (ImageView)convertView.findViewById(R.id.inform_private_userimg);
+            holder.inform_private_time = (TextView)convertView.findViewById(R.id.inform_private_time);
             convertView.setTag(holder);
         }
         else {
@@ -66,9 +69,10 @@ public class PrivateAdapter extends BaseAdapter{
         }
         
         map = list.get(position);
-        holder.inform_private_username.setText((CharSequence)map.get("username"));
-        holder.inform_private_details.setText((CharSequence)map.get("lastmessage"));
-        MyMapApplication.imageLoader.displayImage(Constant.imgPath+map.get("avatar")+"?imageView2/1/w/40/h/40",  holder.inform_private_userimg,options,null);
+        holder.inform_private_username.setText(map.get("username"));
+        holder.inform_private_details.setText(map.get("lastmessage"));
+        holder.inform_private_time.setText(com.moto.utils.DateUtils.StimestampToDeatil(map.get("updated_at")));
+        MotorApplication.imageLoader.displayImage(Constant.imgPath+map.get("avatar"),  holder.inform_private_userimg,options,null);
         return convertView;
     }	
     //此类为上面getview里面view的引用，方便快速滑动
@@ -76,5 +80,6 @@ public class PrivateAdapter extends BaseAdapter{
         TextView inform_private_username;
         TextView inform_private_details;
         ImageView inform_private_userimg;
+        TextView inform_private_time;
     }
 }

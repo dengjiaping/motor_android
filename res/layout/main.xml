@@ -3,7 +3,7 @@
     android:id="@+id/navigationBar"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:background="#48C1D5" 
+    android:background="#6BE9F2"
     android:orientation="horizontal" >
         
    <LinearLayout         

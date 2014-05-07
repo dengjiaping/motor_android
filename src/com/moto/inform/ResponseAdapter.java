@@ -6,6 +6,7 @@ import com.moto.constant.Constant;
 import com.moto.constant.ImageMethod;
 import com.moto.main.R;
 import com.moto.mymap.MyMapApplication;
+import com.moto.utils.DateUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -59,7 +60,7 @@ public class ResponseAdapter extends BaseAdapter{
             holder.inform_response_username = (TextView)convertView.findViewById(R.id.inform_response_username);
             holder.inform_response_details = (TextView)convertView.findViewById(R.id.inform_response_details);
             holder.inform_response_theme = (TextView)convertView.findViewById(R.id.inform_response_theme);
-            holder.inform_response_data = (TextView)convertView.findViewById(R.id.inform_response_data);
+
             holder.inform_response_time = (TextView)convertView.findViewById(R.id.inform_response_time);
             holder.inform_response_userimg = (ImageView)convertView.findViewById(R.id.inform_response_userimg);
             convertView.setTag(holder);
@@ -71,10 +72,9 @@ public class ResponseAdapter extends BaseAdapter{
         
         map = list.get(position);
         holder.inform_response_username.setText(map.get("author"));
-        holder.inform_response_details.setText(map.get("message"));
-        //            holder.inform_response_theme.setText( map.get("theme"));
-        holder.inform_response_data.setText("2013");
-        holder.inform_response_time.setText("03:24");
+        holder.inform_response_details.setText(map.get("reply_message"));
+        holder.inform_response_theme.setText( map.get("subject"));
+        holder.inform_response_time.setText(DateUtils.timestampToDeatil(map.get("dateline")));
         MyMapApplication.imageLoader.displayImage(Constant.imgPath+map.get("avatar")+"?imageView2/1/w/40/h/40",  holder.inform_response_userimg,options,null);
         return convertView;
     }
@@ -83,7 +83,6 @@ public class ResponseAdapter extends BaseAdapter{
         TextView inform_response_username;
         TextView inform_response_details;
         TextView inform_response_theme;
-        TextView inform_response_data;
         TextView inform_response_time;
         ImageView inform_response_userimg;
     }

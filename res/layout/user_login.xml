@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bootstrapbutton="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/moto_background"
@@ -34,48 +35,47 @@
         android:text="@string/userlogin"
         />
 	</RelativeLayout>
-	<EditText
-	    android:id="@+id/user_login_name"
-	    android:layout_marginTop="30dp"
-     	android:layout_width="fill_parent"
-        android:layout_height="50dip"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/login_input"
-        android:drawableLeft="@drawable/login_icon_account"
-        android:drawablePadding="25dip"
-        android:hint="@string/name_or_email"
-        android:inputType="textEmailAddress"
-        android:paddingLeft="25dip"
-        android:textColor="#ff98bede"
-        android:textColorHint="#ffdddddd" 
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="140dp"
+        android:background="@drawable/motoimage"
         />
-
-    <EditText
+    <com.moto.user.BootstrapEditText
+        android:id="@+id/user_login_name"
+        android:layout_width="fill_parent"
+        android:layout_height="60dip"
+        android:textSize="18sp"
+        android:drawableLeft="@drawable/login_icon_account"
+        android:inputType="textEmailAddress"
+        bootstrapbutton:be_state="success"
+        android:textColor="#ff98bede"
+        android:drawablePadding="20dip"
+        android:textColorHint="#ffdddddd"
+        android:hint="@string/name_or_email"
+        />
+    <com.moto.user.BootstrapEditText
         android:id="@+id/user_login_password"
         android:layout_width="fill_parent"
-        android:layout_height="50dip"
-        android:layout_marginBottom="8dip"
-        android:layout_marginLeft="8dip"
-        android:layout_marginRight="8dip"
-        android:background="@drawable/login_input"
+        android:layout_height="60dip"
+        android:textSize="18sp"
+        android:drawablePadding="20dip"
         android:drawableLeft="@drawable/login_icon_password"
-        android:drawablePadding="25dip"
-        android:hint="@string/password_hint"
-        android:paddingLeft="25dip"
         android:inputType="textPassword"
+        bootstrapbutton:be_state="success"
         android:textColor="#ff98bede"
-        android:textColorHint="#ffdddddd" />
-	
-	<LinearLayout 
+        android:textColorHint="#ffdddddd"
+        android:hint="@string/password_hint"
+        />
+
+	<LinearLayout
 	    android:layout_width="wrap_content"
 	    android:layout_gravity="center"
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="10dp"
+        android:visibility="gone"
 	    android:orientation="vertical"
 	    >
-	    <TextView      
+	    <TextView
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:textColor="#747675"
@@ -83,7 +83,7 @@
 	        android:textSize="20sp"
 	        android:text="@string/forget_password"
 	        />
-	    <TextView 
+	    <TextView
 	        android:layout_gravity="center"
         	android:layout_width="fill_parent"
         	android:layout_height="1dp"
@@ -91,21 +91,21 @@
         	/>
 	</LinearLayout>
 	
-	<Button
-       	android:id="@+id/user_login_button"
+
+
+    <com.moto.user.BootstrapButton
+        android:id="@+id/user_login_button"
         android:layout_width="fill_parent"
-        android:layout_height="45dip"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="8dip"
-        android:layout_marginRight="8dip"
-        android:background="@drawable/login_btn"
-        android:shadowColor="#7f000000"
-        android:shadowDx="0.0"
-        android:shadowDy="1.0"
-        android:shadowRadius="1.0"
+        android:layout_height="70dip"
+        android:clickable="true"
         android:text="@string/userlogin"
-        android:textColor="#ffffff"
-        android:textSize="20sp" 
-        android:enabled="true"/>
+        bootstrapbutton:bb_text_gravity="center"
+        bootstrapbutton:bb_type="success" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#E2EBB4"
+        />
 	
 </LinearLayout>

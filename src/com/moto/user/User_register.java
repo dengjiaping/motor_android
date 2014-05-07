@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-import com.loopj.android.http.RequestParams;
 import com.moto.asydata.LoadCacheResponseLoginouthandler;
 import com.moto.asydata.LoadDatahandler;
 import com.moto.asydata.RequstClient;
@@ -24,10 +23,10 @@ import com.moto.validation.Validation;
 public class User_register extends Moto_RootActivity implements OnClickListener{
 	
 	private ImageView regiter_return;
-	private EditText user_name;
-	private EditText user_email;
-	private EditText user_password;
-	private Button register_Button;
+	private BootstrapEditText user_name;
+	private BootstrapEditText user_email;
+	private BootstrapEditText user_password;
+	private BootstrapButton register_Button;
 	private String nameString;
 	private String emailString;
 	private String passwordString;
@@ -43,10 +42,10 @@ public class User_register extends Moto_RootActivity implements OnClickListener{
 	private void init() {
 		// TODO Auto-generated method stub
 		regiter_return = (ImageView)findViewById(R.id.user_register_return);
-		user_email = (EditText)findViewById(R.id.user_register_email);
-		user_name = (EditText)findViewById(R.id.user_register_name);
-		user_password = (EditText)findViewById(R.id.user_register_password);
-		register_Button = (Button)findViewById(R.id.user_register_button);
+		user_email = (BootstrapEditText)findViewById(R.id.user_register_email);
+		user_name = (BootstrapEditText)findViewById(R.id.user_register_name);
+		user_password = (BootstrapEditText)findViewById(R.id.user_register_password);
+		register_Button = (BootstrapButton)findViewById(R.id.user_register_button);
 		register_Button.setOnClickListener(this);
 		regiter_return.setOnClickListener(this);
 	}
@@ -109,6 +108,7 @@ public class User_register extends Moto_RootActivity implements OnClickListener{
         Log.d("log",jsonObject.getString("is"));
         DialogMethod.stopProgressDialog();
         Log.d("log1",jsonObject.getString("is"));
+        new SignNetWorkModel(User_register.this,User_register.this ).registerBpush(User_register.this);
         User_register.this.finish();
     }
 
