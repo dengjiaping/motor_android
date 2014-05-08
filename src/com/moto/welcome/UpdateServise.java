@@ -24,10 +24,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.RemoteViews;
-
 public class UpdateServise extends Service implements NetWorkModelListener{
     private int len;  
     private NotificationManager manager;  
@@ -139,28 +139,35 @@ public class UpdateServise extends Service implements NetWorkModelListener{
 	
 	private void downloadApk(String uri)
 	
-	{ 
-        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);  
-        notif = new Notification();  
-        notif.icon = R.drawable.icon_main;  
-        notif.tickerText = "正在下载...";  
+	{
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        notif = new Notification();
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setContentTitle("机车党")
+                .setSmallIcon(R.drawable.icon_main)
+                .setTicker("正在下载...");
+//        notif.icon = R.drawable.icon_main;
+//        notif.tickerText = "正在下载...";
         //通知栏显示所用到的布局文件  
-        notif.contentView = new RemoteViews(getPackageName(), R.layout.update_notification_progress);  
-        manager.notify(0, notif);    
+//        notif.contentView = new RemoteViews(getPackageName(), R.layout.update_notification_progress);
+        builder.setProgress(100, 0, false);
+        manager.notify(0, builder.build());
 		AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 		asyncHttpClient.get(uri, new AsyncHttpResponseHandler(){
 
 			@Override
 			public void onProgress(int bytesWritten, int totalSize) {
 				// TODO Auto-generated method stub
+                Log.e("bytesWritten",bytesWritten+"");
 				super.onProgress(bytesWritten, totalSize);
 				len = bytesWritten * 100 / totalSize;
 				if(bytesWritten < totalSize && (System.currentTimeMillis() - time)>1000)
 				{
 	                time = System.currentTimeMillis();
-	                notif.contentView.setTextViewText(R.id.content_view_text1, len+"%");  
-	                notif.contentView.setProgressBar(R.id.content_view_progress, 100, len, false);  
-	                manager.notify(0, notif);
+//	                notif.contentView.setTextViewText(R.id.content_view_text1, len+"%");
+//	                notif.contentView.setProgressBar(R.id.content_view_progress, 100, len, false);
+                    builder.setProgress(100,len,false);
+	                manager.notify(0, builder.build());
 				}
 			}
 
@@ -168,9 +175,14 @@ public class UpdateServise extends Service implements NetWorkModelListener{
 			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
 				// TODO Auto-generated method stub
 				super.onSuccess(arg0, arg1, arg2);
-				notif.contentView.setTextViewText(R.id.content_view_text1, 100+"%");  
-              notif.contentView.setProgressBar(R.id.content_view_progress, 100, 100, false); 
-              manager.notify(0, notif);
+//				notif.contentView.setTextViewText(R.id.content_view_text1, 100+"%");
+//              notif.contentView.setProgressBar(R.id.content_view_progress, 100, 100, false);
+                // When the loop is finished, updates the notification
+                builder.setContentText("下载完成")
+                        // Removes the progress bar
+                        .setProgress(0,0,false);
+                manager.notify(0, builder.build());
+//              manager.notify(0, notif);
               File newFolder = new File(Environment.getExternalStorageDirectory(), "moto");
               if (!newFolder.exists()) {
                   newFolder.mkdir();
