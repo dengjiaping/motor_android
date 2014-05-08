@@ -242,7 +242,7 @@ public class SquareActivity extends tabActivity{
 		fid = "37";
 		options = ImageMethod.GetOptions();
 		Originaloptions = ImageMethod.GetOriginalOptions();
-		String title_name = "发现";
+		String title_name = "广场";
 		listview = (NoScrollListview)findViewById(R.id.square_listview);
 		scrollView = (CustomScrollView)findViewById(R.id.discuss_kids_scrollview);
 		

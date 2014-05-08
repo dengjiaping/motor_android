@@ -20,6 +20,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -176,7 +177,8 @@ public class Live_Kids_Own extends Live_Kids_User{
 	{
 		TokenShared = getSharedPreferences("usermessage", 0);
 		tokenString = TokenShared.getString("token", "");
-		if(tokenString.equals(""))
+        Log.e("sdc",tokenString);
+        if(tokenString.equals(""))
 		{
 			ToastClass.SetToast(Live_Kids_Own.this, "需要先登录才能够查看自己直播");
             //			Moto_MainActivity.radioGroup.check(R.id.main_tab_user);

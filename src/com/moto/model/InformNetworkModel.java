@@ -34,5 +34,28 @@ public class InformNetworkModel extends MotoNetWorkModel{
 		this.connectWithPostData(params, "writeprivatemessage");
 	}
 
+    public void readReply() {
+        RequestParams params = new RequestParams();
+        SharedPreferences sharedPreferences = this.context.getSharedPreferences("usermessage", 0);
+        String token = sharedPreferences.getString("token", "");
+        params.put("token", token);
+        this.connectWithPostData(params, "readreply");
+    }
+
+    public void readAt() {
+        RequestParams params = new RequestParams();
+        SharedPreferences sharedPreferences = this.context.getSharedPreferences("usermessage", 0);
+        String token = sharedPreferences.getString("token", "");
+        params.put("token", token);
+        this.connectWithPostData(params, "readat");
+    }
+
+    public void readConversation() {
+        RequestParams params = new RequestParams();
+        SharedPreferences sharedPreferences = this.context.getSharedPreferences("usermessage", 0);
+        String token = sharedPreferences.getString("token", "");
+        params.put("token", token);
+        this.connectWithPostData(params, "readconversation");
+    }
 
 }

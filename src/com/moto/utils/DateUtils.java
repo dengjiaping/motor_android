@@ -79,6 +79,34 @@ public class DateUtils {
 	    }
 		return detailString;
 	}
+
+    /**
+     * 根据传入的时间计算距离该时间是几分钟前，几小时前，还是显示具体时间
+     *
+     *
+     *
+     * @param timestamp UTC时间
+     * @return String 	根据传入的的时间距离当前时间的时长，返回不同的字符串
+     * 针对的是后面有毫秒的
+     */
+    public static String StimestampToDeatil(String timestamp){
+        Date date = DateUtils.timestampToLocalDateWithMillisecond(timestamp);
+        String detailString = new String();
+        long  distance = System.currentTimeMillis() - date.getTime();
+        if(distance > 0 && distance < 60000)
+        {
+            detailString = formatSecondDate(distance);
+        }
+        else if (distance > 60000 && distance < 3600000) {
+            detailString = formatMinuteDate(distance);
+        }else if(distance >= 3600000 && distance < 86400000){
+            detailString = formatDayDate(distance);
+        }
+        else{
+            detailString = formatDeatilDate(date);
+        }
+        return detailString;
+    }
 	
 	
 	public static String formatSecondDate(long distance) {

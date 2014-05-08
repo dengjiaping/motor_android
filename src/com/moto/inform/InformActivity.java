@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import info.hoang8f.android.segmented.*;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +46,7 @@ import android.widget.TextView;
  *
  */
 public class InformActivity extends tabActivity implements OnClickListener {
-    
+
 	private static final int PAGE1 = 0;// 页面1
 	private static final int PAGE2 = 1;// 页面2
 	private static final int PAGE3 = 2;// 页面3
@@ -77,8 +79,9 @@ public class InformActivity extends tabActivity implements OnClickListener {
 	private LinkedList<HashMap<String, String>> privateList = new LinkedList<HashMap<String,String>>();
 	private LinkedList<HashMap<String, String>> touchmeList = new LinkedList<HashMap<String,String>>();
 	private HashMap<String, String> map;
-	
-	public void onCreate(Bundle savedInstanceState) {
+
+
+    public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         //		requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题栏
 		setContentView(R.layout.inform);
@@ -296,7 +299,6 @@ public class InformActivity extends tabActivity implements OnClickListener {
 							JSONObject jsonObject2 = (JSONObject) responsearray.get(i);
 							responseList.add(GetReaponseMap(jsonObject2));
 						}
-						
 						String private_details = jsonObject1
                         .getString("conversation_list");
 						JSONArray privatearray = new JSONArray(private_details);

@@ -8,5 +8,5 @@
         android:contentDescription="@string/desc"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#009DB8" />  
+        android:background="#6BE9F2" />
 </LinearLayout>

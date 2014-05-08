@@ -6,39 +6,42 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="19" />
-
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        android:targetSdkVersion="19" 
+        />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />      
+	<uses-permission android:name="android.permission.USE_CREDENTIALS" /> 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>  
+	<uses-permission android:name="android.permission.WRITE_CONTACTS"/> 
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
+
+
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
-
     <application
-        android:name="com.moto.main.MotorApplication"
-        android:allowBackup="true"
         android:hardwareAccelerated="false"
+        android:allowBackup="true"
+        android:name="com.moto.main.MotorApplication"
         android:icon="@drawable/icon_main"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="4bfbeec2ebb136b59d8e8f59bdfe9a1e" />
@@ -54,7 +57,7 @@
         -->
         <activity
             android:name="com.moto.welcome.Welcome"
-            android:label="@string/app_name"
+            android:label="@string/app_name" 
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
             <intent-filter>
@@ -63,146 +66,178 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
+        
+         <activity 
             android:name="com.moto.main.Moto_MainActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+        
+         <activity 
             android:name="com.moto.user.User_EditUserMassage"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+        
+        <activity 
             android:name="com.moto.hot.HotActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+        
+        <activity 
             android:name="com.moto.inform.InformActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+        
+        <activity 
             android:name="com.moto.live.LiveActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+        
+        <activity 
             android:name="com.moto.user.UserActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+        
+        <activity 
             android:name="com.moto.square.SquareActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        
+        <activity 
             android:name="com.moto.live.WriteLiveActivity"
+            android:theme="@android:style/Theme.NoTitleBar" 
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        
+        <activity 
             android:name="com.moto.live.ContactActivity"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity
+            android:screenOrientation="portrait" 
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        
+        <activity 
             android:name="com.moto.live.Places"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+        
+        <activity 
             android:name="com.moto.square.Publish_post"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+        
+         <activity 
             android:name="com.moto.square.Discuss_kids"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+         
+         <activity 
             android:name="com.moto.square.Discuss_Activity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+         
+         <activity 
             android:name="com.moto.square.Theme_Post"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@android:style/Theme.NoTitleBar" />
+         
+          <activity 
             android:name="com.moto.live.Live_Kids_User"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@android:style/Theme.NoTitleBar" />
+          
+          <activity 
             android:name="com.moto.live.Live_Kids_Map"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+          
+          <activity 
             android:name="com.moto.live.Live_Kids_Own"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@android:style/Theme.NoTitleBar" />
+          
+          <activity 
             android:name="com.moto.inform.Inform_Friends"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+          
+          <activity 
             android:name="com.moto.inform.Chat_privateActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+          
+          <activity 
             android:name="com.moto.user.User_SystemSetting"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+          
+          <activity 
             android:name="com.moto.user.User_browseSetting"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+          
+          <activity 
             android:name="com.moto.user.User_feedbackSetting"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+          
+          <activity 
             android:name="com.moto.result_img.CropImageActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+          
+          <activity 
             android:name="com.moto.user.User_numPost"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+          
+          <activity 
             android:name="com.moto.user.User_friends"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+          
+          <activity 
             android:name="com.moto.user.User_collect"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+          
+          <activity 
             android:name="com.moto.user.User_register"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+        
+          <activity 
             android:name="com.moto.live.LiveKidsResponse"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@android:style/Theme.NoTitleBar" />
+          
+          <activity 
             android:name="com.moto.live.Live_kidsAllResponse"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@android:style/Theme.NoTitleBar" />
+          
+          <activity 
             android:name="com.moto.square.Theme_Post_Kids"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@android:style/Theme.NoTitleBar" />
+          
+          <activity 
             android:name="com.moto.tryimage.ImageFactoryActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
+          
+          <activity
             android:name="com.chute.android.photopickerplus.ui.activity.ServicesActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/PhotoPickerTheme" >
-        </activity>
-        <activity
+        	</activity>
+        	<activity
             android:name="com.chute.android.photopickerplus.ui.activity.AlbumsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/PhotoPickerTheme" >
@@ -217,96 +252,82 @@
             android:screenOrientation="portrait"
             android:theme="@style/PhotoPickerTheme" >
         </activity>
-        <activity
+        
+        <activity 
             android:name="com.moto.photo.ImageBrowserActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity
-            android:name="com.moto.logindialog.LoginDialog"
-            android:configChanges="keyboardHidden|orientation"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.HalfTranslucent"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-        <activity
+        
+        <activity android:name="com.moto.logindialog.LoginDialog"            
+            android:theme="@style/Theme.HalfTranslucent" 
+            android:screenOrientation="portrait" 
+            android:configChanges="keyboardHidden|orientation" 
+            android:launchMode="singleTask" 
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+        
+        <activity 
             android:name="com.moto.select_morephoto.AlbumActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-
+        
         <!-- push service rich media display -->
-        <activity
-            android:name="com.baidu.android.pushservice.richmedia.MediaViewActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="MediaViewActivity" >
-        </activity>
-        <activity
-            android:name="com.baidu.android.pushservice.richmedia.MediaListActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="MediaListActivity"
-            android:launchMode="singleTask" >
-        </activity>
-        <!-- push service client -->
-        <!-- 这个是自己定义的 -->
-        <receiver android:name="com.moto.welcome.MyPushMessageReceiver" >
-            <intent-filter>
-
+     	<activity
+         	android:name="com.baidu.android.pushservice.richmedia.MediaViewActivity"
+         	android:configChanges="orientation|keyboardHidden"
+         	android:label="MediaViewActivity" >
+     	</activity>
+     	<activity
+         	android:name="com.baidu.android.pushservice.richmedia.MediaListActivity"
+         	android:configChanges="orientation|keyboardHidden"
+         	android:label="MediaListActivity"
+         	android:launchMode="singleTask" >
+     	</activity>
+     	<!-- push service client -->
+         <!--这个是自己定义的-->
+         <receiver android:name="com.moto.welcome.MyPushMessageReceiver">
+             <intent-filter>
                 <!-- 接收push消息 -->
-                <action android:name="com.baidu.android.pushservice.action.MESSAGE" />
-                <!-- 接收bind,unbind,fetch,delete等反馈消息 -->
-                <action android:name="com.baidu.android.pushservice.action.RECEIVE" />
-                <action android:name="com.baidu.android.pushservice.action.notification.CLICK" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-        <!-- push service -->
-        <receiver
-            android:name="com.baidu.android.pushservice.PushServiceReceiver"
-            android:process=":bdservice_v1" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="com.baidu.android.pushservice.action.notification.SHOW" />
-                <action android:name="com.baidu.android.pushservice.action.media.CLICK" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name="com.baidu.android.pushservice.RegistrationReceiver"
-            android:process=":bdservice_v1" >
-            <intent-filter>
-                <action android:name="com.baidu.android.pushservice.action.METHOD" />
-                <action android:name="com.baidu.android.pushservice.action.BIND_SYNC" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="com.baidu.android.pushservice.PushService"
-            android:exported="true"
-            android:process=":bdservice_v1" />
-        <service
-            android:name="com.moto.welcome.UpdateServise"
-            android:enabled="true" >
+                 <action android:name="com.baidu.android.pushservice.action.MESSAGE" />
+                 <!-- 接收bind,unbind,fetch,delete等反馈消息 -->
+                 <action android:name="com.baidu.android.pushservice.action.RECEIVE" />
+                 <action android:name="com.baidu.android.pushservice.action.notification.CLICK" />
+             	<category android:name="android.intent.category.DEFAULT"/>
+             </intent-filter>
+         </receiver>
+         <!-- push service -->
+     <receiver android:name="com.baidu.android.pushservice.PushServiceReceiver"
+         android:process=":bdservice_v1">
+         <intent-filter>
+             <action android:name="android.intent.action.BOOT_COMPLETED" />
+             <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+             <action android:name="com.baidu.android.pushservice.action.notification.SHOW" />
+             <action android:name="com.baidu.android.pushservice.action.media.CLICK" />
+             <category android:name="android.intent.category.DEFAULT"/>
+         </intent-filter>
+     </receiver>
+ 
+     <receiver android:name="com.baidu.android.pushservice.RegistrationReceiver"
+        android:process=":bdservice_v1">
+         <intent-filter>
+             <action android:name="com.baidu.android.pushservice.action.METHOD" />
+             <action android:name="com.baidu.android.pushservice.action.BIND_SYNC" />
+             <category android:name="android.intent.category.DEFAULT"/>
+         </intent-filter>
+         <intent-filter>
+             <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+             <category android:name="android.intent.category.DEFAULT"/>
+             <data android:scheme="package" />
+         </intent-filter>                   
+     </receiver>
+ 
+     <service
+         android:name="com.baidu.android.pushservice.PushService"
+         android:exported="true"
+        android:process=":bdservice_v1" />
+     <service 
+             android:name="com.moto.welcome.UpdateServise"
+             android:enabled="true">
         </service>
-
-        <meta-data
-            android:name="api_key"
-            android:value="07Wwhw3vfVWn4SIM0xVi4I4T" />
-
-        <activity
-            android:name="com.moto.user.TermActivity"
-            android:label="@string/title_activity_term" >
-        </activity>
+     <meta-data android:name="api_key" android:value="07Wwhw3vfVWn4SIM0xVi4I4T" />
     </application>
-
 </manifest>

@@ -1,5 +1,6 @@
 package com.moto.main;
 import com.moto.inform.InformActivity;
+import com.moto.inform.Inform_main;
 import com.moto.live.LiveActivity;
 import com.moto.live.Live_Kids_Own;
 import com.moto.square.SquareActivity;
@@ -46,7 +47,7 @@ public class Moto_MainActivity extends TabActivity {
         tabHost.addTab(spec);
 
 
-        intent=new Intent().setClass(this, InformActivity.class);
+        intent=new Intent().setClass(this, Inform_main.class);
         spec=tabHost.newTabSpec("inform").setIndicator("inform").setContent(intent);
         tabHost.addTab(spec);
 

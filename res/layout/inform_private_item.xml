@@ -18,14 +18,29 @@
 	    android:layout_marginBottom="15dp"
 	    android:orientation="vertical"
 	    >
-	    <TextView
-	   	    android:id="@+id/inform_private_username"
-	   	    android:textColor="#f0938c"
-	   	    android:layout_width="wrap_content"
-	   	    android:layout_height="wrap_content"
-	   	    android:textSize="17sp"
-	   	    android:singleLine="true"
-	   	    />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/inform_private_username"
+                android:textColor="#777777"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:singleLine="true"
+                />
+            <TextView
+                android:id="@+id/inform_private_time"
+                android:textColor="#f0938c"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:singleLine="true"
+                />
+        </RelativeLayout>
+
 	    <TextView
 	   	    android:id="@+id/inform_private_details"
 	   	    android:textColor="#000000"
