@@ -282,6 +282,9 @@
          	android:label="MediaListActivity"
          	android:launchMode="singleTask" >
      	</activity>
+        <activity
+             android:name="com.moto.user.TermActivity" >
+        </activity>
      	<!-- push service client -->
          <!--这个是自己定义的-->
          <receiver android:name="com.moto.welcome.MyPushMessageReceiver">
