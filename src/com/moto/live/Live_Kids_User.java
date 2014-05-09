@@ -413,6 +413,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 				intent = new Intent();
 				intent.putExtra("pid", list.get(arg2).get("pid").toString());
 				intent.putExtra("subject", subject);
+                intent.putExtra("dateline",list.get(arg2).get("dateline").toString());
 				int num = carList.get(arg2).size();
 				if(num == 0)
 				{
@@ -421,8 +422,6 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 				else {
 					intent.putExtra("photoname", carList.get(arg2).get(num - 1));
 				}
-				intent.putExtra("message", list.get(arg2).get("message").toString());
-				intent.putExtra("location", list.get(arg2).get("location").toString());
 				intent.setClass(Live_Kids_User.this, LiveKidsResponse.class);
 				startActivityForResult(intent, 304);
 			}

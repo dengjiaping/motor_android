@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -25,6 +26,7 @@ import com.moto.asydata.RequstClient;
 import com.moto.constant.Constant;
 import com.moto.constant.DialogMethod;
 import com.moto.constant.ImageMethod;
+import com.moto.date.DateUtils;
 import com.moto.img.ScaleImageView;
 import com.moto.listview.CustomScrollView;
 import com.moto.listview.NoScrollListview;
@@ -45,6 +47,7 @@ public class LiveKidsResponse extends MyActivity implements OnClickListener{
 	private String photoname;
 	private String message;
 	private String location;
+    private String dateline;
 	private TextView details;
 	private ScaleImageView img;
 	private TextView timeTextView;
@@ -137,11 +140,23 @@ public class LiveKidsResponse extends MyActivity implements OnClickListener{
                         //获取成功
                     case Constant.MSG_SUCCESS:
                         isRefresh = false;
+                        details.setText(message);
+                        if(!location.equals("null"))
+                        {
+                            positionlayout.setVisibility(View.VISIBLE);
+                            position.setText(location);
+                        }
                         adapter.notifyDataSetChanged();
                         break;
                         
                     case Constant.MSG_SUCCESSAGAIN:
                         isRefresh = false;
+                        details.setText(message);
+                        if(!location.equals("null"))
+                        {
+                            positionlayout.setVisibility(View.VISIBLE);
+                            position.setText(location);
+                        }
                         adapter.notifyDataSetChanged();
                         scrollView.onRefreshComplete();
                         scrollView.onLoadComplete();
@@ -163,8 +178,8 @@ public class LiveKidsResponse extends MyActivity implements OnClickListener{
 		subject = intent.getStringExtra("subject");
 		pid = intent.getStringExtra("pid");
 		photoname = intent.getStringExtra("photoname");
-		message = intent.getStringExtra("message");
 		location = intent.getStringExtra("location");
+        dateline = intent.getStringExtra("dateline");
 		Originaloptions = ImageMethod.GetOriginalOptions();
 		
 		positionlayout = (LinearLayout)findViewById(R.id.live_kids_item_time_response_item_comment);
@@ -185,18 +200,13 @@ public class LiveKidsResponse extends MyActivity implements OnClickListener{
 		{
 			String imageUrl = imgPath+photoname;
 			img.setVisibility(View.VISIBLE);
-			MyMapApplication.imageLoader.displayImage(imageUrl+"?imageView2/1/w/200/h/200", img, Originaloptions,null);
+			MyMapApplication.imageLoader.displayImage(imageUrl, img, Originaloptions,null);
 			img.setImageHeight(80);
 			img.setImageWidth(100);
 		}
-		if(!location.equals("null"))
-		{
-			positionlayout.setVisibility(View.VISIBLE);
-			position.setText(location);
-		}
-		timeTextView.setText("09.20 17:00");
+
+		timeTextView.setText(com.moto.utils.DateUtils.timestampToDeatil(dateline));
 		title.setText(subject);
-		details.setText(message);
 	}
 	@Override
 	public void onClick(View v) {
@@ -310,7 +320,8 @@ public class LiveKidsResponse extends MyActivity implements OnClickListener{
 					{
 						list.clear();
 					}
-					JSONObject jsonObject = new JSONObject(data);
+                    Log.e("data",data);
+                    JSONObject jsonObject = new JSONObject(data);
 					if (jsonObject.getString("is").equals("1")) {
 						String data_details = jsonObject
                         .getString("comment_list");
@@ -319,7 +330,9 @@ public class LiveKidsResponse extends MyActivity implements OnClickListener{
 							JSONObject jsonObject2 = (JSONObject) array.get(i);
 							list.add(GetMap(jsonObject2));
 						}
+
 						if (count == 0) {
+                            SetLivePost(jsonObject.getJSONObject("live_post"));
 							if (isRefresh)
 								handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
                                 .sendToTarget();
@@ -377,5 +390,17 @@ public class LiveKidsResponse extends MyActivity implements OnClickListener{
 		return map;
 		
 	}
+
+    private void SetLivePost(JSONObject jsonObject)
+    {
+        try {
+            message = jsonObject.getString("message");
+            location = jsonObject.getString("location");
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
     
 }

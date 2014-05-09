@@ -1,14 +1,18 @@
 package com.moto.user;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.moto.asydata.LoadCacheResponseLoginouthandler;
 import com.moto.asydata.LoadDatahandler;
@@ -27,6 +31,8 @@ public class User_register extends Moto_RootActivity implements OnClickListener{
 	private BootstrapEditText user_email;
 	private BootstrapEditText user_password;
 	private BootstrapButton register_Button;
+    private TextView register_policy;
+    private CheckBox checkBox;
 	private String nameString;
 	private String emailString;
 	private String passwordString;
@@ -46,8 +52,11 @@ public class User_register extends Moto_RootActivity implements OnClickListener{
 		user_name = (BootstrapEditText)findViewById(R.id.user_register_name);
 		user_password = (BootstrapEditText)findViewById(R.id.user_register_password);
 		register_Button = (BootstrapButton)findViewById(R.id.user_register_button);
+        register_policy = (TextView)findViewById(R.id.user_register_policy);
+        checkBox = (CheckBox)findViewById(R.id.user_register_checkbox);
 		register_Button.setOnClickListener(this);
 		regiter_return.setOnClickListener(this);
+        register_policy.setOnClickListener(this);
 	}
 
 	@Override
@@ -57,6 +66,11 @@ public class User_register extends Moto_RootActivity implements OnClickListener{
 		{
 			User_register.this.finish();
 		}
+
+        if(v == register_policy)
+        {
+            pushToNextActivity(TermActivity.class);
+        }
 		if(v == register_Button)
 		{
 			nameString = user_name.getText().toString();
@@ -92,8 +106,12 @@ public class User_register extends Moto_RootActivity implements OnClickListener{
 			}
 			else if(Validation.checkEmail(emailString))
 			{
-				DialogMethod.dialogShow(User_register.this,"请检查邮箱的正确性!");
+				DialogMethod.dialogShow(User_register.this, "请检查邮箱的正确性!");
 			}
+            else if(!checkBox.isChecked())
+            {
+                DialogMethod.dialogShow(User_register.this, "请阅读并同意机车党使用协议");
+            }
 			else {
                 new SignNetWorkModel(User_register.this,User_register.this).signIn(nameString, passwordString, emailString);
 			}

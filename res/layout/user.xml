@@ -1,13 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#ffffff"
     android:orientation="vertical" >
-	<ScrollView 
+
+    <RelativeLayout
+        android:id="@+id/user_head_layout"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="-100dp"
+        android:contentDescription="@null"
+        android:scaleType="fitXY"
+        android:background="@drawable/cuttedbackground_me"
+        >
+        <RelativeLayout
+            android:id="@+id/relativelayout"
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"
+            >
+            <ImageView
+                android:contentDescription="@string/desc"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:background="@drawable/whitebackground"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"
+                />
+            <ImageView
+                android:background="@drawable/male"
+                android:contentDescription="@string/desc"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"
+                />
+            <ImageView
+                android:id="@+id/user_userimg"
+                android:contentDescription="@string/desc"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/user_signature"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/relativelayout"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:textSize="15sp"
+            />
+    </RelativeLayout>
+	<com.moto.user.PullScrollView
 	    android:id="@+id/user_scrollview"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:headerHeight="300dp"
+        app:headerVisibleHeight="100dp"
+        android:fillViewport="true"
 	    android:scrollbars="none"
 	    >
 	    <LinearLayout 
@@ -15,64 +75,15 @@
 	    	android:layout_height="wrap_content"
 	    	android:orientation="vertical"
 	        >
-	        <RelativeLayout 
-	            android:layout_width="fill_parent"
-	            android:layout_height="250dp"
-	            android:background="@drawable/cuttedbackground_me"
-	            >
-	            <RelativeLayout 
-	                android:id="@+id/relativelayout"
-	                android:layout_width="wrap_content"
-	                android:layout_centerInParent="true"
-	            	android:layout_height="wrap_content"
-	                >
-	                <ImageView 
-	        			android:contentDescription="@string/desc"
-	        			android:layout_width="75dp"
-	        			android:layout_height="75dp"
-	        			android:background="@drawable/whitebackground"
-	        			android:layout_gravity="center"
-	        			android:layout_centerInParent="true"
-	        			/> 
-	        		<ImageView 
-	        			android:background="@drawable/male"
-	        			android:contentDescription="@string/desc"
-	        			android:layout_width="70dp"
-	        			android:layout_height="70dp"
-	        			android:layout_gravity="center"
-	        			android:layout_centerInParent="true"
-	        			/> 
-	                <ImageView 
-	        			android:id="@+id/user_userimg"
-	        			android:contentDescription="@string/desc"
-	        			android:layout_width="70dp"
-	        			android:layout_height="70dp"
-	        			android:layout_gravity="center"
-	        			android:layout_centerInParent="true"
-	        			/> 
-	            </RelativeLayout>
-	    	    <TextView 
-	    	        android:id="@+id/user_signature"
-		            android:layout_width="wrap_content"
-		            android:layout_marginTop="5dp"
-		            android:layout_below="@id/relativelayout"
-		            android:layout_marginLeft="10dp"
-		            android:layout_marginRight="10dp"
-		            android:layout_gravity="center_vertical"
-		            android:layout_height="wrap_content"
-					android:textColor="#ffffff"
-					android:gravity="center"
-					android:layout_centerHorizontal="true"
-					android:textSize="15sp"		
-	            	/>
-	        </RelativeLayout>
+
 	   		<LinearLayout 
 	    		android:layout_width="fill_parent"
 	    		android:layout_height="wrap_content"
 	    		android:background="#e0e0e0"
 	    		android:orientation="horizontal"
 	    		>
-	    		<LinearLayout 					android:id="@+id/user_number_post_layout"
+	    		<LinearLayout 
+					android:id="@+id/user_number_post_layout"
 	    		    android:layout_width="0dp"
 	    		    android:layout_weight="1"
 	    		    android:layout_height="wrap_content"
@@ -268,5 +279,5 @@
 		        android:scrollbars="none"
 	    	    />
 	    </LinearLayout>
-	</ScrollView>
+	</com.moto.user.PullScrollView >
 </LinearLayout>

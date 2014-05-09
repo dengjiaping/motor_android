@@ -1,11 +1,16 @@
 package com.moto.inform;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
+import android.widget.AdapterView;
 
 import com.moto.constant.Constant;
 import com.moto.listview.MyListView;
+import com.moto.live.LiveKidsResponse;
+import com.moto.live.Live_kidsAllResponse;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
 import com.moto.model.InformNetworkModel;
@@ -58,6 +63,39 @@ public class InformTouchmeActivity extends Moto_RootActivity {
             }
 
         };
+        touchmeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent();
+                String fid = list.get(position).get("fid");
+                String tid = list.get(position).get("tid");
+                String pid = list.get(position).get("pid");
+                String cid = list.get(position).get("cid");
+                if(fid.equals("1") && !tid.equals("null") && pid.equals("null") && !cid.equals("null"))
+                {
+                    intent = new Intent();
+                    intent.putExtra("tid", tid);
+                    intent.setClass(InformTouchmeActivity.this, Live_kidsAllResponse.class);
+                    startActivityForResult(intent, 304);
+                }
+                else if(fid.equals("1") && !tid.equals("null") && !pid.equals("null") && !cid.equals("null"))
+                {
+                    intent.putExtra("pid", list.get(position).get("pid").toString());
+                    intent.putExtra("subject", list.get(position).get("subject").toString());
+                    intent.putExtra("dateline",list.get(position).get("dateline").toString());
+                    int num = carList.get(position).size();
+                    if(num == 0)
+                    {
+                        intent.putExtra("photoname", "null");
+                    }
+                    else {
+                        intent.putExtra("photoname", carList.get(position).get(num - 1));
+                    }
+                    intent.setClass(InformTouchmeActivity.this, LiveKidsResponse.class);
+                    startActivityForResult(intent, 304);
+                }
+            }
+        });
     }
 
     private void init()

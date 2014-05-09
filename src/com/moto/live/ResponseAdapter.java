@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.moto.constant.ImageMethod;
 import com.moto.main.R;
 import com.moto.mymap.MyMapApplication;
+import com.moto.utils.DateUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 public class ResponseAdapter extends BaseAdapter{
@@ -62,9 +63,9 @@ public class ResponseAdapter extends BaseAdapter{
         holder = (ViewHolder) convertView.getTag();
         
         map = list.get(position);
-        holder.live_kids_item_response_item_username.setText((CharSequence) map.get("author")+": ");
+        holder.live_kids_item_response_item_username.setText(map.get("author")+": ");
         holder.live_kids_item_response_item_details.setText((CharSequence) map.get("message"));
-        holder.live_kids_item_time_response_item_text.setText("09.20 11:30");
+        holder.live_kids_item_time_response_item_text.setText(DateUtils.timestampToDeatil(map.get("dateline").toString()));
         if(!map.get("avatar").toString().equals("null"))
         {
             MyMapApplication.imageLoader.displayImage(imgPath+map.get("avatar")+"?imageView2/1/w/40/h/40",  holder.live_kids_item_response_item_img,options,null);

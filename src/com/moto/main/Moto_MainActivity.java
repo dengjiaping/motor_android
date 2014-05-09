@@ -5,6 +5,8 @@ import com.moto.live.LiveActivity;
 import com.moto.live.Live_Kids_Own;
 import com.moto.square.SquareActivity;
 import com.moto.user.TermActivity;
+import com.moto.user.UserActivity;
+
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,7 +53,7 @@ public class Moto_MainActivity extends TabActivity {
         spec=tabHost.newTabSpec("inform").setIndicator("inform").setContent(intent);
         tabHost.addTab(spec);
 
-        intent=new Intent().setClass(this, TermActivity.class);
+        intent=new Intent().setClass(this, UserActivity.class);
         spec=tabHost.newTabSpec("me").setIndicator("me").setContent(intent);
         tabHost.addTab(spec);
         tabHost.setCurrentTab(0);

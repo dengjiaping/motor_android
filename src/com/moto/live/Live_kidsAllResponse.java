@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -272,7 +273,8 @@ public class Live_kidsAllResponse extends MyActivity{
 					}
 					JSONObject jsonObject = new JSONObject(data);
 					if (jsonObject.getString("is").equals("1")) {
-						String data_details = jsonObject
+                        Log.e("asds",data);
+                        String data_details = jsonObject
                         .getString("comment_list");
 						JSONArray array = new JSONArray(data_details);
 						for (int i = 0; i < array.length(); i++) {

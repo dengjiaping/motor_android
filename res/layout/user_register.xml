@@ -76,5 +76,42 @@
         android:text="@string/register"
         bootstrapbutton:bb_text_gravity="center"
         bootstrapbutton:bb_type="success" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_margin="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/user_register_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:button="@null"
+            android:background="@drawable/checkbox"
+            />
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/register_agree"
+            android:layout_marginLeft="5dp"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/user_register_policy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_policy"
+            android:textSize="16sp"
+            android:clickable="true"
+            android:textColor="#6EBE7F"
+            android:layout_marginLeft="2dp"
+            />
+    </LinearLayout>
+
+
+
+
 	
 </LinearLayout>

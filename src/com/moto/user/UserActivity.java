@@ -44,10 +44,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -88,6 +87,8 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 	private SharedPreferences mshared;
 	private LinearLayout moto_photo;
 	private Editor editor;
+    private PullScrollView pullScrollView;
+    private RelativeLayout user_head_layout;
 	
 	private Intent intent;
 	private RequestParams param;
@@ -239,6 +240,15 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 		friends_layout.setOnClickListener(this);
 		collect_layout.setOnClickListener(this);
 //		user_setting.setOnClickListener(this);
+        user_head_layout = (RelativeLayout)findViewById(R.id.user_head_layout);
+        pullScrollView = (PullScrollView)findViewById(R.id.user_scrollview);
+        pullScrollView.setHeader(user_head_layout);
+        pullScrollView.setOnTurnListener(new PullScrollView.OnTurnListener() {
+            @Override
+            public void onTurn() {
+
+            }
+        });
 	}
 	
 	private void login_init(){
