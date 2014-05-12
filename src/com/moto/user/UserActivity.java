@@ -1,12 +1,28 @@
 package com.moto.user;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import com.loopj.android.http.RequestParams;
 import com.moto.asydata.LoadCacheResponseLoginouthandler;
 import com.moto.asydata.LoadDatahandler;
@@ -28,27 +44,15 @@ import com.moto.utils.StringUtils;
 import com.moto.utils.UrlUtils;
 import com.moto.validation.Validation;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.graphics.Color;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class UserActivity extends Moto_RootActivity implements OnClickListener{
 	private MyGridView listView;
@@ -89,7 +93,9 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 	private Editor editor;
     private PullScrollView pullScrollView;
     private RelativeLayout user_head_layout;
-	
+
+    private Bitmap[] bitmap = new Bitmap[10];
+
 	private Intent intent;
 	private RequestParams param;
 	protected String imgPath = "http://motor.qiniudn.com/";
@@ -165,6 +171,7 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 		login_init();
 	}
 	private void user(){
+
 //		setContentView(R.layout.user);
 		token = mshared.getString("token", "");
 //		user_name.setText(mshared.getString("username", ""));
@@ -191,6 +198,10 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 				pushToNextActivity(extras, Live_Kids_User.class, 304);
 			}
 		});
+
+
+
+
 	}
 	
 	@Override
@@ -249,6 +260,8 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 
             }
         });
+
+        pullScrollView.setOriginbitmap(this, BitmapFactory.decodeResource(getResources(), R.drawable.cuttedbackground_me));
 	}
 	
 	private void login_init(){

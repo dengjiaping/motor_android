@@ -46,7 +46,7 @@ public class User_SystemSetting extends MyActivity implements OnClickListener,Ne
 //	private RelativeLayout browse_setting;
 	private RelativeLayout feedback_setting;
 	private RelativeLayout checkVersion;
-	private Button user_exit;
+	private BootstrapButton user_exit;
 	private SharedPreferences mshared;
 	private Editor editor;
 	private RelativeLayout clear;
@@ -70,7 +70,7 @@ public class User_SystemSetting extends MyActivity implements OnClickListener,Ne
 		setting_return = (ImageView)findViewById(R.id.user_system_setting_return);
 //		browse_setting = (RelativeLayout)findViewById(R.id.user_browse_setting);
 		feedback_setting = (RelativeLayout)findViewById(R.id.user_feedback_setting);
-		user_exit = (Button)findViewById(R.id.user_setting_exit);
+		user_exit = (BootstrapButton )findViewById(R.id.user_setting_exit);
 		clear = (RelativeLayout)findViewById(R.id.user_system_setting_clear);
 		user_edit_ownmassage = (RelativeLayout)findViewById(R.id.user_own_setting_message);
 		feedback_setting.setOnClickListener(this);

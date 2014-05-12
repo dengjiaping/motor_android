@@ -2,13 +2,22 @@ package com.moto.user;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ScrollView;
+
 import com.moto.main.R;
+import com.moto.utils.Blur;
+
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * 自定义ScrollView
@@ -59,6 +68,11 @@ public class PullScrollView extends ScrollView {
     /** 状态变化时的监听器. */
     private OnTurnListener mOnTurnListener;
 
+
+    private Bitmap originbitmap;
+
+    private ArrayList<Bitmap> blurbitmaps = new ArrayList<Bitmap>();
+
     private enum State {
         /**顶部*/
         UP,
@@ -86,8 +100,16 @@ public class PullScrollView extends ScrollView {
         init(context, attrs);
     }
 
+
+
     private void init(Context context, AttributeSet attrs) {
         // set scroll mode
+
+        originbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cuttedbackground_me);
+        for(int i = 0; i < 5; i++)
+        {
+            blurbitmaps.add(originbitmap);
+        }
         setOverScrollMode(OVER_SCROLL_NEVER);
 
         if (null != attrs) {
@@ -99,6 +121,39 @@ public class PullScrollView extends ScrollView {
                         .PullScrollView_headerVisibleHeight, -1);
                 ta.recycle();
             }
+        }
+    }
+
+    public void setOriginbitmap(Context context,Bitmap originbitmap) {
+        this.originbitmap = originbitmap;
+        blurbitmaps.add(4,originbitmap);
+        try {
+            blurbitmaps = new BitmapBlurTask().execute(blurbitmaps, context).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        mHeader.setBackground(new BitmapDrawable(blurbitmaps.get((0))));
+    }
+
+    public class BitmapBlurTask extends AsyncTask<Object, String, ArrayList<Bitmap>>{
+
+        @Override
+        protected ArrayList<Bitmap> doInBackground(Object... params) {
+            ArrayList<Bitmap> bitmaps = (ArrayList<Bitmap>)params[0];
+//            int radius = (int)(Math.sqrt(Math.pow(bitmaps.get(9).getWidth(),2)+Math.pow(bitmaps.get(9).getHeight(),2))) / 2;
+            Context context = (Context)params[1];
+            for( int i = 3,j = 2; i >= 0; i--,j+=4)
+            {
+                bitmaps.set(i,Blur.apply(context,bitmaps.get(i),j));
+            }
+            return bitmaps;
+        }
+
+        protected void onPostExecute(ArrayList<Bitmap> result) {
+            // TODO Auto-generated method stub
+
         }
     }
 
@@ -178,7 +233,7 @@ public class PullScrollView extends ScrollView {
                 if (getScrollY() == 0) {
                     mState = State.NORMAL;
                 }
-
+                mHeader.setBackground(new BitmapDrawable(blurbitmaps.get(0)));
                 isMoving = false;
                 mEnableTouch = false;
                 break;
@@ -197,7 +252,6 @@ public class PullScrollView extends ScrollView {
         // 当滚动到顶部时，将状态设置为正常，避免先向上拖动再向下拖动到顶端后首次触摸不响应的问题
         if (getScrollY() == 0) {
             mState = State.NORMAL;
-
             // 滑动经过顶部初始位置时，修正Touch down的坐标为当前Touch点的坐标
             if (isTop) {
                 isTop = false;
@@ -217,7 +271,7 @@ public class PullScrollView extends ScrollView {
         if (mState == State.UP) {
             deltaY = deltaY < 0 ? deltaY : 0;
 
-            isMoving = false;
+            isMoving = true;
             mEnableTouch = false;
 
         } else if (mState == State.DOWN) {
@@ -248,7 +302,7 @@ public class PullScrollView extends ScrollView {
             int headerBottom = mCurrentBottom - mHeaderVisibleHeight;
             int top = (int) (mContentRect.top + contentMoveHeight);
             int bottom = (int) (mContentRect.bottom + contentMoveHeight);
-
+            int everyheight = getMaxScrollAmount() / 5;
             if (top <= headerBottom) {
                 // 移动content view
                 mContentView.layout(mContentRect.left, top, mContentRect.right, bottom);
@@ -256,6 +310,8 @@ public class PullScrollView extends ScrollView {
                 // 移动header view
                 mHeader.layout(mHeader.getLeft(), mCurrentTop, mHeader.getRight(), mCurrentBottom);
             }
+
+            mHeader.setBackground(new BitmapDrawable(blurbitmaps.get((int)(contentMoveHeight / everyheight))));
         }
     }
 
