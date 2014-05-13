@@ -1,27 +1,5 @@
 package com.moto.live;
 
-import java.io.File;
-import java.util.ArrayList;
-import org.json.JSONException;
-import org.json.JSONObject;
-import com.loopj.android.http.RequestParams;
-import com.moto.asydata.LoadCacheResponseLoginouthandler;
-import com.moto.asydata.LoadDatahandler;
-import com.moto.asydata.RequstClient;
-import com.moto.constant.Constant;
-import com.moto.constant.DialogMethod;
-import com.moto.main.R;
-import com.moto.model.LiveNetworkModel;
-import com.moto.model.NetWorkModelListener;
-import com.moto.myactivity.MyActivity;
-import com.moto.mydialog.errorDialog;
-import com.moto.qiniu.img.Image;
-import com.moto.select_morephoto.AlbumActivity;
-import com.moto.select_morephoto.GridImageAdapter;
-import com.moto.toast.ToastClass;
-import com.moto.utils.StringUtils;
-
-import darko.imagedownloader.ImageLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,7 +11,6 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -44,7 +21,33 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class WriteLiveActivity extends MyActivity implements OnClickListener,NetWorkModelListener{
+import com.loopj.android.http.RequestParams;
+import com.moto.asydata.LoadCacheResponseLoginouthandler;
+import com.moto.asydata.LoadDatahandler;
+import com.moto.asydata.RequstClient;
+import com.moto.constant.Constant;
+import com.moto.constant.DialogMethod;
+import com.moto.main.Moto_RootActivity;
+import com.moto.main.R;
+import com.moto.model.LiveNetworkModel;
+import com.moto.mydialog.errorDialog;
+import com.moto.qiniu.img.Image;
+import com.moto.select_morephoto.AlbumActivity;
+import com.moto.select_morephoto.GridImageAdapter;
+import com.moto.toast.ToastClass;
+import com.moto.utils.CompressUtils;
+import com.moto.utils.StringUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+import darko.imagedownloader.ImageLoader;
+
+public class WriteLiveActivity extends Moto_RootActivity implements OnClickListener{
 	private ImageView mention;
 	private ImageView camera;
 	private ImageView photos;
@@ -67,14 +70,16 @@ public class WriteLiveActivity extends MyActivity implements OnClickListener,Net
 	private TextView live_user_name;
 	private RelativeLayout.LayoutParams layoutParams;
 	private boolean isHavePhoto = false;
-	Image[] files = new Image[1];
 	private Handler handler;
 	private String lat = "";
 	private String lon = "";
 	private String locationsign = "";
 	private String filepath;
+    private Intent intent;
+    private RequestParams param;
 	
 	private ArrayList<String> dataList = new ArrayList<String>();
+    private LinkedList<String> compressList = new LinkedList<String>();
 	private GridImageAdapter gridImageAdapter;
 	
 	public ImageLoader loader;
@@ -150,6 +155,7 @@ public class WriteLiveActivity extends MyActivity implements OnClickListener,Net
                         //获取成功
                     case Constant.MSG_WAITSUCCESS:
                         ToastClass.SetImageToast(WriteLiveActivity.this,"成功发送直播");
+                        CompressUtils.deleteLinkFile(compressList);
                         setResult(303);
                         WriteLiveActivity.this.finish();
                         break;
@@ -161,6 +167,16 @@ public class WriteLiveActivity extends MyActivity implements OnClickListener,Net
                     case Constant.MSG_FALTH:
                         String messageString = (String) msg.obj;
                         ToastClass.SetToast(WriteLiveActivity.this, messageString);
+                        DialogMethod.stopProgressDialog();
+                        CompressUtils.deleteLinkFile(compressList);
+                        break;
+                    case Constant.MSG_START:
+                        DialogMethod.startProgressDialog(WriteLiveActivity.this,"正在发送");
+                        break;
+                    case Constant.MSG_NULL:
+                        DialogMethod.stopProgressDialog();
+                        CompressUtils.deleteLinkFile(compressList);
+                        ToastClass.SetToast(WriteLiveActivity.this,"获取失败");
                         break;
 				}
 				super.handleMessage(msg);
@@ -278,38 +294,8 @@ public class WriteLiveActivity extends MyActivity implements OnClickListener,Net
 				DialogMethod.dialogShow(WriteLiveActivity.this,"请编辑内容!");
 			}
 			else {
+                DialogMethod.startProgressDialog(WriteLiveActivity.this,"正在发送");
 				GetAsyData();
-				new AsyncTask<Integer, String, Integer>(){
-                    
-					@Override
-					protected Integer doInBackground(Integer... params) {
-						// TODO Auto-generated method stub
-                        
-                        try {
-                            Thread.sleep(40 * 1000);
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-						return null;
-					}
-					@Override
-					protected void onCancelled() {
-						DialogMethod.stopProgressDialog();
-						super.onCancelled();
-					}
-					@Override
-					protected void onPreExecute() {
-						DialogMethod.startProgressDialog(WriteLiveActivity.this,"正在发送");
-					}
-                    
-					@Override
-					protected void onPostExecute(Integer result) {
-						DialogMethod.stopProgressDialog();
-                        //						DialogMethod.dialogShow(User_EditUserMassage.this, "修改失败!");
-					}
-					
-				}.execute();
 			}
 		}
 		if(v == end_live)
@@ -436,9 +422,12 @@ public class WriteLiveActivity extends MyActivity implements OnClickListener,Net
 		ArrayList<String> tdataList = StringUtils.getIntentArrayList(dataList);
 		int num1 = tdataList.size();
 		try {
+            compressList.clear();
 			for (int i = 0; i < num1; i++) {
-				lovecarImage.add(new Image(tdataList.get(i),
+                String compressPath = CompressUtils.GetCompressPath(tdataList.get(i), 480);
+				lovecarImage.add(new Image(compressPath,
                                            "file"));
+                compressList.add(compressPath);
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -519,18 +508,9 @@ public class WriteLiveActivity extends MyActivity implements OnClickListener,Net
 	public void handleNetworkDataWithFail(JSONObject jsonObject)
     throws JSONException {
 		// TODO Auto-generated method stub
-		
+        handler.obtainMessage(Constant.MSG_NULL)
+                .sendToTarget();
 	}
-    
-	@Override
-	public void handleNetworkDataWithUpdate(float progress)
-    throws JSONException {
-		// TODO Auto-generated method stub
-		
-	}
-    
-    
-    
 	@Override
 	public void handleNetworkDataGetFail(String message) throws JSONException {
 		// TODO Auto-generated method stub
@@ -541,13 +521,5 @@ public class WriteLiveActivity extends MyActivity implements OnClickListener,Net
 		// 发送这个消息到消息队列中
 		handler.sendMessage(msg);
 		DialogMethod.stopProgressDialog();
-	}
-    
-    
-    
-	@Override
-	public void handleNetworkDataStart() throws JSONException {
-		// TODO Auto-generated method stub
-		
 	}
 }

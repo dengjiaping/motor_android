@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -146,7 +147,24 @@ public class Moto_RootActivity extends Activity implements NetWorkModelListener{
         intent.setClass(this, cls);
         startActivity(intent);
     }
-	
+
+    /**
+     * 关闭输入法
+     */
+    protected void manageInput(Activity activity)
+    {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(imm.isActive())
+        {
+            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+
+
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),
+
+
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
 
     /**
      * 

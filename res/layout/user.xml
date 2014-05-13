@@ -71,8 +71,8 @@
 	    android:scrollbars="none"
 	    >
 	    <LinearLayout 
-	        android:layout_width="fill_parent"
-	    	android:layout_height="wrap_content"
+	        android:layout_width="match_parent"
+	    	android:layout_height="match_parent"
 	    	android:orientation="vertical"
 	        >
 
@@ -202,49 +202,56 @@
 		            android:paddingRight="8dip" >
         		</LinearLayout>
     		</HorizontalScrollView>
-			<LinearLayout 
-	    	    android:layout_width="wrap_content"
-	    	    android:layout_height="wrap_content"
-	    	    android:orientation="horizontal"       
-	    	    >
-	    	    <TextView 
-				  	android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-					android:textColor="#F0938D"
-					android:textSize="20sp"
-					android:text="@string/xinghao"		
-			        />
-	    	    <TextView 
-	    	        android:id="@+id/user_mototype"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-					android:textColor="#777777"
-					android:layout_marginLeft="4dp"
-					android:textSize="20sp"		
-			        />
-	    	</LinearLayout>
-	    	<LinearLayout 
-	    	    android:layout_width="wrap_content"
-	    	    android:layout_marginTop="15dp"
-	    	    android:layout_height="wrap_content"
-	    	    android:orientation="horizontal"
-	    	    >
-	    	    <TextView 
-				  	android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-					android:textColor="#F0938D"
-					android:textSize="20sp"
-					android:text="@string/pailiang"		
-			        />
-	    	    <TextView
-	    	        android:id="@+id/user_outputvolume" 
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-					android:textColor="#777777"
-					android:layout_marginLeft="4dp"
-					android:textSize="20sp"		
-			        />
-	    	</LinearLayout>
+			<LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:background="#ffffff"
+                >
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#F0938D"
+                        android:textSize="20sp"
+                        android:text="@string/xinghao"
+                        />
+                    <TextView
+                        android:id="@+id/user_mototype"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#777777"
+                        android:layout_marginLeft="4dp"
+                        android:textSize="20sp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#F0938D"
+                        android:textSize="20sp"
+                        android:text="@string/pailiang"
+                        />
+                    <TextView
+                        android:id="@+id/user_outputvolume"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#777777"
+                        android:layout_marginLeft="4dp"
+                        android:textSize="20sp"
+                        />
+                </LinearLayout>
+
 	    	<TextView 
 		     	android:layout_width="fill_parent"
 		       	android:layout_height="wrap_content"
@@ -279,6 +286,7 @@
     			android:layout_marginBottom="10dp"
 		        android:scrollbars="none"
 	    	    />
+            </LinearLayout>
 	    </LinearLayout>
 	</com.moto.user.PullScrollView >
 </RelativeLayout>

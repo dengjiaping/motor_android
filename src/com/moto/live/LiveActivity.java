@@ -1,38 +1,4 @@
 package com.moto.live;
-import java.util.HashMap;
-import java.util.LinkedList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import com.loopj.android.http.RequestParams;
-import com.moto.asydata.LoadCacheResponseLoginouthandler;
-import com.moto.asydata.LoadDatahandler;
-import com.moto.asydata.RequstClient;
-import com.moto.constant.Constant;
-import com.moto.constant.DialogMethod;
-import com.moto.constant.ImageMethod;
-import com.moto.date.DateUtils;
-import com.moto.img.ScaleImageView;
-import com.moto.listview.CustomScrollView;
-import com.moto.listview.NoScrollListview;
-import com.moto.listview.CustomScrollView.OnLoadListener;
-import com.moto.listview.CustomScrollView.OnRefreshListener;
-import com.moto.listview.ProgressBarView;
-import com.moto.main.Moto_MainActivity;
-import com.moto.main.Moto_RootActivity;
-import com.moto.main.R;
-import com.moto.model.CacheModel;
-import com.moto.model.LiveNetworkModel;
-import com.moto.mymap.MyMapApplication;
-import com.moto.toast.ToastClass;
-import com.moto.utils.StringUtils;
-import com.moto.utils.UrlUtils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -42,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -56,6 +21,41 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.loopj.android.http.RequestParams;
+import com.moto.asydata.LoadCacheResponseLoginouthandler;
+import com.moto.asydata.LoadDatahandler;
+import com.moto.asydata.RequstClient;
+import com.moto.constant.Constant;
+import com.moto.constant.DialogMethod;
+import com.moto.constant.ImageMethod;
+import com.moto.img.ScaleImageView;
+import com.moto.listview.CustomScrollView;
+import com.moto.listview.CustomScrollView.OnLoadListener;
+import com.moto.listview.CustomScrollView.OnRefreshListener;
+import com.moto.listview.NoScrollListview;
+import com.moto.listview.ProgressBarView;
+import com.moto.main.Moto_MainActivity;
+import com.moto.main.Moto_RootActivity;
+import com.moto.main.R;
+import com.moto.model.CacheModel;
+import com.moto.model.LiveNetworkModel;
+import com.moto.mymap.MyMapApplication;
+import com.moto.toast.ToastClass;
+import com.moto.utils.DateUtils;
+import com.moto.utils.StringUtils;
+import com.moto.utils.UrlUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class LiveActivity extends Moto_RootActivity{
 	
@@ -209,7 +209,7 @@ public class LiveActivity extends Moto_RootActivity{
 		// TODO Auto-generated method stub
 		RequestParams param;
 		param = new RequestParams();
-		param.put("page", ""+count);
+		param.put("timestamp", DateUtils.getUTCCurrentTimestamp());
 		RequstClient.post(uriString, param, new LoadCacheResponseLoginouthandler(
                                                                                  LiveActivity.this,
                                                                                  new LoadDatahandler(){
