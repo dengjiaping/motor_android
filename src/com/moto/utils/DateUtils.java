@@ -35,6 +35,48 @@ public class DateUtils {
         return date;
     }
 
+
+    /**
+     * 获取指定时间的UTC时间,指定时间不包含毫秒
+     *
+     *
+     *
+     * @param timestamp 传入服务器返回的时间
+     * @return String 	返回UTC时间
+     */
+    public static String getUTCTimestamp(String timestamp)
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date date = timestampToLocalDate(timestamp);
+        String ts = sdf.format(date);
+        return ts;
+    }
+
+    /**
+     * 获取指定时间的UTC时间,指定时间包含毫秒
+     *
+     *
+     *
+     * @param timestamp 传入服务器返回的时间
+     * @return String 	返回UTC时间
+     */
+    public static String getUTCTimestampWithMillisecond(String timestamp)
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date date = timestampToLocalDateWithMillisecond(timestamp);
+        String ts = sdf.format(date);
+        return ts;
+    }
+
+    /**
+     * 获取当前的UTC时间
+     *
+     *
+     *
+     * @return String 	返回当前UTC时间
+     */
     public static String getUTCCurrentTimestamp()
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
