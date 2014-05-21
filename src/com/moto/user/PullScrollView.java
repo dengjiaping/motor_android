@@ -311,7 +311,14 @@ public class PullScrollView extends ScrollView {
                 mHeader.layout(mHeader.getLeft(), mCurrentTop, mHeader.getRight(), mCurrentBottom);
             }
 
-            mHeader.setBackground(new BitmapDrawable(blurbitmaps.get((int)(contentMoveHeight / everyheight))));
+            if(contentMoveHeight >= 0)
+            {
+                mHeader.setBackground(new BitmapDrawable(blurbitmaps.get((int)(contentMoveHeight / everyheight))));
+            }
+            else
+            {
+                mHeader.setBackground(new BitmapDrawable(blurbitmaps.get(0)));
+            }
         }
     }
 

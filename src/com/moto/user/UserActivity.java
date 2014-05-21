@@ -700,7 +700,6 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 		editor.commit();
 		handler.obtainMessage(Constant.MSG_SUCCESS)
 		.sendToTarget();
-		DialogMethod.stopProgressDialog();
 	}
 	@Override
 	public void handleNetworkDataWithFail(JSONObject jsonObject) throws JSONException{
