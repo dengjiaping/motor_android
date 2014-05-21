@@ -1,14 +1,12 @@
 package com.moto.main;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,20 +19,25 @@ import android.widget.TextView;
 
 import com.moto.model.NetWorkModelListener;
 
-public class Moto_RootActivity extends Activity implements NetWorkModelListener{
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class Moto_RootActivity extends FragmentActivity implements NetWorkModelListener{
 
 	public LinearLayout navigationBar;
 	private LinearLayout leftLinearLayout;
 	private LinearLayout rightLinearLayout;
 	private TextView navigationBarTitleTextView;
-	private ImageView leftBarButton;
-	private ImageView rightBarButton;
+	public ImageView leftBarButton;
+    public ImageView rightBarButton;
+    public TextView rightBarTextView;
 	
 	public enum barButtonIconType {
 	       barButtonIconType_None, 
 	       barButtonIconType_Back, 
 	       barButtonIconType_refresh,
-	       barButtonIconType_setting
+	       barButtonIconType_setting,
+           barRightTextViewType
 	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +58,9 @@ public class Moto_RootActivity extends Activity implements NetWorkModelListener{
 	protected void addContentView(int resource) {
 		LayoutInflater  inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		LayoutParams layoutParams  = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		View MenuLyaout = inflater.inflate(resource, null);
-		addContentView(MenuLyaout, layoutParams);
-		this.navigationBar.bringToFront();
+        View MenuLyaout = inflater.inflate(resource, null);
+        addContentView(MenuLyaout, layoutParams);
+        this.navigationBar.bringToFront();
 	}
 	
 	/**
@@ -121,6 +124,23 @@ public class Moto_RootActivity extends Activity implements NetWorkModelListener{
 		handleIconType(leftBarButton, leftType);
 		handleIconType(rightBarButton, rightType);
 	}
+
+    /**
+     * 从res的layout中加载一个界面附在当前视图表面上,并给导航栏赋值
+     *
+     *
+     * @param resource 	R.layout.id
+     * @param navigationBarTitle 	导航栏标题
+     * @param leftType 	导航栏左按钮样式
+     * @param rightType 导航栏右按钮样式
+     * @param rightText 导航栏右文本样式
+     */
+    public void addContentView(int resource, int navigationBarTitle,int rightText, barButtonIconType leftType, barButtonIconType rightType) {
+        addContentView(resource);
+        setNavigationBarTitle(navigationBarTitle);
+        handleIconType(leftBarButton,rightText,rightBarTextView, leftType);
+        handleIconType(rightBarButton, rightText,rightBarTextView,rightType);
+    }
     /**
      * 
      * 进入下一个Activity
@@ -261,10 +281,12 @@ public class Moto_RootActivity extends Activity implements NetWorkModelListener{
 		}
 		break;
 		case barButtonIconType_refresh:{
+            button.setVisibility(View.VISIBLE);
 			button.setImageResource(R.drawable.f5_broadcast);
 		}
 		break;
 		case barButtonIconType_setting:{
+            button.setVisibility(View.VISIBLE);
 			button.setImageResource(R.drawable.set);
 		}
 		break;
@@ -273,6 +295,30 @@ public class Moto_RootActivity extends Activity implements NetWorkModelListener{
 		}
 		
 	}
+
+    private void handleIconType(ImageView button,int text,TextView textview, barButtonIconType type) {
+        switch (type) {
+            case barButtonIconType_None:{
+            }
+            break;
+            case barButtonIconType_Back:{
+                button.setImageResource(R.drawable.return_up);
+                leftLinearLayout.setOnClickListener(new OnClickListener() {
+                    public void onClick(View v) {
+                        leftBarButtonItemEvent();
+                    }
+                });
+            }
+            break;
+            case barRightTextViewType:{
+                textview.setVisibility(View.VISIBLE);
+                textview.setText(text);
+            }
+            default:
+                break;
+        }
+
+    }
 
 	private void initNavigationBar() {
 		navigationBar = (LinearLayout)findViewById(R.id.navigationBar);
@@ -290,6 +336,7 @@ public class Moto_RootActivity extends Activity implements NetWorkModelListener{
 		
 		leftBarButton = (ImageView)findViewById(R.id.left_bar_button);
 		rightBarButton = (ImageView)findViewById(R.id.right_bar_button);
+        rightBarTextView = (TextView)findViewById(R.id.right_bar_text);
 	}
 	
 

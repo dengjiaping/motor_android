@@ -115,6 +115,7 @@
 		        android:layout_marginLeft="10dp"
 		        android:layout_marginTop="10dp"
 		        android:textSize="22sp"
+                android:visibility="gone"
 		        android:text="@string/push_new_massage"
 		        />
 	        <RelativeLayout 
@@ -122,6 +123,7 @@
 			    android:layout_height="55dp"
 			    android:clickable="true"
 			    android:layout_marginLeft="10dp"
+                android:visibility="gone"
 			    android:layout_marginRight="10dp"
 			    android:background="@drawable/user_item_press"
 			    >
@@ -146,7 +148,8 @@
 			        android:text="每日21:00-次日7:00"
 			        />
 			</RelativeLayout>
-			<TextView     
+			<TextView
+
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textColor="#747675"
@@ -156,6 +159,7 @@
 		        />
 			<RelativeLayout 
 			    android:layout_width="fill_parent"
+
 			    android:layout_height="55dp"
 			    android:clickable="true"
 			    android:layout_marginLeft="10dp"
@@ -331,6 +335,7 @@
 			    android:layout_height="wrap_content"
 			    android:clickable="true"
 			    android:layout_marginLeft="10dp"
+                android:visibility="gone"
 			    android:layout_marginRight="10dp"
 			    android:layout_marginBottom="10dp"
 			    android:background="@drawable/user_itembottom_press"

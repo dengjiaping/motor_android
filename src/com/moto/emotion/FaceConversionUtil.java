@@ -1,13 +1,5 @@
 package com.moto.emotion;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.moto.main.R;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,12 +8,20 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
 
+import com.moto.main.R;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * 
  ****************************************** 
- * @author 廖乃波
+ * @author chenhong
  * @文件名称 : FaceConversionUtil.java
- * @创建时间 : 2013-1-27 下午02:34:09
+ * @创建时间 : 2014-1-27 下午02:34:09
  * @文件描述 : 表情轉換工具
  ****************************************** 
  */

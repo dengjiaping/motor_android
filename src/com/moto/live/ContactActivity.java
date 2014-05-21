@@ -56,7 +56,6 @@ public class ContactActivity extends MyActivity implements OnClickListener{
 		characterParser = CharacterParser.getInstance();
 		
 		pinyinComparator = new PinyinComparator();
-		
 		sideBar = (SideBar) findViewById(R.id.sidrbar);
 		dialog = (TextView) findViewById(R.id.dialog);
 		return_contact = (ImageView)findViewById(R.id.return_contact);

@@ -44,6 +44,7 @@ import com.moto.mymap.MyMapApplication;
 import com.moto.toast.ToastClass;
 import com.moto.utils.DateUtils;
 import com.moto.utils.StringUtils;
+import com.moto.utils.SystemSoundPlayer;
 import com.moto.utils.UrlUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -72,6 +73,7 @@ public class LiveActivity extends Moto_RootActivity{
 	private int count = 0;
 	private boolean isrefresh = false;
 	private boolean isfirst = true;
+    private boolean isload = false;
 	private String uriString = "http://damp-reef-9073.herokuapp.com/api/live/readbireflive";
     //	private ProgressBar progressBar_loading;
     //	private ImageView refresh;
@@ -104,6 +106,7 @@ public class LiveActivity extends Moto_RootActivity{
                         //获取成功
                     case Constant.MSG_SUCCESS:
                         isrefresh = false;
+                        isload = false;
                         //					progressBar_loading.setVisibility(View.GONE);
                         adapter.notifyDataSetChanged();
                         DialogMethod.stopProgressDialog();
@@ -111,23 +114,30 @@ public class LiveActivity extends Moto_RootActivity{
                         
                     case Constant.MSG_SUCCESSAGAIN:
                         isrefresh = false;
+                        isload = false;
                         //					progressBar_loading.setVisibility(View.GONE);
                         adapter.notifyDataSetChanged();
                         scrollView.onRefreshComplete();
                         scrollView.onLoadComplete();
+                        SystemSoundPlayer.getInstance(LiveActivity.this).playSendSound();
                         break;
                     case Constant.MSG_NULL:
                         isrefresh = false;
+                        isload = false;
                         //					progressBar_loading.setVisibility(View.GONE);
                         scrollView.onRefreshComplete();
                         scrollView.onLoadComplete();
                         break;
                     case Constant.MSG_FALTH:
+                        isrefresh = false;
+                        isload = false;
                         String str = (String) msg.obj;
                         ToastClass.SetToast(LiveActivity.this, str);
                         DialogMethod.stopProgressDialog();
                         break;
                     case Constant.MSG_TESTSTART:
+                        isrefresh = false;
+                        isload = false;
                         DialogMethod.startProgressDialog(LiveActivity.this,"点赞中...");
                         break;
  				}
@@ -146,7 +156,6 @@ public class LiveActivity extends Moto_RootActivity{
 							e.printStackTrace();
 						}
 						isrefresh = true;
-						count = 0;
 						GetAsyData();
 						return null;
 					}
@@ -168,7 +177,9 @@ public class LiveActivity extends Moto_RootActivity{
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
+                        isload = true;
 						GetAsyData();
+
 						return null;
 					}
                     
@@ -209,7 +220,24 @@ public class LiveActivity extends Moto_RootActivity{
 		// TODO Auto-generated method stub
 		RequestParams param;
 		param = new RequestParams();
-		param.put("timestamp", DateUtils.getUTCCurrentTimestamp());
+        if(isload)
+        {
+            if(live_list.size() == 0)
+            {
+                param.put("timestamp", DateUtils.getUTCCurrentTimestamp());
+            }
+            else
+            {
+                String time = live_list.get(like_list.size()-1).get("dateline").toString();
+                param.put("timestamp", DateUtils.getUTCTimestamp(time));
+            }
+
+        }
+        else
+        {
+            param.put("timestamp", DateUtils.getUTCCurrentTimestamp());
+        }
+
 		RequstClient.post(uriString, param, new LoadCacheResponseLoginouthandler(
                                                                                  LiveActivity.this,
                                                                                  new LoadDatahandler(){
@@ -257,7 +285,7 @@ public class LiveActivity extends Moto_RootActivity{
 							JSONObject jsonObject = num_Array.getJSONObject(i);
 							like_list.add(jsonObject.getString("like_count"));
 						}
-						if (count == 0) {
+						if (!isload) {
 							if (isrefresh)
 								handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
                                 .sendToTarget();
@@ -268,7 +296,6 @@ public class LiveActivity extends Moto_RootActivity{
 							handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
                             .sendToTarget();
 						}
-						count++;
                         
 					} else {
 						handler.obtainMessage(Constant.MSG_NULL).sendToTarget();

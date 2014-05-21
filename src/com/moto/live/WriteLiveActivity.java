@@ -14,7 +14,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,8 +34,13 @@ import com.moto.qiniu.img.Image;
 import com.moto.select_morephoto.AlbumActivity;
 import com.moto.select_morephoto.GridImageAdapter;
 import com.moto.toast.ToastClass;
+import com.moto.tryimage.PhotoUtils;
 import com.moto.utils.CompressUtils;
 import com.moto.utils.StringUtils;
+import com.rockerhieu.emojicon.EmojiconEditText;
+import com.rockerhieu.emojicon.EmojiconGridFragment;
+import com.rockerhieu.emojicon.EmojiconsFragment;
+import com.rockerhieu.emojicon.emoji.Emojicon;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,11 +51,18 @@ import java.util.LinkedList;
 
 import darko.imagedownloader.ImageLoader;
 
-public class WriteLiveActivity extends Moto_RootActivity implements OnClickListener{
+public class WriteLiveActivity extends Moto_RootActivity implements OnClickListener,EmojiconsFragment.OnEmojiconBackspaceClickedListener,EmojiconGridFragment.OnEmojiconClickedListener{
 	private ImageView mention;
 	private ImageView camera;
 	private ImageView photos;
-	private GridView image_grid;
+
+    @Override
+    public void onEmojiconBackspaceClicked(View view) {
+        EmojiconsFragment.backspace(et_sendmessage);
+    }
+
+    private GridView image_grid;
+    private int picPosition = 0;//记录需要改变的图片位置
 	private View view;
 	private TextView end_live;
 	private ImageView emotion;
@@ -61,7 +72,7 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 	private ImageView write_send;
 	private String subject =null;
 	private String location;
-	private EditText et_sendmessage;
+	private EmojiconEditText et_sendmessage;
 	private SharedPreferences TokenShared;
 	private String tokenString;
 	private String is;
@@ -97,22 +108,29 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 		gridImageAdapter = new GridImageAdapter(this, dataList);
 		image_grid.setAdapter(gridImageAdapter);
 		
-		image_grid.setOnItemClickListener(new GridView.OnItemClickListener() {
+		image_grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 
                 //				if (position == dataList.size() - 1) {
-                
-                Intent intent = new Intent(WriteLiveActivity.this,
-                                           AlbumActivity.class);
-                Bundle bundle = new Bundle();
-                // intent.putArrayListExtra("dataList", dataList);
-                bundle.putStringArrayList("dataList",
-                                          StringUtils.getIntentArrayList(dataList));
-                intent.putExtras(bundle);
-                startActivityForResult(intent, 0);
+                picPosition = position;
+                if((dataList.size()-1) == position && StringUtils.getIntentArrayList(dataList).size() != 5)
+                {
+                    Intent intent = new Intent(WriteLiveActivity.this,
+                            AlbumActivity.class);
+                    Bundle bundle = new Bundle();
+                    // intent.putArrayListExtra("dataList", dataList);
+                    bundle.putStringArrayList("dataList",
+                            StringUtils.getIntentArrayList(dataList));
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, 0);
+                }
+                else
+                {
+                    PhotoUtils.fliterPhoto(WriteLiveActivity.this, WriteLiveActivity.this, dataList.get(position));
+                }
                 
                 //				}
                 
@@ -200,7 +218,7 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 		return_live = (ImageView)findViewById(R.id.return_live);
 		real_position = (TextView)findViewById(R.id.real_position);
 		write_send = (ImageView)findViewById(R.id.write_send);
-		et_sendmessage = (EditText)findViewById(R.id.et_sendmessage);
+		et_sendmessage = (EmojiconEditText)findViewById(R.id.et_sendmessage);
 		end_live = (TextView)findViewById(R.id.end_live);
 		live_name = (TextView)findViewById(R.id.live_name);
 		live_user_name = (TextView)findViewById(R.id.live_user_name);
@@ -407,6 +425,19 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
         {
             real_position.setText(data.getStringExtra("data"));
         }
+
+        else if(requestCode == 5)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                String path = data.getStringExtra("path");
+                if(path != null)
+                {
+                    dataList.set(picPosition,path);
+                    gridImageAdapter.notifyDataSetChanged();
+                }
+            }
+        }
 	}
 	private void GetAsyData() {
 		// TODO Auto-generated method stub
@@ -522,4 +553,9 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 		handler.sendMessage(msg);
 		DialogMethod.stopProgressDialog();
 	}
+
+    @Override
+    public void onEmojiconClicked(Emojicon emojicon) {
+        EmojiconsFragment.input(et_sendmessage, emojicon);
+    }
 }

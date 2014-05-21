@@ -1,12 +1,5 @@
 package com.moto.square;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -27,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loopj.android.http.RequestParams;
 import com.moto.asydata.LoadCacheResponseLoginouthandler;
 import com.moto.asydata.LoadDatahandler;
@@ -36,15 +29,22 @@ import com.moto.constant.DialogMethod;
 import com.moto.constant.ImageMethod;
 import com.moto.img.ScaleImageView;
 import com.moto.listview.CustomScrollView;
-import com.moto.listview.NoScrollListview;
 import com.moto.listview.CustomScrollView.OnLoadListener;
 import com.moto.listview.CustomScrollView.OnRefreshListener;
+import com.moto.listview.NoScrollListview;
 import com.moto.main.R;
 import com.moto.myactivity.MyActivity;
 import com.moto.mymap.MyMapApplication;
 import com.moto.toast.ToastClass;
-import com.moto.user.UserActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class Theme_Post extends MyActivity{
     
@@ -247,7 +247,7 @@ public class Theme_Post extends MyActivity{
 		MyMapApplication.imageLoader.displayImage(imgPath,  post_user_img,options,null);
 		if(!photoname.equals("null"))
 		{
-			String imageUrl = imgPath+photoname+"?imageView2/1/w/200/h/200";
+			String imageUrl = imgPath+photoname;
 			post_detail_img.setVisibility(View.VISIBLE);
 			MyMapApplication.imageLoader.displayImage(imageUrl,  post_detail_img,Originaloptions,null);
 			post_detail_img.setImageHeight(80);

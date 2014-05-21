@@ -3,7 +3,6 @@ package com.moto.inform;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.moto.constant.Constant;
 import com.moto.listview.MyListView;
@@ -107,8 +106,6 @@ public class InformPrivateActivity extends Moto_RootActivity {
             String lastmessage = conversationJson.getString("lastmessage");
             String ucid = conversationJson.getString("ucid");
             String updated_at = conversationJson.getString("updated_at");
-            Log.e("AAAAA",ucid.toString());
-            Log.e("aaaaa",updated_at.toString());
 
             String avatar = jsonObject.getString("avatar");
             map.put("username", username);

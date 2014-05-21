@@ -1,14 +1,5 @@
 package com.moto.tryimage;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.UUID;
-
-import com.moto.main.R;
-import com.moto.tryimage.ImageFactoryFliter.FilterType;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -27,10 +18,18 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+
+import com.moto.main.R;
+import com.moto.tryimage.ImageFactoryFliter.FilterType;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.UUID;
 
 /**
  * @fileName PhotoUtils.java
@@ -42,10 +41,7 @@ import android.util.TypedValue;
  */
 public class PhotoUtils {
 	// 图片在SD卡中的缓存路径
-	private static final String IMAGE_PATH = Environment
-			.getExternalStorageDirectory().toString()
-			+ File.separator
-			+ "immomo" + File.separator + "Images" + File.separator;
+	private static final String IMAGE_PATH = "/mnt/sdcard/DCIM/Camera/";
 	// 相册的RequestCode
 	public static final int INTENT_REQUEST_CODE_ALBUM = 0;
 	// 照相的RequestCode
@@ -53,7 +49,7 @@ public class PhotoUtils {
 	// 裁剪照片的RequestCode
 	public static final int INTENT_REQUEST_CODE_CROP = 2;
 	// 滤镜图片的RequestCode
-	public static final int INTENT_REQUEST_CODE_FLITER = 3;
+	public static final int INTENT_REQUEST_CODE_FLITER = 5;
 
 	/**
 	 * 通过手机相册获取图片

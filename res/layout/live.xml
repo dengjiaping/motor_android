@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+
     android:orientation="vertical"
     android:background="#E7E7E7"
     >
     
-	<com.moto.listview.CustomScrollView 
+	<com.moto.listview.CustomScrollView
 	    android:id="@+id/live_myscrollview"
 	    android:layout_width="fill_parent"
 	    android:fillViewport="true"
@@ -17,11 +18,9 @@
 	    android:layout_height="fill_parent"
 	    android:orientation="vertical"
         >
-        <TextView 
-	    android:background="#E7E7E7"
-	    android:layout_width="fill_parent"
-	    android:layout_height="60dp"
-	    />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="60dp" />
         <com.moto.listview.NoScrollListview
     	android:id="@+id/live_listview"
     	android:layout_width="fill_parent"

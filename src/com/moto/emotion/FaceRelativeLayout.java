@@ -1,7 +1,4 @@
 package com.moto.emotion;
-import java.util.ArrayList;
-import java.util.List;
-import com.moto.main.R;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -22,12 +19,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.moto.main.R;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  ******************************************
- * @author 廖乃波
+ * @author chenhong
  * @文件名称	:  FaceRelativeLayout.java
- * @创建时间	: 2013-1-27 下午02:34:17
+ * @创建时间	: 2014-1-27 下午02:34:17
  * @文件描述	: 带表情的自定义输入框
  ******************************************
  */

@@ -1,7 +1,5 @@
 package com.moto.tryimage;
 
-import com.moto.main.R;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -12,6 +10,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
+
+import com.moto.main.R;
 
 public class ImageFactoryActivity extends FragmentActivity {
 	private ViewFlipper mVfFlipper;
@@ -142,6 +142,28 @@ public class ImageFactoryActivity extends FragmentActivity {
 	}
 
 	private void initImageFactory() {
+        title = (TextView)findViewById(R.id.photo);
+        toprightView = (ImageView)findViewById(R.id.photo_round);
+        toprightView.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                switch (mIndex) {
+                    case 0:
+                        if (mImageFactoryCrop != null) {
+                            mImageFactoryCrop.Rotate();
+                        }
+                        break;
+
+                    case 1:
+                        if (mImageFactoryFliter != null) {
+                            mImageFactoryFliter.Rotate();
+                        }
+                        break;
+                }
+            }
+        });
 		switch (mIndex) {
 		case 0:
 			if (mImageFactoryCrop == null) {
@@ -149,28 +171,8 @@ public class ImageFactoryActivity extends FragmentActivity {
 						mVfFlipper.getChildAt(0));
 			}
 			mImageFactoryCrop.init(mPath, mScreenWidth, mScreenHeight);
-			toprightView = (ImageView)findViewById(R.id.photo_round);
-			toprightView.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					switch (mIndex) {
-					case 0:
-						if (mImageFactoryCrop != null) {
-							mImageFactoryCrop.Rotate();
-						}
-						break;
 
-					case 1:
-						if (mImageFactoryFliter != null) {
-							mImageFactoryFliter.Rotate();
-						}
-						break;
-					}
-				}
-			});
-			title = (TextView)findViewById(R.id.photo);
+
 			title.setText("裁切图片");
 			mBtnLeft.setText("取    消");
 			mBtnRight.setText("确    认");

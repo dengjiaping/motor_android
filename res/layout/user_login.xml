@@ -5,38 +5,9 @@
     android:layout_height="fill_parent"
     android:background="@drawable/moto_background"
     android:orientation="vertical" >
-	<RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="50.0dip" >
-        
-    <include 
-        layout="@layout/title"
-        />
-
-    <TextView
-        android:id="@+id/user_login_register"      
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:textColor="#ffffff"
-        android:textSize="20sp"
-        android:clickable="true"
-        android:gravity="right"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="15dp"
-        android:text="@string/bit_register"
-        />
-    <TextView    
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#ffffff"
-        android:textSize="30sp"
-        android:layout_centerInParent="true"
-        android:text="@string/userlogin"
-        />
-	</RelativeLayout>
     <ImageView
         android:layout_width="fill_parent"
+        android:layout_marginTop="60dp"
         android:layout_height="140dp"
         android:background="@drawable/motoimage"
         />

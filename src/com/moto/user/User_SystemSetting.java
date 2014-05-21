@@ -1,14 +1,5 @@
 package com.moto.user;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import org.apache.http.Header;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.DialogInterface;
@@ -23,9 +14,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
@@ -39,14 +29,29 @@ import com.moto.model.UpdateNetworkModel;
 import com.moto.myactivity.MyActivity;
 import com.moto.mydialog.errorDialog;
 import com.moto.mymap.MyMapApplication;
+import com.moto.switchbutton.SwitchButton;
 import com.moto.toast.ToastClass;
+import com.moto.utils.SystemSoundPlayer;
+
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class User_SystemSetting extends MyActivity implements OnClickListener,NetWorkModelListener{
 	private ImageView setting_return;
 //	private RelativeLayout browse_setting;
 	private RelativeLayout feedback_setting;
+    private RelativeLayout user_system_draftbox;
 	private RelativeLayout checkVersion;
 	private BootstrapButton user_exit;
+
+    private SwitchButton sound_swicthbutton;
+
 	private SharedPreferences mshared;
 	private Editor editor;
 	private RelativeLayout clear;
@@ -76,11 +81,17 @@ public class User_SystemSetting extends MyActivity implements OnClickListener,Ne
 		feedback_setting.setOnClickListener(this);
 		setting_return.setOnClickListener(this);
 		checkVersion = (RelativeLayout)findViewById(R.id.user_system_setting_checkversion);
+        user_system_draftbox = (RelativeLayout)findViewById(R.id.user_system_draftbox);
 //		browse_setting.setOnClickListener(this);
+
+        sound_swicthbutton = (SwitchButton)findViewById(R.id.sound_swicthbutton);
+        SystemSoundPlayer.getInstance(User_SystemSetting.this).setSwitchButtonOnOff(sound_swicthbutton);
+
 		user_exit.setOnClickListener(this);
 		clear.setOnClickListener(this);
 		user_edit_ownmassage.setOnClickListener(this);
 		checkVersion.setOnClickListener(this);
+        user_system_draftbox.setOnClickListener(this);
 		
 		intent = getIntent();
 		if(intent.getStringExtra("is").equals("1"))
@@ -95,6 +106,8 @@ public class User_SystemSetting extends MyActivity implements OnClickListener,Ne
 			ownphotoMessage = intent.getStringArrayListExtra("motophoto");
 		}
 	}
+
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -102,6 +115,10 @@ public class User_SystemSetting extends MyActivity implements OnClickListener,Ne
 		{
 			User_SystemSetting.this.finish();
 		}
+        if(v == user_system_draftbox)
+        {
+            ToastClass.SetToast(User_SystemSetting.this,"您还没有草稿");
+        }
 //		if(v == browse_setting)
 //		{
 //			intent = new Intent();
@@ -217,7 +234,14 @@ public class User_SystemSetting extends MyActivity implements OnClickListener,Ne
 			}.execute();
 		}
 	}
-	@Override
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SystemSoundPlayer.getInstance(User_SystemSetting.this).toggleSoundPlayerOn(sound_swicthbutton.isChecked());
+    }
+
+    @Override
 	public void handleNetworkDataWithSuccess(JSONObject JSONObject)
 			throws JSONException {
 		// TODO Auto-generated method stub

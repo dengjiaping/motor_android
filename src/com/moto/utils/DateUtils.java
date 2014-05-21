@@ -82,6 +82,23 @@ public class DateUtils {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date date = new Date();
+
+        String timestamp = sdf.format(date);
+        return timestamp;
+    }
+
+    /**
+     * 获取当前的UTC时间
+     *
+     *
+     *
+     * @return String 	返回当前UTC时间
+     */
+    public static String getUTCStartTimestamp()
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date date = timestampToLocalDate("1970-01-01T00:00:00Z");
         String timestamp = sdf.format(date);
         return timestamp;
     }

@@ -1,11 +1,5 @@
 package com.moto.live;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,10 +16,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -34,13 +28,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.amap.api.maps2d.AMap;
-import com.amap.api.maps2d.CameraUpdateFactory;
-import com.amap.api.maps2d.MapView;
-import com.amap.api.maps2d.Projection;
 import com.amap.api.maps2d.AMap.InfoWindowAdapter;
 import com.amap.api.maps2d.AMap.OnInfoWindowClickListener;
 import com.amap.api.maps2d.AMap.OnMarkerClickListener;
+import com.amap.api.maps2d.CameraUpdateFactory;
+import com.amap.api.maps2d.MapView;
+import com.amap.api.maps2d.Projection;
 import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.LatLngBounds;
 import com.amap.api.maps2d.model.Marker;
@@ -56,9 +51,9 @@ import com.moto.constant.DialogMethod;
 import com.moto.constant.ImageMethod;
 import com.moto.img.ScaleImageView;
 import com.moto.listview.CustomScrollView;
-import com.moto.listview.NoScrollListview;
 import com.moto.listview.CustomScrollView.OnLoadListener;
 import com.moto.listview.CustomScrollView.OnRefreshListener;
+import com.moto.listview.NoScrollListview;
 import com.moto.listview.ProgressBarView;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
@@ -69,11 +64,20 @@ import com.moto.photo.ImageBrowserActivity;
 import com.moto.photo.UserPhotosView;
 import com.moto.photo.UserPhotosView.onPagerPhotoItemClickListener;
 import com.moto.toast.ToastClass;
+import com.moto.utils.DateUtils;
 import com.moto.utils.StringUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class Live_Kids_User extends Moto_RootActivity implements OnMarkerClickListener,
 OnInfoWindowClickListener, InfoWindowAdapter{
@@ -83,7 +87,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 	protected Handler handler;
 	protected String tid;
 	protected String subject;
-	protected String avatar;
+	protected String avatar = "";
 	protected ImageView user_img;
 	protected TextView live_title;
 	protected RelativeLayout comment;
@@ -98,6 +102,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 	protected MyAdapter adapter;
 	protected boolean isRefresh = false;
 	protected boolean IsfirstIn = true;
+    private boolean isload = false;
 	protected int count = 0;
 	protected DisplayImageOptions options;
 	protected DisplayImageOptions Originaloptions;
@@ -205,6 +210,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
+                        isload = true;
 						GetAsyData();
 						return null;
 					}
@@ -232,6 +238,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
                         //获取成功
                     case Constant.MSG_SUCCESS:
                         isRefresh = false;
+                        isload = false;
                         loadingProgressBar.setVisibility(View.GONE);
                         adapter.notifyDataSetChanged();
                         //					SetGaoDeMap();
@@ -244,16 +251,21 @@ OnInfoWindowClickListener, InfoWindowAdapter{
                                 scrollView.scrollTo(0, CacheModel.getHeight("scrollviewheight"+tid, Live_Kids_User.this));
                             }
                         });
-                        
-                        if(!avatar.equals("null"))
+                        if(list.size() > 0)
                         {
-                            MyMapApplication.imageLoader.displayImage(imgPath+avatar+"?imageView2/1/w/40/h/40",  user_img,options,null);
+                            avatar = list.get(0).get("avatar").toString();
+                            if(!avatar.equals("null"))
+                            {
+                                MyMapApplication.imageLoader.displayImage(imgPath+avatar+"?imageView2/1/w/40/h/40",  user_img,options,null);
+                            }
                         }
+
                         break;
                         //获取成功
                         
                     case Constant.MSG_SUCCESSAGAIN:
                         isRefresh = false;
+                        isload = false;
                         //					SetGaoDeMap();
                         aMap.clear();
                         addMarkersToMap();// 往地图上添加marker
@@ -264,19 +276,26 @@ OnInfoWindowClickListener, InfoWindowAdapter{
                         break;
                     case Constant.MSG_NULL:
                         isRefresh = false;
+                        isload = false;
                         loadingProgressBar.setVisibility(View.GONE);
                         scrollView.onRefreshComplete();
                         scrollView.onLoadComplete();
                         break;
                     case Constant.MSG_FALTH:
+                        isRefresh = false;
+                        isload = false;
                         String str = (String) msg.obj;
                         ToastClass.SetToast(Live_Kids_User.this, str);
                         DialogMethod.stopProgressDialog();
                         break;
                     case Constant.MSG_TESTSTART:
+                        isRefresh = false;
+                        isload = false;
                         DialogMethod.startProgressDialog(Live_Kids_User.this,"收藏中...");
                         break;
                     case Constant.MSG_WAITSUCCESS:
+                        isRefresh = false;
+                        isload = false;
                         String string = (String) msg.obj;
                         ToastClass.SetToast(Live_Kids_User.this, string);
                         DialogMethod.stopProgressDialog();
@@ -485,7 +504,24 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 		// TODO Auto-generated method stub
 		param = new RequestParams();
 		param.put("tid", tid);
-		param.put("page", ""+count);
+
+        if(isload)
+        {
+            if(list.size() == 0)
+            {
+                param.put("timestamp", DateUtils.getUTCStartTimestamp());
+            }
+            else
+            {
+                String time = list.get(list.size()-1).get("dateline").toString();
+                param.put("timestamp", DateUtils.getUTCTimestamp(time));
+            }
+
+        }
+        else
+        {
+            param.put("timestamp", DateUtils.getUTCStartTimestamp());
+        }
 		
 		RequstClient.post(uriString, param, new LoadCacheResponseLoginouthandler(
                                                                                  Live_Kids_User.this,
@@ -535,7 +571,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
                             LocationList.add(GetLocationMap(jsonObject2));
                             //								getNumDate(list);
                         }
-						if (count == 0) {
+						if (!isload) {
 							if (isRefresh)
 								handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
                                 .sendToTarget();
@@ -546,7 +582,6 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 							handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
                             .sendToTarget();
 						}
-						count++;
 						
 					} else {
 						handler.obtainMessage(Constant.MSG_NULL).sendToTarget();

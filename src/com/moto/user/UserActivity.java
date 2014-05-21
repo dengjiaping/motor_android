@@ -1,4 +1,5 @@
 package com.moto.user;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -66,7 +67,6 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 	private HashMap<String, Object> ownMessageMapNum = new HashMap<String, Object>();
 	private ArrayList<String> carList = new ArrayList<String>();
 	private MyAdapter adapter;
-	private ImageView user_setting;
 	private LinearLayout number_post_layout;
 	private LinearLayout friends_layout;
 	private LinearLayout collect_layout;
@@ -87,7 +87,6 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 	private String nameString;
 	private String passwordString;
 	private String emailString = "";
-	private TextView user_register;
 	private SharedPreferences mshared;
 	private LinearLayout moto_photo;
 	private Editor editor;
@@ -167,19 +166,27 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 		
 	}
 	private void login(){
-		setContentView(R.layout.user_login);
+//		setContentView(R.layout.user_login);
+        ViewGroup viewGroup = (ViewGroup) findViewById(android.R.id.content);
+
+        addContentView(R.layout.user_login, R.string.userlogin, R.string.bit_register,barButtonIconType.barButtonIconType_None, barButtonIconType.barRightTextViewType );
+        if(viewGroup.getChildCount() >= 3)
+            viewGroup.removeView(viewGroup.getChildAt(0));
 		login_init();
 	}
 	private void user(){
+        ViewGroup viewGroup = (ViewGroup) findViewById(android.R.id.content);
 
 //		setContentView(R.layout.user);
 		token = mshared.getString("token", "");
 //		user_name.setText(mshared.getString("username", ""));
 		addContentView(R.layout.user, mshared.getString("username", ""), barButtonIconType.barButtonIconType_None, barButtonIconType.barButtonIconType_setting );
+        if(viewGroup.getChildCount() >= 3)
+            viewGroup.removeView(viewGroup.getChildAt(0));
 		navigationBar.setBackgroundColor(Color.rgb(0,0,0));
 		navigationBar.getBackground().setAlpha(0);
 		init();
-		
+
 		adapter = new MyAdapter(this, list);
 		listView.setAdapter(adapter);
 		
@@ -198,35 +205,11 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 				pushToNextActivity(extras, Live_Kids_User.class, 304);
 			}
 		});
+        this.navigationBar.bringToFront();
 
 
 
 
-	}
-	
-	@Override
-	public void rightBarButtonItemEvent() {
-		// TODO Auto-generated method stub
-		super.rightBarButtonItemEvent();
-		intent = new Intent();
-		if(ownMessageMap.size() == 0)
-		{
-			intent.putExtra("is", "0");
-		}
-		else
-		{
-			intent.putExtra("is", "1");
-			intent.putExtra("avatar", ownMessageMap.get("avatar").toString());
-			intent.putStringArrayListExtra("motophoto", ownphotoMessage);
-			intent.putExtra("gender", ownMessageMap.get("gender").toString());
-			intent.putExtra("username", ownMessageMap.get("username").toString());
-			intent.putExtra("profile", ownMessageMap.get("profile").toString());
-			intent.putExtra("mototype", ownMessageMap.get("mototype").toString());
-			intent.putExtra("outputvolume", ownMessageMap.get("outputvolume").toString());
-		}
-		intent.setClass(UserActivity.this, User_SystemSetting.class);
-		startActivityForResult(intent, 301);
-		
 	}
 	private void init() {
 		// TODO Auto-generated method stub
@@ -238,6 +221,7 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 		user_scrollview = (ScrollView)findViewById(R.id.user_scrollview);
 //		user_setting = (ImageView)findViewById(R.id.user_setting);
 		number_post_layout = (LinearLayout)findViewById(R.id.user_number_post_layout);
+
 		friends_layout = (LinearLayout)findViewById(R.id.user_friends_layout);
 		collect_layout = (LinearLayout)findViewById(R.id.user_collect_layout);
 //		user_name = (TextView)findViewById(R.id.user_name);
@@ -262,15 +246,52 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
         });
 
         pullScrollView.setOriginbitmap(this, BitmapFactory.decodeResource(getResources(), R.drawable.cuttedbackground_me));
+
+        LinearLayout rightLinearLayout = (LinearLayout)findViewById(R.id.right_linear_nav);
+        rightLinearLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                intent = new Intent();
+                if(ownMessageMap.size() == 0)
+                {
+                    intent.putExtra("is", "0");
+                }
+                else
+                {
+                    intent.putExtra("is", "1");
+                    intent.putExtra("avatar", ownMessageMap.get("avatar").toString());
+                    intent.putStringArrayListExtra("motophoto", ownphotoMessage);
+                    intent.putExtra("gender", ownMessageMap.get("gender").toString());
+                    intent.putExtra("username", ownMessageMap.get("username").toString());
+                    intent.putExtra("profile", ownMessageMap.get("profile").toString());
+                    intent.putExtra("mototype", ownMessageMap.get("mototype").toString());
+                    intent.putExtra("outputvolume", ownMessageMap.get("outputvolume").toString());
+                }
+                intent.setClass(UserActivity.this, User_SystemSetting.class);
+                startActivityForResult(intent, 301);
+            }
+        });
 	}
 	
 	private void login_init(){
-		user_register = (TextView)findViewById(R.id.user_login_register);
 		login_name = (BootstrapEditText)findViewById(R.id.user_login_name);
 		login_password = (BootstrapEditText)findViewById(R.id.user_login_password);
 		login_button = (BootstrapButton)findViewById(R.id.user_login_button);
 		login_button.setOnClickListener(this);
-		user_register.setOnClickListener(this);
+        this.rightBarButton.setVisibility(View.GONE);
+        this.rightBarTextView.setVisibility(View.VISIBLE);
+        navigationBar.setBackgroundColor(Color.rgb(107,233,242));
+        navigationBar.getBackground().setAlpha(255);
+        LinearLayout rightLinearLayout = (LinearLayout)findViewById(R.id.right_linear_nav);
+        rightLinearLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent();
+                intent.setClass(UserActivity.this, User_register.class);
+                startActivity(intent);
+            }
+        });
 	}
 	
 	class MyAdapter extends BaseAdapter{
@@ -343,27 +364,6 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		if(v == user_setting)
-		{
-			intent = new Intent();
-			if(ownMessageMap.size() == 0)
-			{
-				intent.putExtra("is", "0");
-			}
-			else
-			{
-				intent.putExtra("is", "1");
-				intent.putExtra("avatar", ownMessageMap.get("avatar").toString());
-				intent.putStringArrayListExtra("motophoto", ownphotoMessage);
-				intent.putExtra("gender", ownMessageMap.get("gender").toString());
-				intent.putExtra("username", ownMessageMap.get("username").toString());
-				intent.putExtra("profile", ownMessageMap.get("profile").toString());
-				intent.putExtra("mototype", ownMessageMap.get("mototype").toString());
-				intent.putExtra("outputvolume", ownMessageMap.get("outputvolume").toString());
-			}
-			intent.setClass(UserActivity.this, User_SystemSetting.class);
-			startActivityForResult(intent, 301);
-		}
 		if(v == number_post_layout)
 		{
 			intent = new Intent();
@@ -382,13 +382,8 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 			intent.setClass(UserActivity.this, User_collect.class);
 			startActivity(intent);
 		}
-		if(v == user_register)
-		{
-			intent = new Intent();
-			intent.setClass(UserActivity.this, User_register.class);
-			startActivity(intent);
-		}
-		if(v == login_button) 
+
+		if(v == login_button)
 		{
 			nameString = login_name.getText().toString();
 			passwordString = login_password.getText().toString();

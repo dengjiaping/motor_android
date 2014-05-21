@@ -1,35 +1,5 @@
 package com.moto.square;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import com.loopj.android.http.RequestParams;
-import com.moto.asydata.LoadCacheResponseLoginouthandler;
-import com.moto.asydata.LoadDatahandler;
-import com.moto.asydata.RequstClient;
-import com.moto.constant.Constant;
-import com.moto.constant.ImageMethod;
-import com.moto.img.ScaleImageView;
-import com.moto.listview.CustomScrollView;
-import com.moto.listview.NoScrollListview;
-import com.moto.listview.ProgressBarView;
-import com.moto.listview.CustomScrollView.OnLoadListener;
-import com.moto.listview.CustomScrollView.OnRefreshListener;
-import com.moto.main.R;
-import com.moto.myactivity.tabActivity;
-import com.moto.mymap.MyMapApplication;
-import com.moto.square.JazzyViewPager.TransitionEffect;
-import com.moto.utils.StringUtils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -38,21 +8,52 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
+
+import com.loopj.android.http.RequestParams;
+import com.moto.asydata.LoadCacheResponseLoginouthandler;
+import com.moto.asydata.LoadDatahandler;
+import com.moto.asydata.RequstClient;
+import com.moto.constant.Constant;
+import com.moto.constant.ImageMethod;
+import com.moto.img.ScaleImageView;
+import com.moto.listview.CustomScrollView;
+import com.moto.listview.CustomScrollView.OnLoadListener;
+import com.moto.listview.CustomScrollView.OnRefreshListener;
+import com.moto.listview.NoScrollListview;
+import com.moto.listview.ProgressBarView;
+import com.moto.main.R;
+import com.moto.myactivity.tabActivity;
+import com.moto.mymap.MyMapApplication;
+import com.moto.square.JazzyViewPager.TransitionEffect;
+import com.moto.utils.DateUtils;
+import com.moto.utils.StringUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class SquareActivity extends tabActivity{
 	private NoScrollListview listview;
@@ -62,6 +63,7 @@ public class SquareActivity extends tabActivity{
 	private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
 	private HashMap<String, Object> map;
 	private boolean isRefresh = false;
+    private boolean isload = false;
 	private int count = 0;
 	private MyAdapter adapter;
 	private String fid;
@@ -70,16 +72,16 @@ public class SquareActivity extends tabActivity{
 	protected DisplayImageOptions options;
 	private DisplayImageOptions Originaloptions;
 	private String readUri = "http://damp-reef-9073.herokuapp.com/api/square/readforumbriefpost";
-	
+
 	// ============== 广告切换 ===================
     private JazzyViewPager mViewPager = null;
     /**
      * 装指引的ImageView数组
      */
     private ImageView[] mIndicators;
-    
+
     private Handler mHandler;
-    
+
     /**
      * 装ViewPager中ImageView的数组
      */
@@ -101,7 +103,7 @@ public class SquareActivity extends tabActivity{
 		listview.setAdapter(adapter);
 		GetAsyData();
 		edit_theme.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -111,7 +113,7 @@ public class SquareActivity extends tabActivity{
 				startActivityForResult(intent, 304);
 			}
 		});
-		
+
 		scrollView.setOnRefreshListener(new OnRefreshListener() {
 			public void onRefresh() {
 				new AsyncTask<Void, Void, Void>() {
@@ -122,16 +124,15 @@ public class SquareActivity extends tabActivity{
 							e.printStackTrace();
 						}
 						isRefresh = true;
-						count = 0;
 						GetAsyData();
 						return null;
 					}
-                    
+
 					@Override
 					protected void onPostExecute(Void result) {
                         //						refresh_scrollview.onRefreshComplete();
 					}
-                    
+
 				}.execute();
 			}
 		});
@@ -144,31 +145,34 @@ public class SquareActivity extends tabActivity{
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
+                        isload = true;
 						GetAsyData();
 						return null;
 					}
-                    
+
 					@Override
 					protected void onPostExecute(Void result) {
                         //						refresh_scrollview.onLoadComplete();
 					}
-                    
+
 				}.execute();
 			}
 		});
 		handler = new Handler(){
-            
+
 			@Override
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
-				
+
 				switch(msg.what)
 				{
                         //获取成功
                     case Constant.MSG_SUCCESS:
+                        isload = false;
+                        isRefresh = false;
                         adapter.notifyDataSetChanged();
                         break;
-                        
+
                     case Constant.MSG_SUCCESSAGAIN:
                         if(isRefresh)
                         {
@@ -182,8 +186,12 @@ public class SquareActivity extends tabActivity{
                             scrollView.onRefreshComplete();
                             scrollView.onLoadComplete();
                         }
+                        isload = false;
+                        isRefresh = false;
                         break;
                     case Constant.MSG_NULL:
+                        isload = false;
+                        isRefresh = false;
                         scrollView.onRefreshComplete();
                         scrollView.onLoadComplete();
                         break;
@@ -191,9 +199,9 @@ public class SquareActivity extends tabActivity{
 				super.handleMessage(msg);
 			}
 		};
-		
+
 		mHandler = new Handler(getMainLooper()) {
-            
+
 			@Override
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
@@ -209,13 +217,13 @@ public class SquareActivity extends tabActivity{
                                                          PHOTO_CHANGE_TIME);
 				}
 			}
-            
+
 		};
 		initdata();
 		initview();
-		
+
 		listview.setOnItemClickListener(new OnItemClickListener() {
-            
+
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                     long arg3) {
@@ -225,7 +233,11 @@ public class SquareActivity extends tabActivity{
 				intent.putExtra("author", list.get(arg2).get("author").toString());
 				intent.putExtra("message", list.get(arg2).get("message").toString());
 				intent.putExtra("dateline", list.get(arg2).get("dateline").toString());
-				intent.putExtra("photoname", carList.get(arg2).get(0));
+                if(carList.get(arg2).toString().equals("[]"))
+                    intent.putExtra("photoname", "null");
+                else
+				    intent.putExtra("photoname", carList.get(arg2).get(0));
+
 				intent.putExtra("subject", list.get(arg2).get("subject").toString());
 				intent.setClass(SquareActivity.this, Theme_Post.class);
 				startActivityForResult(intent, 304);
@@ -236,7 +248,7 @@ public class SquareActivity extends tabActivity{
 		});
 		
 	}
-    
+
 	private void init() {
 		// TODO Auto-generated method stub
 		fid = "37";
@@ -245,42 +257,42 @@ public class SquareActivity extends tabActivity{
 		String title_name = "广场";
 		listview = (NoScrollListview)findViewById(R.id.square_listview);
 		scrollView = (CustomScrollView)findViewById(R.id.discuss_kids_scrollview);
-		
+
 		mViewPager = (JazzyViewPager) findViewById(R.id.square_images_container);
 		mIndicator = (LinearLayout) findViewById(R.id.square_images_indicator);
-		
+
 		edit_theme = (TextView)findViewById(R.id.sqare_theme);
 		title = (TextView)findViewById(R.id.discuss_kids_title);
 		title.setText(title_name);
 	}
-	
+
 	private void initdata(){
 		mImageUrl = "drawable://" + R.drawable.banner;
 		mImageUrls.add(mImageUrl);
-        
+
 		mImageUrl = "drawable://" + R.drawable.banner;
 		mImageUrls.add(mImageUrl);
-        
+
 		mImageUrl = "drawable://" + R.drawable.banner;
 		mImageUrls.add(mImageUrl);
-        
+
 		mImageUrl = "drawable://" + R.drawable.banner;
 		mImageUrls.add(mImageUrl);
-        
+
 		mImageUrl = "drawable://" + R.drawable.banner;
 		mImageUrls.add(mImageUrl);
-        
+
 		mImageUrl = "drawable://" + R.drawable.banner;
 		mImageUrls.add(mImageUrl);
 	}
-	
+
 	private void initview(){
 		// ======= 初始化ViewPager ========
 		mIndicators = new ImageView[mImageUrls.size()];
 		if (mImageUrls.size() <= 1) {
 			mIndicator.setVisibility(View.GONE);
 		}
-        
+
 		for (int i = 0; i < mIndicators.length; i++) {
 			ImageView imageView = new ImageView(this);
 			LayoutParams params = new LayoutParams(0,
@@ -297,12 +309,12 @@ public class SquareActivity extends tabActivity{
 				mIndicators[i]
                 .setBackgroundResource(R.drawable.guide_dot_black);
 			}
-            
+
 			mIndicator.addView(imageView);
 		}
-        
+
 		mImageViews = new ImageView[mImageUrls.size()];
-        
+
 		for (int i = 0; i < mImageViews.length; i++) {
 			ImageView imageView = new ImageView(this);
 			imageView.setScaleType(ScaleType.CENTER_CROP);
@@ -311,11 +323,11 @@ public class SquareActivity extends tabActivity{
 		mViewPager.setTransitionEffect(TransitionEffect.CubeOut);
 		mViewPager.setCurrentItem(0);
 		mHandler.sendEmptyMessageDelayed(MSG_CHANGE_PHOTO, PHOTO_CHANGE_TIME);
-        
+
 		mViewPager.setAdapter(new JazzyAdapter(mImageViews, mViewPager, mImageUrls));
 		mViewPager.setOnPageChangeListener(new MyPageChangeListener());
 		mViewPager.setOnTouchListener(new OnTouchListener() {
-            
+
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
@@ -325,10 +337,10 @@ public class SquareActivity extends tabActivity{
 					return false;
 			}
 		});
-        
+
 		// ======= 初始化ViewPager ========
 	}
-	
+
 	/**
 	 * 当ViewPager中页面的状态发生改变时调用
 	 *
@@ -336,7 +348,7 @@ public class SquareActivity extends tabActivity{
 	 *
 	 */
 	private class MyPageChangeListener implements OnPageChangeListener {
-        
+
 		/**
 		 * This method will be invoked when a new page becomes selected.
 		 * position: Position index of the new selected page.
@@ -344,16 +356,16 @@ public class SquareActivity extends tabActivity{
 		public void onPageSelected(int position) {
 			setImageBackground(position);
 		}
-        
+
 		public void onPageScrollStateChanged(int arg0) {
-            
+
 		}
-        
+
 		public void onPageScrolled(int arg0, float arg1, int arg2) {
-            
+
 		}
 	}
-	
+
 	/**
 	 * 设置选中的tip的背景
 	 *
@@ -374,24 +386,40 @@ public class SquareActivity extends tabActivity{
 		// TODO Auto-generated method stub
 		param = new RequestParams();
 		param.put("fid", fid);
-		param.put("page", ""+count);
-		
+        if(isload)
+        {
+            if(list.size() == 0)
+            {
+                param.put("timestamp", DateUtils.getUTCCurrentTimestamp());
+            }
+            else
+            {
+                String time = list.get(list.size()-1).get("dateline").toString();
+                param.put("timestamp", DateUtils.getUTCTimestamp(time));
+            }
+
+        }
+        else
+        {
+            param.put("timestamp", DateUtils.getUTCCurrentTimestamp());
+        }
+
 		RequstClient.post(readUri, param, new LoadCacheResponseLoginouthandler(
                                                                                SquareActivity.this,
                                                                                new LoadDatahandler(){
-            
+
 			@Override
 			public void onStart() {
 				// TODO Auto-generated method stub
 				super.onStart();
 			}
-            
+
 			@Override
 			public void onLoadCaches(String data) {
 				// TODO Auto-generated method stub
 				super.onLoadCaches(data);
 			}
-            
+
 			@Override
 			public void onSuccess(String data) {
 				// TODO Auto-generated method stub
@@ -411,7 +439,7 @@ public class SquareActivity extends tabActivity{
 							JSONObject jsonObject2 = (JSONObject) array.get(i);
 							list.add(GetMap(jsonObject2));
 						}
-						if (count == 0) {
+						if (!isload) {
 							if (isRefresh)
 								handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
                                 .sendToTarget();
@@ -423,36 +451,36 @@ public class SquareActivity extends tabActivity{
                             .sendToTarget();
 						}
 						count++;
-                        
+
 					} else {
 						handler.obtainMessage(Constant.MSG_NULL).sendToTarget();
 					}
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
-				
+
 			}
-            
+
 			@Override
 			public void onFailure(String error, String message) {
 				// TODO Auto-generated method stub
 				super.onFailure(error, message);
 			}
-            
+
 			@Override
 			public void onFinish() {
 				// TODO Auto-generated method stub
 				super.onFinish();
 			}
-			
+
 		}));
 	}
-	
+
 	private HashMap<String, Object> GetMap(JSONObject jsonObject)
 	{
 		map = new HashMap<String, Object>();
 		try {
-			
+
 			String author = jsonObject.getString("author");
 			String subject = jsonObject.getString("subject");
 			String message = jsonObject.getString("message");
@@ -472,49 +500,49 @@ public class SquareActivity extends tabActivity{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return map;
-		
+
 	}
-	
+
     //	内部类实现BaseAdapter  ，自定义适配器
 	class MyAdapter extends BaseAdapter{
-        
+
 		private Context context;
 		LinkedList<HashMap<String, Object>> list;
 		private HashMap<String, Object> map;
 		long time = 0;
-		
+
 		public MyAdapter(Context context, LinkedList<HashMap<String, Object>> list)
 		{
 			this.context = context;
 			this.list = list;
 		}
-        
+
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
 			return list.size();
 		}
-        
+
 		@Override
 		public Object getItem(int arg0) {
 			// TODO Auto-generated method stub
 			return arg0;
 		}
-        
+
 		@Override
 		public long getItemId(int arg0) {
 			// TODO Auto-generated method stub
 			return arg0;
 		}
-        
+
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
 			final ViewHolder holder;
 			// TODO Auto-generated method stub
-			
+
             convertView = LayoutInflater.from(context).inflate(R.layout.square_item, null);
             holder = new ViewHolder();
             holder.square_item_title = (TextView)convertView.findViewById(R.id.square_item_title);
@@ -543,7 +571,7 @@ public class SquareActivity extends tabActivity{
 						holder.progressBarView.setProgressNotInUiThread(0);
 						holder.progressBarView.setVisibility(View.VISIBLE);
 					}
-                    
+
 					@Override
 					public void onLoadingFailed(String imageUri, View view,
                                                 FailReason failReason) {
@@ -551,7 +579,7 @@ public class SquareActivity extends tabActivity{
 						super.onLoadingFailed(imageUri, view, failReason);
 						holder.progressBarView.setVisibility(View.GONE);
 					}
-                    
+
 					@Override
 					public void onLoadingComplete(String imageUri, View view,
                                                   Bitmap loadedImage) {
@@ -560,9 +588,9 @@ public class SquareActivity extends tabActivity{
 						holder.progressBarView.setVisibility(View.GONE);
 						holder.progressBarView.setProgressNotInUiThread(100);
 					}
-					
+
 				},new ImageLoadingProgressListener() {
-					
+
 					@Override
 					public void onProgressUpdate(String imageUri, View view, int current,
                                                  int total) {
@@ -572,14 +600,14 @@ public class SquareActivity extends tabActivity{
 							time = System.currentTimeMillis();
 							holder.progressBarView.setProgressNotInUiThread(Math.round(100.0f * current / total));
 						}
-						
+
 					}
 				});
 				holder.square_item_image.setImageHeight(80);
 				holder.square_item_image.setImageWidth(100);
 			}
             return convertView;
-		}	
+		}
 	}
 	//此类为上面getview里面view的引用，方便快速滑动
 	class ViewHolder{
@@ -590,7 +618,7 @@ public class SquareActivity extends tabActivity{
 		TextView square_item_user;
 		ProgressBarView progressBarView;
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
@@ -600,7 +628,7 @@ public class SquareActivity extends tabActivity{
                 setResult(304);
                 break;
 		}
-		
+
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 }
