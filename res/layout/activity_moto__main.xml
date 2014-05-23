@@ -58,15 +58,32 @@
                     android:drawableTop="@drawable/bg_checkbox_icon_menu_1"
                     android:text="@string/live" />
 
-                <RadioButton
-                    android:id="@+id/main_tab_square"
-                    style="@style/MMTabButton"
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
                     android:layout_weight="1.0"
-                    android:background="@drawable/bg_checkbox_icon_menu_2"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:drawableTop="@drawable/add_tabbar"
-                    />
+                    android:layout_height="fill_parent">
+                    <RadioButton
+                        android:id="@+id/main_tab_square"
+                        style="@style/MMTabButton"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/bg_checkbox_icon_menu_2"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+
+                        />
+                    <ImageView
+                        android:id="@+id/main_add_img"
+                        android:layout_width="fill_parent"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/add_tabbar"
+                        android:layout_centerInParent="true"
+                        />
+                    </RelativeLayout>
 
                 <RadioButton
                     android:id="@+id/main_tab_inform"

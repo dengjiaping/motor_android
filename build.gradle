@@ -17,6 +17,7 @@ dependencies {
     compile 'info.hoang8f:android-segmented:1.0.0'
     compile 'com.daimajia.numberprogressbar:library:1.0@aar'
     compile 'com.rockerhieu.emojicon:library:1.0'
+    compile 'com.facebook.rebound:rebound:0.3.3'
 }
 
 android {
