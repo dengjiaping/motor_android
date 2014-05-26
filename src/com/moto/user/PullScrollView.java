@@ -134,7 +134,7 @@ public class PullScrollView extends ScrollView {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        mHeader.setBackground(new BitmapDrawable(blurbitmaps.get((0))));
+        mHeader.setBackgroundDrawable(new BitmapDrawable(blurbitmaps.get((0))));
     }
 
     public class BitmapBlurTask extends AsyncTask<Object, String, ArrayList<Bitmap>>{
@@ -146,7 +146,7 @@ public class PullScrollView extends ScrollView {
             Context context = (Context)params[1];
             for( int i = 3,j = 2; i >= 0; i--,j+=4)
             {
-                bitmaps.set(i,Blur.apply(context,bitmaps.get(i),j));
+                bitmaps.set(i,Blur.getInstance(context,bitmaps.get(i),j).apply());
             }
             return bitmaps;
         }
@@ -233,7 +233,7 @@ public class PullScrollView extends ScrollView {
                 if (getScrollY() == 0) {
                     mState = State.NORMAL;
                 }
-                mHeader.setBackground(new BitmapDrawable(blurbitmaps.get(0)));
+                mHeader.setBackgroundDrawable(new BitmapDrawable(blurbitmaps.get(0)));
                 isMoving = false;
                 mEnableTouch = false;
                 break;
@@ -313,11 +313,11 @@ public class PullScrollView extends ScrollView {
 
             if(contentMoveHeight >= 0)
             {
-                mHeader.setBackground(new BitmapDrawable(blurbitmaps.get((int)(contentMoveHeight / everyheight))));
+                mHeader.setBackgroundDrawable(new BitmapDrawable(blurbitmaps.get((int)(contentMoveHeight / everyheight))));
             }
             else
             {
-                mHeader.setBackground(new BitmapDrawable(blurbitmaps.get(0)));
+                mHeader.setBackgroundDrawable(new BitmapDrawable(blurbitmaps.get(0)));
             }
         }
     }
@@ -362,4 +362,17 @@ public class PullScrollView extends ScrollView {
          */
         public void onTurn();
     }
+    public void destoryBitmap(){
+        int num = blurbitmaps.size();
+        for(int i = 0; i < num; i++) {
+            if (blurbitmaps.get(i) != null && !blurbitmaps.get(i).isRecycled()) {
+                blurbitmaps.get(i).recycle();
+                blurbitmaps.set(i, null);
+            }
+        }
+//        blurbitmaps.clear();
+
+    }
+
+
 }

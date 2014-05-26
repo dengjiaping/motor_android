@@ -13,12 +13,33 @@ import android.renderscript.ScriptIntrinsicBlur;
 // https://github.com/PomepuyN/BlurEffectForAndroidDesign
 public class Blur {
 
-    public static Bitmap apply(Context context, Bitmap sentBitmap) {
-        return apply(context, sentBitmap, 7);
+    private static Context context;
+    private static Bitmap sentBitmap;
+    private static int radius;
+    private static class BlurHolder{
+        public static Blur blur = init();
+
+        private static Blur init(){
+            Blur myblur = new Blur();
+            return myblur;
+        }
+
     }
 
+    public static Blur getInstance(Context c, Bitmap bitmap, int r)
+    {
+        context = c;
+        sentBitmap = bitmap;
+        radius = r;
+        return BlurHolder.blur;
+    }
+
+//    public static Bitmap apply(Context context, Bitmap sentBitmap) {
+//        return apply(context, sentBitmap, 7);
+//    }
+
     @SuppressLint("NewApi")
-    public static Bitmap apply(Context context, Bitmap sentBitmap, int radius) {
+    public  Bitmap apply() {
         if (VERSION.SDK_INT > 16) {
             Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
 

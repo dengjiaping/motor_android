@@ -1,4 +1,7 @@
 package com.moto.main;
+import com.facebook.rebound.SimpleSpringListener;
+import com.facebook.rebound.Spring;
+import com.facebook.rebound.SpringSystem;
 import com.moto.inform.InformActivity;
 import com.moto.inform.Inform_main;
 import com.moto.live.LiveActivity;
@@ -13,6 +16,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -24,6 +28,7 @@ public class Moto_MainActivity extends TabActivity {
 	private TabHost tabHost;
 	public static RadioGroup radioGroup;
 	private RadioButton radioButton;
+    private ImageView main_add_img;
     //	private TextView main_tab_new_message;
 	
     @Override
@@ -71,6 +76,31 @@ public class Moto_MainActivity extends TabActivity {
                 overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
 			}
 		});
+
+        main_add_img = (ImageView)this.findViewById(R.id.main_add_img);
+
+        // Create a system to run the physics loop for a set of springs.
+        SpringSystem springSystem = SpringSystem.create();
+
+        // Add a spring to the system.
+        Spring spring = springSystem.createSpring();
+
+        // Add a listener to observe the motion of the spring.
+        spring.addListener(new SimpleSpringListener() {
+
+            @Override
+            public void onSpringUpdate(Spring spring) {
+                // You can observe the updates in the spring
+                // state by asking its current value in onSpringUpdate.
+                float value = (float) spring.getCurrentValue();
+                float scale = 1f - (value * 0.5f);
+                main_add_img.setScaleX(scale);
+                main_add_img.setScaleY(scale);
+            }
+        });
+
+        // Set the spring in motion; moving from 0 to 1
+        spring.setEndValue(1);
         radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {

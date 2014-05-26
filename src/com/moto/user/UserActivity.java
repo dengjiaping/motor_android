@@ -672,6 +672,7 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 		{
 		case 301:
 			login();
+            pullScrollView.destoryBitmap();
 			break;
 		case 302:
 			GetAsyMessageData();
