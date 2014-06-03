@@ -70,6 +70,11 @@
             android:name="com.moto.main.Moto_MainActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
+
+        <activity
+            android:name="com.moto.welcome.OrigamiActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
         
          <activity 
             android:name="com.moto.user.User_EditUserMassage"
