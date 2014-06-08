@@ -3,11 +3,13 @@ package com.moto.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Build.VERSION;
+import android.os.Build;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+
+import java.io.FileOutputStream;
 
 // Code borrowed from Nicolas Pomepuy
 // https://github.com/PomepuyN/BlurEffectForAndroidDesign
@@ -15,23 +17,49 @@ public class Blur {
 
     private static Context context;
     private static Bitmap sentBitmap;
-    private static int radius;
-    private static class BlurHolder{
+    private int radius;
+    private static class BlurHolder {
         public static Blur blur = init();
 
         private static Blur init(){
             Blur myblur = new Blur();
+            myblur.SetBitmapToSD();
             return myblur;
         }
 
     }
 
-    public static Blur getInstance(Context c, Bitmap bitmap, int r)
+    public static Blur getInstance(Context c, Bitmap  Sbitmap)
     {
         context = c;
-        sentBitmap = bitmap;
-        radius = r;
+        sentBitmap = Sbitmap;
         return BlurHolder.blur;
+
+    }
+
+    public void SetBitmapToSD()
+    {
+        for(int i = 3,j = 2; i >= 0; i--,j+=4)
+        {
+            radius = j;
+            Bitmap bitmap = apply();
+            String str1 = "icon"+i;
+            try {
+                FileOutputStream localFileOutputStream1 = context.openFileOutput(str1, 0);
+
+
+                Bitmap.CompressFormat localCompressFormat = Bitmap.CompressFormat.PNG;
+
+                bitmap.compress(localCompressFormat, 100, localFileOutputStream1);
+
+                localFileOutputStream1.close();
+            }catch (Exception ex){
+
+            }
+
+
+
+        }
     }
 
 //    public static Bitmap apply(Context context, Bitmap sentBitmap) {
@@ -40,7 +68,7 @@ public class Blur {
 
     @SuppressLint("NewApi")
     public  Bitmap apply() {
-        if (VERSION.SDK_INT > 16) {
+        if (Build.VERSION.SDK_INT > 16) {
             Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
 
             final RenderScript rs = RenderScript.create(context);
@@ -82,7 +110,6 @@ public class Blur {
         // the following line:
         //
         // Stack Blur Algorithm by Mario Klingemann <mario@quasimondo.com>
-
         Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
 
         if (radius < 1) {
@@ -277,7 +304,6 @@ public class Blur {
                 yi += w;
             }
         }
-
         bitmap.setPixels(pix, 0, w, 0, 0, w, h);
         return (bitmap);
     }

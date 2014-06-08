@@ -1,11 +1,5 @@
 package com.moto.myactivity;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import org.apache.http.NameValuePair;
-import com.loopj.android.http.RequestParams;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +8,15 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+
+import com.loopj.android.http.RequestParams;
+
+import org.apache.http.NameValuePair;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 public class MyActivity extends Activity{
 	protected Intent intent;

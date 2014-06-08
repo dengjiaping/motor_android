@@ -1,30 +1,30 @@
 package com.moto.myactivity;
 
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-
-import org.apache.http.NameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.loopj.android.http.RequestParams;
-import com.moto.main.R;
-import com.moto.model.NetWorkModelListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+
+import com.loopj.android.http.RequestParams;
+import com.moto.main.R;
+import com.moto.model.NetWorkModelListener;
+
+import org.apache.http.NameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 public class tabActivity extends Activity implements NetWorkModelListener{
 	protected Intent intent;
@@ -125,17 +125,17 @@ public class tabActivity extends Activity implements NetWorkModelListener{
         return bitmap;
     }
 	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
-        
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (event.getRepeatCount() == 0) {
-				AppManager.getInstance().exit();
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+//	@Override
+//	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		// TODO Auto-generated method stub
+//
+//		if (keyCode == KeyEvent.KEYCODE_BACK) {
+//			if (event.getRepeatCount() == 0) {
+//				AppManager.getInstance().exit();
+//            }
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
     
 	@Override
 	public void handleNetworkDataWithSuccess(JSONObject JSONObject)

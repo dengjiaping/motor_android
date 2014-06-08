@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,6 +42,7 @@ import com.moto.photo.ImageBrowserActivity;
 import com.moto.qiniu.img.Image;
 import com.moto.qiniu.img.UploadImage;
 import com.moto.toast.ToastClass;
+import com.moto.utils.BitmapUtils;
 import com.moto.utils.StringUtils;
 import com.moto.utils.UrlUtils;
 import com.moto.validation.Validation;
@@ -93,12 +95,10 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
     private PullScrollView pullScrollView;
     private RelativeLayout user_head_layout;
 
-    private Bitmap[] bitmap = new Bitmap[10];
-
 	private Intent intent;
 	private RequestParams param;
 	protected String imgPath = "http://motor.qiniudn.com/";
-	
+
 	private String token;
 	private String recentPostUri = "http://damp-reef-9073.herokuapp.com/api/me/readrecentpost";
 	private String readUri = "http://damp-reef-9073.herokuapp.com/api/me/readprofile";
@@ -108,6 +108,7 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		mshared = getSharedPreferences("usermessage", 0);
 		String str = mshared.getString("token", "");
+
 		if(str.equals(""))
 			login();
 		else {
@@ -174,7 +175,18 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
             viewGroup.removeView(viewGroup.getChildAt(0));
 		login_init();
 	}
-	private void user(){
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(pullScrollView != null)
+        {
+
+            pullScrollView.destoryBitmap();
+        }
+    }
+
+    private void user(){
         ViewGroup viewGroup = (ViewGroup) findViewById(android.R.id.content);
 
 //		setContentView(R.layout.user);
@@ -244,8 +256,26 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 
             }
         });
+        Bitmap bitmap = null;
+        try {
+            bitmap = BitmapUtils.getInstance(UserActivity.this,bitmap).GetBitmap();
+            if(bitmap ==null)
+            {
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cuttedbackground_me);
 
-        pullScrollView.setOriginbitmap(this, BitmapFactory.decodeResource(getResources(), R.drawable.cuttedbackground_me));
+                BitmapUtils.getInstance(UserActivity.this,bitmap);
+            }
+        }catch (OutOfMemoryError o)
+        {}
+
+        pullScrollView.setOriginbitmap(this, bitmap);
+        if(bitmap != null && !bitmap.isRecycled())
+        {
+            Log.e("sdfdsf","sfds");
+            bitmap.recycle();
+            bitmap = null;
+        }
+        System.gc(); //回收
 
         LinearLayout rightLinearLayout = (LinearLayout)findViewById(R.id.right_linear_nav);
         rightLinearLayout.setOnClickListener(new OnClickListener() {
@@ -754,5 +784,7 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 			super.onProgressUpdate(values);
 		}
 	}
+
+
 
 }

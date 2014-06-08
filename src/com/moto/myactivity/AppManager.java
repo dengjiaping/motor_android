@@ -1,10 +1,10 @@
 package com.moto.myactivity;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.Application;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class AppManager extends Application{
 	private List<Activity> activityList=new LinkedList<Activity>();

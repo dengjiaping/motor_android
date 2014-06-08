@@ -27,7 +27,6 @@ import com.moto.live.LiveActivity;
 import com.moto.live.Live_Kids_Own;
 import com.moto.square.SquareActivity;
 import com.moto.user.UserActivity;
-import com.moto.welcome.OrigamiActivity;
 
 public class Moto_MainActivity extends TabActivity {
     /** Called when the activity is first created. */
@@ -125,10 +124,10 @@ public class Moto_MainActivity extends TabActivity {
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         spring.setEndValue(0);
-                        Intent intent = new Intent();
-                        intent.setClass(Moto_MainActivity.this, OrigamiActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
+//                        Intent intent = new Intent();
+//                        intent.setClass(Moto_MainActivity.this, OrigamiActivity.class);
+//                        startActivity(intent);
+//                        overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
                         break;
                 }
                 return true;

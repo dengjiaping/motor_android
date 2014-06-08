@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import android.util.Log;
-
 public class DateUtils {
 	
 	public static Date GetData(String time)
