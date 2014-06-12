@@ -7,6 +7,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -25,6 +28,7 @@ import com.facebook.rebound.SpringUtil;
 import com.moto.inform.Inform_main;
 import com.moto.live.LiveActivity;
 import com.moto.live.Live_Kids_Own;
+import com.moto.main.AbstractInOutAnimationSet.Direction;
 import com.moto.square.SquareActivity;
 import com.moto.user.UserActivity;
 
@@ -36,10 +40,13 @@ public class Moto_MainActivity extends TabActivity {
     private ImageView main_add_img;
     private RotateAnimation rAnimation; //设置旋转
     private boolean IsRotate = true;
-    private ImageView mFeedbackBar;
     // Create a spring configuration based on Origami values from the Photo Grid example.
     private static final SpringConfig ORIGAMI_SPRING_CONFIG = SpringConfig.fromOrigamiTensionAndFriction(40, 7);
     //	private TextView main_tab_new_message;
+
+
+    private InOutRelativeLayout mButtonsWrapper;
+    private boolean mAreButtonsShowins ;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,6 +94,22 @@ public class Moto_MainActivity extends TabActivity {
 //			}
 //		});
 
+        // 所有弹出收回按钮视图集合
+        mButtonsWrapper = (InOutRelativeLayout) findViewById(R.id.buttons_wrapper);
+
+// 设置每个弹出收回按钮的点击事件，点击后放大并隐藏
+        for (int i = 0, count = mButtonsWrapper.getChildCount(); i < count; i++) {
+            if (mButtonsWrapper.getChildAt(i) instanceof InOutImageButton) {
+                View view = mButtonsWrapper.getChildAt(i);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startButtonClickAnimations(view);
+                    }
+                });
+            }
+        }
+
 
 
         main_add_img = (ImageView)this.findViewById(com.moto.main.R.id.main_add_img);
@@ -124,16 +147,12 @@ public class Moto_MainActivity extends TabActivity {
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         spring.setEndValue(0);
-//                        Intent intent = new Intent();
-//                        intent.setClass(Moto_MainActivity.this, OrigamiActivity.class);
-//                        startActivity(intent);
-//                        overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
+                        toggleButton();
                         break;
                 }
                 return true;
             }
         });
-        mFeedbackBar = (ImageView)findViewById(com.moto.main.R.id.feedback);
         // Add a listener to observe the motion of the spring.
         spring.addListener(new SimpleSpringListener() {
 
@@ -147,10 +166,6 @@ public class Moto_MainActivity extends TabActivity {
                 main_add_img.setScaleX(mappedValue);
                 main_add_img.setScaleY(mappedValue);
 
-                // Map the spring to the feedback bar position so that its hidden off screen and bounces in on tap.
-                float barPosition =
-                        (float) SpringUtil.mapValueFromRangeToRange(spring.getCurrentValue(), 0, 1, mFeedbackBar.getHeight(), 0);
-                mFeedbackBar.setTranslationY(barPosition);
             }
         });
         radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -224,6 +239,84 @@ public class Moto_MainActivity extends TabActivity {
         //设置动画效果
         main_add_img.setAnimation(rAnimation);
     }
-    
-    
+
+    /**
+     * 弹出收回按钮点击后动画
+     *
+     * @param subject
+     */
+    private void startButtonClickAnimations(View subject) {
+        mAreButtonsShowins = false;
+
+        AnimationSet shrinkAnimationSet = new NotClickAnimationSet(600);
+        shrinkAnimationSet.setInterpolator(new AnticipateInterpolator(2.0F));
+        shrinkAnimationSet.setAnimationListener(new CustomAnimationListener());
+        radioButton.startAnimation(shrinkAnimationSet);
+
+        // 为每一个按钮都设置动画
+        for (int i = 0, count = mButtonsWrapper.getChildCount(); i < count; i++) {
+            if (mButtonsWrapper.getChildAt(i) instanceof InOutImageButton) {
+                View view = mButtonsWrapper.getChildAt(i);
+                if (view.getId() == subject.getId()) {
+                    // 点击按钮放大并消失
+                    view.startAnimation(new ClickAnimationSet(600));
+                } else {
+                    // 未点击按钮缩小并消失
+                    view.startAnimation(new NotClickAnimationSet(600));
+                }
+            }
+        }
+    }
+    /**
+     * 弹出收回开关
+     */
+    private void toggleButton() {
+        if (mAreButtonsShowins) {
+            AnimationControlUtils.startAnimations(mButtonsWrapper, Direction.OUT);
+
+        } else {
+            AnimationControlUtils.startAnimations(mButtonsWrapper, Direction.IN);
+
+        }
+
+        mAreButtonsShowins = !mAreButtonsShowins;
+    }
+
+    /**
+     * 跳转回来重置
+     */
+    private void reshowButton() {
+
+        // 尺寸，透明度渐变
+        ResetAnimationSet resetAnimationSet = new ResetAnimationSet(300);
+        resetAnimationSet.setInterpolator(new OvershootInterpolator(2.0F));
+        radioButton.startAnimation(resetAnimationSet);
+    }
+    /**
+     *	按钮点击监听器
+     */
+    private class CustomAnimationListener implements Animation.AnimationListener {
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+            setRotateToZero();
+            IsRotate = true;
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+
+
+    }
+
+
+
 }

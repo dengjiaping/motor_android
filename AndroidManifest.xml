@@ -177,6 +177,11 @@
             android:name="com.moto.user.User_numPost"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
+
+        <activity
+            android:name="com.moto.main.Moto_CenterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
           
           <activity 
             android:name="com.moto.user.User_friends"
