@@ -1,5 +1,18 @@
 package com.moto.live;
-import org.json.JSONObject;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import com.amap.api.maps2d.MapView;
 import com.loopj.android.http.RequestParams;
 import com.moto.asydata.LoadCacheResponseLoginouthandler;
@@ -10,26 +23,10 @@ import com.moto.constant.ImageMethod;
 import com.moto.listview.CustomScrollView;
 import com.moto.listview.NoScrollListview;
 import com.moto.main.R;
-import com.moto.main.Moto_RootActivity.barButtonIconType;
 import com.moto.model.CacheModel;
-import com.moto.mydialog.CustomDialog;
 import com.moto.toast.ToastClass;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+
+import org.json.JSONObject;
 
 public class Live_Kids_Own extends Live_Kids_User{
     
@@ -79,6 +76,7 @@ public class Live_Kids_Own extends Live_Kids_User{
                         //获取成功
                     case Constant.MSG_SUCCESSAGAIN:
                         isContinueLive = true;
+                        live_title.setText(subject);
                         if(list.size() == 0)
                         {
                             GetAsyData();
@@ -87,12 +85,12 @@ public class Live_Kids_Own extends Live_Kids_User{
                     case Constant.MSG_SUCCESS:
                         //					loadingProgressBar.setVisibility(View.GONE);
                         live_title.setText(subject);
-                        live_kids_check.setText("续写直播");
-                        live_kids_check.setEnabled(true);
+//                        live_kids_check.setText("续写直播");
+//                        live_kids_check.setEnabled(true);
                         break;
                     case Constant.MSG_FALTH:
-                        live_kids_check.setEnabled(true);
-                        live_kids_check.setText("写直播");
+//                        live_kids_check.setEnabled(true);
+//                        live_kids_check.setText("写直播");
                         isContinueLive = false;
                         loadingProgressBar.setVisibility(View.GONE);
 				}
@@ -109,50 +107,50 @@ public class Live_Kids_Own extends Live_Kids_User{
         //				CheckAsyData();
         //			}
         //		}).start();
-		live_kids_check.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if(isContinueLive)
-				{
-					intent = new Intent();
-					intent.putExtra("subject", subject);
-					intent.setClass(Live_Kids_Own.this, WriteLiveActivity.class);
-					startActivityForResult(intent, 301);
-				}
-				else {
-					final CustomDialog.Builder builder = new CustomDialog.Builder(Live_Kids_Own.this);
-					builder.setTitle
-					("创建您的直播：");
-					builder.setPositiveButton("创建", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-							//设置你的操作事项
-							if(builder.subject.getText().toString().replaceAll(" ", "").equals(""))
-							{
-								ToastClass.SetToast(Live_Kids_Own.this, "请输入主题!");
-							}
-							else {
-								intent = new Intent();
-								intent.putExtra("subject", builder.subject.getText().toString());
-								intent.setClass(Live_Kids_Own.this, WriteLiveActivity.class);
-								startActivityForResult(intent, 301);
-							}
-						}
-					});
-                    
-					builder.setNegativeButton("取消",
-                                              new android.content.DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    
-					builder.create().show();
-				}
-			}
-		});
+//		live_kids_check.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				if(isContinueLive)
+//				{
+//					intent = new Intent();
+//					intent.putExtra("subject", subject);
+//					intent.setClass(Live_Kids_Own.this, WriteLiveActivity.class);
+//					startActivityForResult(intent, 301);
+//				}
+//				else {
+//					final CustomDialog.Builder builder = new CustomDialog.Builder(Live_Kids_Own.this);
+//					builder.setTitle
+//					("创建您的直播：");
+//					builder.setPositiveButton("创建", new DialogInterface.OnClickListener() {
+//						public void onClick(DialogInterface dialog, int which) {
+//							dialog.dismiss();
+//							//设置你的操作事项
+//							if(builder.subject.getText().toString().replaceAll(" ", "").equals(""))
+//							{
+//								ToastClass.SetToast(Live_Kids_Own.this, "请输入主题!");
+//							}
+//							else {
+//								intent = new Intent();
+//								intent.putExtra("subject", builder.subject.getText().toString());
+//								intent.setClass(Live_Kids_Own.this, WriteLiveActivity.class);
+//								startActivityForResult(intent, 301);
+//							}
+//						}
+//					});
+//
+//					builder.setNegativeButton("取消",
+//                                              new android.content.DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                        }
+//                    });
+//
+//					builder.create().show();
+//				}
+//			}
+//		});
 	}
 	
 	
@@ -177,7 +175,7 @@ public class Live_Kids_Own extends Live_Kids_User{
 	{
 		TokenShared = getSharedPreferences("usermessage", 0);
 		tokenString = TokenShared.getString("token", "");
-        Log.e("sdc",tokenString);
+
         if(tokenString.equals(""))
 		{
 			ToastClass.SetToast(Live_Kids_Own.this, "需要先登录才能够查看自己直播");
@@ -214,10 +212,10 @@ public class Live_Kids_Own extends Live_Kids_User{
 	//设置底部check控件为显示状态,并初始化控件
 	private void SetBottomVisible()
 	{
-		live_kids_bottom = (RelativeLayout)findViewById(R.id.live_kids_bottom);
-		live_kids_check = (TextView)findViewById(R.id.live_kids_check);
-		live_kids_bottom.setVisibility(View.VISIBLE);
-		live_kids_check.setEnabled(false);
+//		live_kids_bottom = (RelativeLayout)findViewById(R.id.live_kids_bottom);
+//		live_kids_check = (TextView)findViewById(R.id.live_kids_check);
+//		live_kids_bottom.setVisibility(View.VISIBLE);
+//		live_kids_check.setEnabled(false);
 	}
     
 	//通过连接网络检查是否在继续直播
@@ -254,8 +252,7 @@ public class Live_Kids_Own extends Live_Kids_User{
 						
 						mhandler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
 						.sendToTarget();
-						mhandler.obtainMessage(Constant.MSG_SUCCESS)
-						.sendToTarget();
+
 					}
 					else
 					{

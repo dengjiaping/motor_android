@@ -5,14 +5,6 @@
     android:background="@drawable/user_itemmiddle_press"
     android:id="@+id/square_discuss_kids_post_layout"
     android:orientation="horizontal">
-
-    <ImageView 
-	  	android:layout_width="40dp"
-	   	android:layout_height="40dp"
-	   	android:id="@+id/post_item_kidlist_user_img"
-	   	android:layout_marginLeft="3dp"
-	   	android:layout_marginTop="3dp"
-	   	/>
     <LinearLayout 
         android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
@@ -22,41 +14,43 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="4dp"
             >
 			<TextView 
 	        	android:id="@+id/post_item_kidlist_user_name"
 	        	android:layout_width="wrap_content"
 	        	android:layout_height="wrap_content"
 	        	android:gravity="center_vertical"
-	        	android:textColor="#f0938c"
+	        	android:textColor="#41c1d7"
 	        	android:textSize="16sp"
 	        	/>
 			<TextView 
 	        	android:layout_width="wrap_content"
 	        	android:layout_height="wrap_content"
 	        	android:gravity="center_vertical"
-	        	android:textColor="#f0938c"
+	        	android:textColor="#41c1d7"
 	        	android:textSize="16sp"
-	        	android:text=":"
+	        	android:text=": "
 	        	/>
 			<TextView 
 			    android:id="@+id/post_item_kidlist_details"
 	        	android:layout_width="wrap_content"
 	        	android:layout_height="wrap_content"
 	        	android:gravity="center_vertical"
-	        	android:textColor="#AFAFAF"
+	        	android:textColor="#000000"
 	        	android:textSize="16sp"
 	        	/>
         </LinearLayout>
-        <TextView 
+        <TextView
+            android:id="@+id/post_item_kidlist_time"
 	      	android:layout_width="wrap_content"
 	       	android:layout_height="wrap_content"
 	        android:gravity="center_vertical"
 	        android:layout_marginTop="2dp"
 	        android:textColor="#AFAFAF"
-	        android:textSize="16sp"
-	        android:text="12小时前"
+            android:layout_marginLeft="4dp"
+	        android:textSize="12sp"
 	        />
     </LinearLayout>
 </LinearLayout>

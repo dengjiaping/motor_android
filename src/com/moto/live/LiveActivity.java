@@ -1,4 +1,5 @@
 package com.moto.live;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -86,6 +87,8 @@ public class LiveActivity extends Moto_RootActivity{
 	private String tokenString;
 	private int likenum = 0;
 	private int position = 0;
+
+    private TextView live_height_text;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -325,17 +328,28 @@ public class LiveActivity extends Moto_RootActivity{
 		// TODO Auto-generated method stub
 		options = ImageMethod.GetOptions();
 		Originaloptions = ImageMethod.GetOriginalOptions();
-		
+
+
 		live_list = CacheModel.getCacheLiveDate("linkedlist",LiveActivity.this);
 		carList = CacheModel.getPhotoCacheLiveDate("linkedlist",LiveActivity.this);
 		like_list = CacheModel.getLikeCacheLiveDate("linkedlist", LiveActivity.this);
 		myListView = (NoScrollListview)findViewById(R.id.live_listview);
+        live_height_text = (TextView)findViewById(R.id.live_height_text);
 		scrollView = (CustomScrollView)findViewById(R.id.live_myscrollview);
 		scrollView.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				ChangeScrollviewAlpha(scrollView, navigationBar);
+
+                if(scrollView.getScrollY() < 150)
+                {
+                    live_height_text.setVisibility(View.VISIBLE);
+                }
+                else {
+                    live_height_text.setVisibility(View.GONE);
+                }
+
 				return false;
 			}
 		});

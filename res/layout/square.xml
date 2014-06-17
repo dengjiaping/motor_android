@@ -7,12 +7,12 @@
 
    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="50.0dip" >       
-    <include 
+        android:layout_height="50.0dip" >
+    <include
         layout="@layout/title"
         />
 
-    <TextView   
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#ffffff"
@@ -20,8 +20,8 @@
         android:id="@+id/discuss_kids_title"
         android:layout_centerInParent="true"
         />
-    
-    <TextView 
+
+    <TextView
         android:id="@+id/sqare_theme"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
@@ -36,14 +36,15 @@
         />
 	</RelativeLayout>
 
-	<com.moto.listview.CustomScrollView 
+
+	<com.moto.listview.CustomScrollView
 	    android:id="@+id/discuss_kids_scrollview"
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
+	    android:layout_height="fill_parent"
 	    >
 	    <LinearLayout 
 	        android:layout_width="fill_parent"
-	    	android:layout_height="wrap_content"
+	    	android:layout_height="fill_parent"
 	    	android:orientation="vertical"
 	        >
 	    <RelativeLayout 
@@ -65,12 +66,22 @@
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal" />
    	</RelativeLayout>
+            <com.moto.mytextview.ShimmerTextView
+                android:id="@+id/discuss_kids_waittext"
+                android:layout_width="fill_parent"
+                android:layout_marginTop="40dp"
+                android:layout_height="fill_parent"
+                android:textSize="20sp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/refresh"
+                />
    		<com.moto.listview.NoScrollListview
+            android:visibility="gone"
 		    	android:id="@+id/square_listview"
 		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:layout_margin="10dp"
-		        android:dividerHeight="10dp"
+		        android:layout_height="fill_parent"
+		        android:dividerHeight="1dp"
 		        android:divider="#E7E7E7"
 		        android:scrollbars="none"/>
 	    </LinearLayout>

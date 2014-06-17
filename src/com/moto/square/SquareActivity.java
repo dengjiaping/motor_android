@@ -38,6 +38,7 @@ import com.moto.listview.ProgressBarView;
 import com.moto.main.R;
 import com.moto.myactivity.tabActivity;
 import com.moto.mymap.MyMapApplication;
+import com.moto.mytextview.ShimmerTextView;
 import com.moto.square.JazzyViewPager.TransitionEffect;
 import com.moto.utils.DateUtils;
 import com.moto.utils.StringUtils;
@@ -58,6 +59,7 @@ import java.util.List;
 public class SquareActivity extends tabActivity{
 	private NoScrollListview listview;
 	private CustomScrollView scrollView;
+    private ShimmerTextView waitText;
 	private TextView edit_theme;
 	private LinkedList<HashMap<String, Object>> list = new LinkedList<HashMap<String,Object>>();
 	private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
@@ -109,6 +111,7 @@ public class SquareActivity extends tabActivity{
 				// TODO Auto-generated method stub
 				intent = new Intent();
 				intent.putExtra("fid", fid);
+
 				intent.setClass(SquareActivity.this, Publish_post.class);
 				startActivityForResult(intent, 304);
 			}
@@ -168,12 +171,16 @@ public class SquareActivity extends tabActivity{
 				{
                         //获取成功
                     case Constant.MSG_SUCCESS:
+                        listview.setVisibility(View.VISIBLE);
+                        waitText.setVisibility(View.GONE);
                         isload = false;
                         isRefresh = false;
                         adapter.notifyDataSetChanged();
                         break;
 
                     case Constant.MSG_SUCCESSAGAIN:
+                        listview.setVisibility(View.VISIBLE);
+                        waitText.setVisibility(View.GONE);
                         if(isRefresh)
                         {
                             isRefresh = false;
@@ -190,6 +197,8 @@ public class SquareActivity extends tabActivity{
                         isRefresh = false;
                         break;
                     case Constant.MSG_NULL:
+                        listview.setVisibility(View.VISIBLE);
+                        waitText.setVisibility(View.GONE);
                         isload = false;
                         isRefresh = false;
                         scrollView.onRefreshComplete();
@@ -230,14 +239,14 @@ public class SquareActivity extends tabActivity{
 				// TODO Auto-generated method stub
 				intent = new Intent();
 				intent.putExtra("tid", list.get(arg2).get("tid").toString());
-				intent.putExtra("author", list.get(arg2).get("author").toString());
-				intent.putExtra("message", list.get(arg2).get("message").toString());
-				intent.putExtra("dateline", list.get(arg2).get("dateline").toString());
-                if(carList.get(arg2).toString().equals("[]"))
-                    intent.putExtra("photoname", "null");
-                else
-				    intent.putExtra("photoname", carList.get(arg2).get(0));
-
+//				intent.putExtra("author", list.get(arg2).get("author").toString());
+//				intent.putExtra("message", list.get(arg2).get("message").toString());
+//				intent.putExtra("dateline", list.get(arg2).get("dateline").toString());
+//                if(carList.get(arg2).toString().equals("[]"))
+//                    intent.putExtra("photoname", "null");
+//                else
+//				    intent.putExtra("photoname", carList.get(arg2).get(0));
+//
 				intent.putExtra("subject", list.get(arg2).get("subject").toString());
 				intent.setClass(SquareActivity.this, Theme_Post.class);
 				startActivityForResult(intent, 304);
@@ -264,6 +273,8 @@ public class SquareActivity extends tabActivity{
 		edit_theme = (TextView)findViewById(R.id.sqare_theme);
 		title = (TextView)findViewById(R.id.discuss_kids_title);
 		title.setText(title_name);
+
+        waitText = (ShimmerTextView)findViewById(R.id.discuss_kids_waittext);
 	}
 
 	private void initdata(){

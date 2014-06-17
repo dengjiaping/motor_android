@@ -2,7 +2,10 @@ package com.moto.main;
 
 import android.app.TabActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -29,8 +32,14 @@ import com.moto.inform.Inform_main;
 import com.moto.live.LiveActivity;
 import com.moto.live.Live_Kids_Own;
 import com.moto.main.AbstractInOutAnimationSet.Direction;
+import com.moto.select_morephoto.AlbumActivity;
 import com.moto.square.SquareActivity;
+import com.moto.toast.ToastClass;
 import com.moto.user.UserActivity;
+import com.moto.utils.StringUtils;
+
+import java.io.File;
+import java.util.ArrayList;
 
 public class Moto_MainActivity extends TabActivity {
     /** Called when the activity is first created. */
@@ -47,7 +56,17 @@ public class Moto_MainActivity extends TabActivity {
 
     private InOutRelativeLayout mButtonsWrapper;
     private boolean mAreButtonsShowins ;
-	
+    private InOutImageButton button_photo;
+    private InOutImageButton button_camera;
+    private InOutImageButton button_live;
+    private InOutImageButton button_write;
+    //照片路径
+    private String filepath;
+    private ArrayList<String> dataList = new ArrayList<String>();
+
+    //token
+    private SharedPreferences TokenShared;
+    private String tokenString;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +76,12 @@ public class Moto_MainActivity extends TabActivity {
         tabHost=this.getTabHost();
         TabHost.TabSpec spec;
         Intent intent;
+
+        //初始化四个图标
+        button_camera = (InOutImageButton)findViewById(R.id.button_camera);
+        button_photo = (InOutImageButton)findViewById(R.id.button_photo);
+        button_live = (InOutImageButton)findViewById(R.id.button_live);
+        button_write = (InOutImageButton)findViewById(R.id.button_write);
         
         intent=new Intent().setClass(this, SquareActivity.class);
         spec=tabHost.newTabSpec("square").setIndicator("square").setContent(intent);
@@ -105,6 +130,8 @@ public class Moto_MainActivity extends TabActivity {
                     @Override
                     public void onClick(View view) {
                         startButtonClickAnimations(view);
+
+
                     }
                 });
             }
@@ -243,29 +270,76 @@ public class Moto_MainActivity extends TabActivity {
     /**
      * 弹出收回按钮点击后动画
      *
-     * @param subject
+     * @param view
      */
-    private void startButtonClickAnimations(View subject) {
+    private void startButtonClickAnimations(View view) {
         mAreButtonsShowins = false;
 
         AnimationSet shrinkAnimationSet = new NotClickAnimationSet(600);
         shrinkAnimationSet.setInterpolator(new AnticipateInterpolator(2.0F));
-        shrinkAnimationSet.setAnimationListener(new CustomAnimationListener());
+//        shrinkAnimationSet.setAnimationListener(new CustomAnimationListener());
         radioButton.startAnimation(shrinkAnimationSet);
 
         // 为每一个按钮都设置动画
         for (int i = 0, count = mButtonsWrapper.getChildCount(); i < count; i++) {
             if (mButtonsWrapper.getChildAt(i) instanceof InOutImageButton) {
-                View view = mButtonsWrapper.getChildAt(i);
-                if (view.getId() == subject.getId()) {
+                View myview = mButtonsWrapper.getChildAt(i);
+                if (myview.getId() == view.getId()) {
                     // 点击按钮放大并消失
-                    view.startAnimation(new ClickAnimationSet(600));
+                    myview.startAnimation(new ClickAnimationSet(600));
                 } else {
                     // 未点击按钮缩小并消失
-                    view.startAnimation(new NotClickAnimationSet(600));
+                    myview.startAnimation(new NotClickAnimationSet(600));
                 }
             }
         }
+        TokenShared = getSharedPreferences("usermessage", 0);
+        tokenString = TokenShared.getString("token", "");
+
+        if(tokenString.equals(""))
+        {
+            ToastClass.SetToast(Moto_MainActivity.this, "请先登录");
+            //			Moto_MainActivity.radioGroup.check(R.id.main_tab_user);
+        }
+        else {
+            if(view == button_camera)
+            {
+                filepath = "/mnt/sdcard/DCIM/Camera/"
+                        + System.currentTimeMillis() + ".png";
+                final File file = new File(filepath);
+                final Uri imageuri = Uri.fromFile(file);
+                // TODO Auto-generated method stub
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageuri);
+                startActivityForResult(intent, 302);
+            }
+            else if(view == button_photo)
+            {
+                Intent intent = new Intent(Moto_MainActivity.this,
+                        AlbumActivity.class);
+                Bundle bundle = new Bundle();
+                // intent.putArrayListExtra("dataList", dataList);
+                bundle.putStringArrayList("dataList",
+                        StringUtils.getIntentArrayList(dataList));
+                intent.putExtras(bundle);
+                startActivityForResult(intent, 0);
+            }
+            else if(view == button_write)
+            {
+                ToastClass.SetToast(Moto_MainActivity.this,"write");
+            }
+            else if(view == button_live)
+            {
+                Intent intent = new Intent();
+                intent.setClass(Moto_MainActivity.this, Live_Kids_Own.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
+            }
+        }
+
+        setRotateToZero();
+        IsRotate = true;
+
     }
     /**
      * 弹出收回开关

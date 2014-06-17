@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,7 +28,6 @@ import com.moto.asydata.RequstClient;
 import com.moto.constant.Constant;
 import com.moto.constant.DialogMethod;
 import com.moto.constant.ImageMethod;
-import com.moto.img.ScaleImageView;
 import com.moto.listview.CustomScrollView;
 import com.moto.listview.CustomScrollView.OnLoadListener;
 import com.moto.listview.CustomScrollView.OnRefreshListener;
@@ -35,7 +35,9 @@ import com.moto.listview.NoScrollListview;
 import com.moto.main.R;
 import com.moto.myactivity.MyActivity;
 import com.moto.mymap.MyMapApplication;
+import com.moto.mytextview.MarqueeText;
 import com.moto.toast.ToastClass;
+import com.moto.utils.UrlUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import org.json.JSONArray;
@@ -54,25 +56,15 @@ public class Theme_Post extends MyActivity{
 	private LinkedList<HashMap<String, Object>> list;
 	private HashMap<String, Object> map;
 	private int count = 0;
-	private int num_post = 2;
+	private int num_post = 1;
 	private String tid;
-	private String author;
-	private String message;
-	private String dateline;
-	private String photoname;
-	private String subject;
 	private ImageView own_photos;
 	private String photoString = null;
 	private String response_theme_message;
 	private MyAdapter adapter;
 	private boolean isrefresh = false;
-	private TextView post_theme;
-	private TextView post_details;
-	private TextView post_user_name;
-	private ImageView post_user_img;
-	private ScaleImageView post_detail_img;
+	private MarqueeText post_theme;
 	private DisplayImageOptions options;
-	private DisplayImageOptions Originaloptions;
 	private Handler handler;
 	
 	private EditText response_theme;
@@ -90,7 +82,6 @@ public class Theme_Post extends MyActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.square_discuss_kids_post);
 		init();
-		assignment();
 		adapter = new MyAdapter(this, this, GroupList, ChildList);
 		listview.setAdapter(adapter);
 		GetAsyData();
@@ -147,11 +138,6 @@ public class Theme_Post extends MyActivity{
 					setResult(304);
 					Theme_Post.this.finish();
 				}
-                //				if(own_photos.getId() == getResources().getInteger(R.drawable.camera_up))
-                //				{
-                //					Bitmap bitmap = drawableToBitmap(own_photos.getBackground());
-                //					photoString = getBitmapStrBase64(bitmap);
-                //				}
 				else if(response_theme_message.replaceAll(" ", "").equals(""))
 				{
 					DialogMethod.dialogShow(Theme_Post.this,"请输入回复内容!");
@@ -215,45 +201,35 @@ public class Theme_Post extends MyActivity{
 				Theme_Post.this.finish();
 			}
 		});
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                intent = new Intent();
+                intent.putExtra("pid", pidList.get(i));
+                intent.setClass(Theme_Post.this, Theme_Post_Kids.class);
+                startActivityForResult(intent, 304);
+            }
+        });
 	}
     
 	private void init() {
 		// TODO Auto-generated method stub
 		options = ImageMethod.GetOptions();
-		Originaloptions = ImageMethod.GetOriginalOptions();
 		intent = getIntent();
 		tid = intent.getStringExtra("tid");
-		author = intent.getStringExtra("author");
-		message = intent.getStringExtra("message");
-		dateline = intent.getStringExtra("dateline");
-		photoname = intent.getStringExtra("photoname");
-		subject = intent.getStringExtra("subject");
+
+        post_theme = (MarqueeText)findViewById(R.id.post_title);
+        post_theme.setText(intent.getStringExtra("subject"));
+        post_theme.startScroll();
 		listview = (NoScrollListview)findViewById(R.id.post_main_list);
-		post_theme = (TextView)findViewById(R.id.post_theme_details);
-		post_user_name = (TextView)findViewById(R.id.post_user_name);
-		post_user_img = (ImageView)findViewById(R.id.post_user_img);
-		post_details = (TextView)findViewById(R.id.post_details);
-		post_detail_img = (ScaleImageView)findViewById(R.id.post_detail_img);
 		response_theme = (EditText)findViewById(R.id.post_response_theme_edit);
 		post_send = (ImageView)findViewById(R.id.post_send);
 		own_photos = (ImageView)findViewById(R.id.post_camera);
 		scrollView = (CustomScrollView)findViewById(R.id.post_scrollview);
 		leftpage = (ImageView)findViewById(R.id.return_post);
+
     }
-	private void assignment(){
-		post_theme.setText(subject);
-		post_user_name.setText(author);
-		post_details.setText(message);
-		MyMapApplication.imageLoader.displayImage(imgPath,  post_user_img,options,null);
-		if(!photoname.equals("null"))
-		{
-			String imageUrl = imgPath+photoname;
-			post_detail_img.setVisibility(View.VISIBLE);
-			MyMapApplication.imageLoader.displayImage(imageUrl,  post_detail_img,Originaloptions,null);
-			post_detail_img.setImageHeight(80);
-			post_detail_img.setImageWidth(100);
-		}
-	}
 	private void SetAsyResponse() {
 		// TODO Auto-generated method stub
 		param = new RequestParams();
@@ -349,10 +325,12 @@ public class Theme_Post extends MyActivity{
                     if(isrefresh)
                     {
                         GroupList.clear();
+                        num_post = 1;
                         ChildList.clear();
                     }
                     JSONObject jsonObject = new JSONObject(data);
                     if (jsonObject.getString("is").equals("1")) {
+
                         String data_details = jsonObject
                         .getString("detail_theme");
                         JSONArray array_detail = new JSONArray(data_details);
@@ -414,17 +392,18 @@ public class Theme_Post extends MyActivity{
     {
         map = new HashMap<String, Object>();
         try {
-            
             String author = jsonObject.getString("author");
             String message = jsonObject.getString("message");
             String dateline = jsonObject.getString("dateline");
             String photoname = jsonObject.getString("photoname");
             String pid = jsonObject.getString("pid");
+            String avatar = jsonObject.getString("avatar");
             map.put("author", author);
             map.put("message", message);
             map.put("dateline", dateline);
             map.put("photoname", photoname);
             map.put("pid", pid);
+            map.put("avatar",avatar);
             pidList.add(pid);
             map.put("num", num_post+"");
             num_post++;
@@ -440,13 +419,14 @@ public class Theme_Post extends MyActivity{
     {
         map = new HashMap<String, Object>();
         try {
-            
             String author = jsonObject.getString("author");
             String message = jsonObject.getString("message");
             String dateline = jsonObject.getString("dateline");
+//            String avatar = jsonObject.getString("avatar");
             map.put("author", author);
             map.put("message", message);
             map.put("dateline", dateline);
+//            map.put("avatar",avatar);
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -476,8 +456,8 @@ public class Theme_Post extends MyActivity{
 	//此类为上面getview里面view的引用，方便快速滑动
 	class ViewHolderKids{
 		TextView post_item_kidlist_details;
-		ImageView post_item_kidlist_user_img;
 		TextView post_item_kidlist_user_name;
+        TextView post_item_kidlist_time;
 	}
     //	内部类实现BaseAdapter  ，自定义适配器
 	class MyAdapter extends BaseAdapter{
@@ -535,8 +515,8 @@ public class Theme_Post extends MyActivity{
 			holder.post_item_user_name.setText((CharSequence) map.get("author"));
 			holder.post_item_details.setText((CharSequence) map.get("message"));
 			holder.post_item_num.setText((CharSequence) map.get("num"));
-			holder.original_item_poster_time.setText("11小时前");
-			MyMapApplication.imageLoader.displayImage(imgPath,  holder.post_item_user_img,options,null);
+			holder.original_item_poster_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
+			MyMapApplication.imageLoader.displayImage(UrlUtils.avatarUrl(map.get("avatar").toString()),  holder.post_item_user_img,options,null);
 			num = position;
 			holder.post_item_reaponse.setOnClickListener(new OnClickListener() {
 				
@@ -560,16 +540,21 @@ public class Theme_Post extends MyActivity{
 					LinearLayout layout = (LinearLayout) inflater.inflate(
                                                                           R.layout.square_discuss_kids_post_kidslistitem, null);
 					kidsholder.post_item_kidlist_details = (TextView)layout.findViewById(R.id.post_item_kidlist_details);
-					kidsholder.post_item_kidlist_user_img = (ImageView)layout.findViewById(R.id.post_item_kidlist_user_img);
+
 					kidsholder.post_item_kidlist_user_name = (TextView)layout.findViewById(R.id.post_item_kidlist_user_name);
+                    kidsholder.post_item_kidlist_time = (TextView)layout.findViewById(R.id.post_item_kidlist_time);
 					layout.setTag(kidsholder);
 					kidsholder = (ViewHolderKids) layout.getTag();
                     
 					kidsholder.post_item_kidlist_details.setText((CharSequence) list.get(i).get("message"));
 					kidsholder.post_item_kidlist_user_name.setText((CharSequence) list.get(i).get("author"));
-					MyMapApplication.imageLoader.displayImage(imgPath,  kidsholder.post_item_kidlist_user_img,options,null);
+                    kidsholder.post_item_kidlist_time.setText(com.moto.utils.DateUtils.timestampToDeatil(list.get(i).get("dateline")+""));
+
 					holder.square_discuss_kids_post_item_groups.addView(layout);
 				}
+                LayoutInflater inflater = LayoutInflater.from(context);
+                LinearLayout line = (LinearLayout)inflater.inflate(R.layout.theme_post_textline, null);
+                holder.square_discuss_kids_post_item_groups.addView(line);
 			}
 			return convertView;
 		}
