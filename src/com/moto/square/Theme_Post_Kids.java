@@ -322,6 +322,7 @@ public class Theme_Post_Kids extends MyActivity{
                                 count++;
 
                             } else {
+
                                 handler.obtainMessage(Constant.MSG_NULL).sendToTarget();
                             }
                         } catch (Exception e) {
