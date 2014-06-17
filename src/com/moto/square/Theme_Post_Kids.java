@@ -30,6 +30,7 @@ import com.moto.listview.NoScrollListview;
 import com.moto.main.R;
 import com.moto.myactivity.MyActivity;
 import com.moto.mymap.MyMapApplication;
+import com.moto.mytextview.ShimmerTextView;
 import com.moto.toast.ToastClass;
 import com.moto.utils.UrlUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -59,6 +60,7 @@ public class Theme_Post_Kids extends MyActivity{
     private DisplayImageOptions options;
     private Handler handler;
     private ImageView leftpage;
+    private ShimmerTextView waitText;
 
     private String readcommentUri = "http://damp-reef-9073.herokuapp.com/api/square/readcommentforpost";
     private String CreatecommentUri = "http://damp-reef-9073.herokuapp.com/api/square/createcommentforpost";
@@ -82,20 +84,30 @@ public class Theme_Post_Kids extends MyActivity{
                 {
                     //获取成功
                     case Constant.MSG_SUCCESS:
+                        listview.setVisibility(View.VISIBLE);
+                        waitText.setVisibility(View.GONE);
                         isrefresh = false;
                         adapter.notifyDataSetChanged();
                         break;
 
                     case Constant.MSG_SUCCESSAGAIN:
+                        listview.setVisibility(View.VISIBLE);
+                        waitText.setVisibility(View.GONE);
                         isrefresh = false;
                         adapter.notifyDataSetChanged();
                         scrollView.onRefreshComplete();
                         scrollView.onLoadComplete();
                         break;
                     case Constant.MSG_NULL:
+                        listview.setVisibility(View.VISIBLE);
+                        waitText.setVisibility(View.GONE);
                         isrefresh = false;
                         scrollView.onRefreshComplete();
                         scrollView.onLoadComplete();
+                        break;
+                    case Constant.MSG_HAVENOTHING:
+
+                        waitText.setText("暂时还没有任何数据哟");
                         break;
                 }
                 super.handleMessage(msg);
@@ -187,6 +199,7 @@ public class Theme_Post_Kids extends MyActivity{
         intent = getIntent();
         pid = intent.getStringExtra("pid");
         options = ImageMethod.GetOptions();
+        waitText = (ShimmerTextView)findViewById(R.id.kids_post_response_waittext);
         leftpage = (ImageView)findViewById(R.id.kids_post_response_listview_return);
         send = (ImageView)findViewById(R.id.post_kids_send);
         editText = (EditText)findViewById(R.id.post_kids_response_theme_edit);
@@ -288,15 +301,22 @@ public class Theme_Post_Kids extends MyActivity{
                                     JSONObject jsonObject2 = (JSONObject) array.get(i);
                                     Item_list.add(GetMap(jsonObject2));
                                 }
-                                if (count == 0) {
-                                    if (isrefresh)
+                                if(Item_list.size() > 0)
+                                {
+                                    if (count == 0) {
+                                        if (isrefresh)
+                                            handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
+                                                    .sendToTarget();
+                                        else
+                                            handler.obtainMessage(Constant.MSG_SUCCESS)
+                                                    .sendToTarget();
+                                    } else {
                                         handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
                                                 .sendToTarget();
-                                    else
-                                        handler.obtainMessage(Constant.MSG_SUCCESS)
-                                                .sendToTarget();
-                                } else {
-                                    handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
+                                    }
+                                }
+                                else{
+                                    handler.obtainMessage(Constant.MSG_HAVENOTHING)
                                             .sendToTarget();
                                 }
                                 count++;

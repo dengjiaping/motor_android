@@ -38,7 +38,18 @@
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"
 	        >
-   		    <com.moto.listview.NoScrollListview 
+            <com.moto.mytextview.ShimmerTextView
+                android:id="@+id/kids_post_response_waittext"
+                android:layout_width="fill_parent"
+                android:layout_marginTop="40dp"
+                android:layout_height="fill_parent"
+                android:textSize="20sp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/refresh"
+                />
+   		    <com.moto.listview.NoScrollListview
+                android:visibility="gone"
 	        	android:id="@+id/kids_post_response_listview"
 	        	android:layout_width="fill_parent"
 	        	android:layout_height="fill_parent"

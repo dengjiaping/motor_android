@@ -36,6 +36,7 @@ import com.moto.main.R;
 import com.moto.myactivity.MyActivity;
 import com.moto.mymap.MyMapApplication;
 import com.moto.mytextview.MarqueeText;
+import com.moto.mytextview.ShimmerTextView;
 import com.moto.toast.ToastClass;
 import com.moto.utils.UrlUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -66,6 +67,7 @@ public class Theme_Post extends MyActivity{
 	private MarqueeText post_theme;
 	private DisplayImageOptions options;
 	private Handler handler;
+    private ShimmerTextView waitText;
 	
 	private EditText response_theme;
 	private ImageView post_send;
@@ -96,17 +98,23 @@ public class Theme_Post extends MyActivity{
 				{
                         //获取成功
                     case Constant.MSG_SUCCESS:
+                        listview.setVisibility(View.VISIBLE);
+                        waitText.setVisibility(View.GONE);
                         isrefresh = false;
                         adapter.notifyDataSetChanged();
                         break;
                         
                     case Constant.MSG_SUCCESSAGAIN:
+                        listview.setVisibility(View.VISIBLE);
+                        waitText.setVisibility(View.GONE);
                         isrefresh = false;
                         adapter.notifyDataSetChanged();
                         scrollView.onRefreshComplete();
                         scrollView.onLoadComplete();
                         break;
                     case Constant.MSG_NULL:
+                        listview.setVisibility(View.VISIBLE);
+                        waitText.setVisibility(View.GONE);
                         isrefresh = false;
                         scrollView.onRefreshComplete();
                         scrollView.onLoadComplete();
@@ -117,6 +125,10 @@ public class Theme_Post extends MyActivity{
                     case Constant.MSG_TESTFALTH:
                         ToastClass.SetToast(Theme_Post.this, msg.obj.toString());
                         DialogMethod.stopProgressDialog();
+                        break;
+                    case Constant.MSG_HAVENOTHING:
+
+                        waitText.setText("暂时还没有任何数据哟");
                         break;
 				}
 				super.handleMessage(msg);
@@ -218,6 +230,8 @@ public class Theme_Post extends MyActivity{
 		options = ImageMethod.GetOptions();
 		intent = getIntent();
 		tid = intent.getStringExtra("tid");
+
+        waitText = (ShimmerTextView)findViewById(R.id.post_waittext);
 
         post_theme = (MarqueeText)findViewById(R.id.post_title);
         post_theme.setText(intent.getStringExtra("subject"));
@@ -352,16 +366,24 @@ public class Theme_Post extends MyActivity{
                             ChildList.add(list);
                         }
                         
-                        if (count == 0) {
-                            if (isrefresh)
+                        if(GroupList.size() > 0)
+                        {
+                            if (count == 0) {
+                                if (isrefresh)
+                                    handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
+                                            .sendToTarget();
+                                else
+                                    handler.obtainMessage(Constant.MSG_SUCCESS)
+                                            .sendToTarget();
+                            } else {
                                 handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
-                                .sendToTarget();
-                            else
-                                handler.obtainMessage(Constant.MSG_SUCCESS)
-                                .sendToTarget();
-                        } else {
-                            handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
-                            .sendToTarget();
+                                        .sendToTarget();
+                            }
+                        }
+                        else
+                        {
+                            handler.obtainMessage(Constant.MSG_HAVENOTHING)
+                                    .sendToTarget();
                         }
                         count++;
                         

@@ -3,10 +3,11 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:clickable="true"
-    android:background="@drawable/live_item_press"
+    android:background="#E7E7E7"
     android:orientation="vertical" >
 
     <LinearLayout
+        android:background="@drawable/live_item_press"
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

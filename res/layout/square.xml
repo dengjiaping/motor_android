@@ -78,12 +78,12 @@
                 />
    		<com.moto.listview.NoScrollListview
             android:visibility="gone"
-		    	android:id="@+id/square_listview"
-		        android:layout_width="fill_parent"
-		        android:layout_height="fill_parent"
-		        android:dividerHeight="1dp"
-		        android:divider="#E7E7E7"
-		        android:scrollbars="none"/>
+		    android:id="@+id/square_listview"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:dividerHeight="1dp"
+		    android:divider="#E7E7E7"
+		    android:scrollbars="none"/>
 	    </LinearLayout>
 	</com.moto.listview.CustomScrollView>
 </LinearLayout>

@@ -204,6 +204,10 @@ public class SquareActivity extends tabActivity{
                         scrollView.onRefreshComplete();
                         scrollView.onLoadComplete();
                         break;
+                    case Constant.MSG_HAVENOTHING:
+
+                        waitText.setText("暂时还没有任何帖子哟");
+                        break;
 				}
 				super.handleMessage(msg);
 			}
@@ -450,17 +454,24 @@ public class SquareActivity extends tabActivity{
 							JSONObject jsonObject2 = (JSONObject) array.get(i);
 							list.add(GetMap(jsonObject2));
 						}
-						if (!isload) {
-							if (isRefresh)
-								handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
-                                .sendToTarget();
-							else
-								handler.obtainMessage(Constant.MSG_SUCCESS)
-                                .sendToTarget();
-						} else {
-							handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
-                            .sendToTarget();
-						}
+						if(list.size() > 0)
+                        {
+                            if (!isload) {
+                                if (isRefresh)
+                                    handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
+                                            .sendToTarget();
+                                else
+                                    handler.obtainMessage(Constant.MSG_SUCCESS)
+                                            .sendToTarget();
+                            } else {
+                                handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
+                                        .sendToTarget();
+                            }
+                        }
+                        else{
+                            handler.obtainMessage(Constant.MSG_HAVENOTHING)
+                                    .sendToTarget();
+                        }
 						count++;
 
 					} else {
