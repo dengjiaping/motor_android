@@ -77,7 +77,7 @@ public class SquareNetworkModel extends MotoNetWorkModel{
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
-			avatarParam.put("photo", avatHash);
+			avatarParam.put("photo", result);
 			connectWithPostData(avatarParam,"createnewtheme");
 		}
 		}

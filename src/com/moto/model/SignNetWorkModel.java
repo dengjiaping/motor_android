@@ -31,6 +31,7 @@ public class SignNetWorkModel extends MotoNetWorkModel {
 		 		mshared = cx.getSharedPreferences("usermessage", 0);
 		 		
 		 		String bpush_id = mshared.getString("bpush_id", "");
+
 		 		String channel_id = mshared.getString("channel_id", "");
 		 		String username = mshared.getString("username", "");
 		 		if (bpush_id.length() > 1) {

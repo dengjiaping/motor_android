@@ -1,11 +1,4 @@
 package com.moto.live;
-import java.util.HashMap;
-import java.util.LinkedList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,17 +19,23 @@ import com.moto.asydata.RequstClient;
 import com.moto.constant.Constant;
 import com.moto.constant.DialogMethod;
 import com.moto.constant.ImageMethod;
-import com.moto.date.DateUtils;
 import com.moto.img.ScaleImageView;
 import com.moto.listview.CustomScrollView;
-import com.moto.listview.NoScrollListview;
 import com.moto.listview.CustomScrollView.OnLoadListener;
 import com.moto.listview.CustomScrollView.OnRefreshListener;
+import com.moto.listview.NoScrollListview;
 import com.moto.main.R;
 import com.moto.myactivity.MyActivity;
 import com.moto.mymap.MyMapApplication;
 import com.moto.toast.ToastClass;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class LiveKidsResponse extends MyActivity implements OnClickListener{
     
@@ -67,8 +66,8 @@ public class LiveKidsResponse extends MyActivity implements OnClickListener{
 	private SharedPreferences TokenShared;
 	private DisplayImageOptions Originaloptions;
 	private String tokenString;
-	private String readItemCommentUri = "http://damp-reef-9073.herokuapp.com/api/live/readliveitemcomment";
-	private String CreateItemCommentUri = "http://damp-reef-9073.herokuapp.com/api/live/createliveitemcomment";
+	private String readItemCommentUri = path+"api/live/readliveitemcomment";
+	private String CreateItemCommentUri = path+"api/live/createliveitemcomment";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub

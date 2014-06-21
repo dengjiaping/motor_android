@@ -76,7 +76,7 @@ public class LiveActivity extends Moto_RootActivity{
 	private boolean isrefresh = false;
 	private boolean isfirst = true;
     private boolean isload = false;
-	private String uriString = "http://damp-reef-9073.herokuapp.com/api/live/readbireflive";
+	private String uriString = path+"api/live/readbireflive";
     //	private ProgressBar progressBar_loading;
     //	private ImageView refresh;
 	

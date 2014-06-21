@@ -77,8 +77,8 @@ public class Theme_Post extends MyActivity{
 	private SharedPreferences TokenShared;
 	private String tokenString;
 	ArrayList<String> pidList = new ArrayList<String>();
-	private String CreateCommentUri = "http://damp-reef-9073.herokuapp.com/api/square/createpostfortheme";
-	private String readDetailUri = "http://damp-reef-9073.herokuapp.com/api/square/readdetailtheme";
+	private String CreateCommentUri = path+"api/square/createpostfortheme";
+	private String readDetailUri = path+"api/square/readdetailtheme";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub

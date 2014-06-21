@@ -143,6 +143,7 @@
 	<string name="gl_choose_title">请选择图片</string>
     <string name="register_agree">我已阅读并同意</string>
     <string name="register_policy">使用条款和隐私政策</string>
+    <string name="unknownposition">未知位置</string>
     <!-- Account type -->
     <string name="facebook">Facebook</string>
     <string name="flickr">Flickr</string>

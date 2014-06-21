@@ -1,13 +1,5 @@
 package com.moto.live;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,12 +17,19 @@ import com.moto.asydata.LoadDatahandler;
 import com.moto.asydata.RequstClient;
 import com.moto.constant.Constant;
 import com.moto.listview.CustomScrollView;
-import com.moto.listview.NoScrollListview;
 import com.moto.listview.CustomScrollView.OnLoadListener;
 import com.moto.listview.CustomScrollView.OnRefreshListener;
+import com.moto.listview.NoScrollListview;
 import com.moto.main.R;
 import com.moto.myactivity.MyActivity;
 import com.moto.toast.ToastClass;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class Live_kidsAllResponse extends MyActivity{
     
@@ -49,8 +48,8 @@ public class Live_kidsAllResponse extends MyActivity{
 	private SharedPreferences TokenShared;
 	private String tokenString;
 	private Handler handler;
-	private String readCommentUri = "http://damp-reef-9073.herokuapp.com/api/live/readlivecomment";
-	private String CreateCommentUri = "http://damp-reef-9073.herokuapp.com/api/live/createlivecomment";
+	private String readCommentUri = path+"api/live/readlivecomment";
+	private String CreateCommentUri = path+"api/live/createlivecomment";
 	@Override	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);

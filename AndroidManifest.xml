@@ -136,7 +136,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:theme="@android:style/Theme.NoTitleBar" />
-          
+
+        <activity
+            android:name="com.moto.live.User_OwnPage"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
           <activity 
             android:name="com.moto.live.Live_Kids_Map"
             android:screenOrientation="portrait"

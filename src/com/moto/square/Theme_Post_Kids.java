@@ -63,8 +63,8 @@ public class Theme_Post_Kids extends MyActivity{
     private ImageView leftpage;
     private ShimmerTextView waitText;
 
-    private String readcommentUri = "http://damp-reef-9073.herokuapp.com/api/square/readcommentforpost";
-    private String CreatecommentUri = "http://damp-reef-9073.herokuapp.com/api/square/createcommentforpost";
+    private String readcommentUri = path+"api/square/readcommentforpost";
+    private String CreatecommentUri = path+"api/square/createcommentforpost";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub

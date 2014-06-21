@@ -34,7 +34,7 @@ public class MotoNetWorkModel {
  * 网络服务请求的route路径
  *  	
  */	
-	private final static String api_url = "http://damp-reef-9073.herokuapp.com/api/";
+	private final static String api_url = "http://motor-env-e94pufmw8k.elasticbeanstalk.com/api/";
 	public String route;
 	
 
@@ -90,7 +90,7 @@ public class MotoNetWorkModel {
 				super.onSuccess(data);
 				try {
 					JSONObject jsonObject = new JSONObject(data);
-					Log.d("data", jsonObject.toString());
+					Log.e("data", jsonObject.toString());
 					if (jsonObject.getString("is").equals("1")) {
 						netWorkModelListener.handleNetworkDataWithSuccess(jsonObject);
 					}
@@ -220,7 +220,7 @@ public class MotoNetWorkModel {
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			param.put(imageArrayName, result);
-			Log.e("param", param.toString());
+		
 			connectWithPostData(param, act);
 		}
 	}

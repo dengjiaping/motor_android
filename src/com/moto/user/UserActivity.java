@@ -100,8 +100,8 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 	protected String imgPath = "http://motor.qiniudn.com/";
 
 	private String token;
-	private String recentPostUri = "http://damp-reef-9073.herokuapp.com/api/me/readrecentpost";
-	private String readUri = "http://damp-reef-9073.herokuapp.com/api/me/readprofile";
+	private String recentPostUri = path+"api/me/readrecentpost";
+	private String readUri = path+"api/me/readprofile";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub

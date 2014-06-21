@@ -49,8 +49,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import darko.imagedownloader.ImageLoader;
-
 public class WriteLiveActivity extends Moto_RootActivity implements OnClickListener,EmojiconsFragment.OnEmojiconBackspaceClickedListener,EmojiconGridFragment.OnEmojiconClickedListener{
 	private ImageView mention;
 	private ImageView camera;
@@ -87,10 +85,8 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 	private ArrayList<String> dataList = new ArrayList<String>();
     private LinkedList<String> compressList = new LinkedList<String>();
 	private GridImageAdapter gridImageAdapter;
-	
-	public ImageLoader loader;
-	private String writeUri = "http://damp-reef-9073.herokuapp.com/api/live/writelive";
-	private String EndLiveUri = "http://damp-reef-9073.herokuapp.com/api/live/endliving";
+
+	private String EndLiveUri = path+"api/live/endliving";
 	private ArrayList<Image> lovecarImage = new ArrayList<Image>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

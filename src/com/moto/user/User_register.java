@@ -1,28 +1,20 @@
 package com.moto.user;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.moto.asydata.LoadCacheResponseLoginouthandler;
-import com.moto.asydata.LoadDatahandler;
-import com.moto.asydata.RequstClient;
+
 import com.moto.constant.DialogMethod;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
 import com.moto.model.SignNetWorkModel;
-import com.moto.myactivity.MyActivity;
 import com.moto.validation.Validation;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class User_register extends Moto_RootActivity implements OnClickListener{
 	
@@ -36,7 +28,6 @@ public class User_register extends Moto_RootActivity implements OnClickListener{
 	private String nameString;
 	private String emailString;
 	private String passwordString;
-	private String uriString = "http://damp-reef-9073.herokuapp.com/api/user/signin";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -113,6 +104,7 @@ public class User_register extends Moto_RootActivity implements OnClickListener{
                 DialogMethod.dialogShow(User_register.this, "请阅读并同意机车党使用协议");
             }
 			else {
+
                 new SignNetWorkModel(User_register.this,User_register.this).signIn(nameString, passwordString, emailString);
 			}
 		}
@@ -121,11 +113,8 @@ public class User_register extends Moto_RootActivity implements OnClickListener{
     @Override
     public void handleNetworkDataWithSuccess(JSONObject jsonObject) throws JSONException {
         super.handleNetworkDataWithSuccess(jsonObject);
-        Log.d("log22",jsonObject.getString("is"));
         Toast.makeText(User_register.this, "注册成功", Toast.LENGTH_SHORT).show();
-        Log.d("log",jsonObject.getString("is"));
         DialogMethod.stopProgressDialog();
-        Log.d("log1",jsonObject.getString("is"));
         new SignNetWorkModel(User_register.this,User_register.this ).registerBpush(User_register.this);
         User_register.this.finish();
     }
@@ -133,65 +122,19 @@ public class User_register extends Moto_RootActivity implements OnClickListener{
     @Override
     public void handleNetworkDataWithFail(JSONObject jsonObject) throws JSONException {
         Toast.makeText(User_register.this, "注册失败", Toast.LENGTH_SHORT).show();
+        DialogMethod.stopProgressDialog();
     }
 
-    //	private void GetAsyData() {
-//		// TODO Auto-generated method stub
-//		param = new RequestParams();
-//		param.put("email", emailString);
-//		param.put("username", nameString);
-//		param.put("password", passwordString);
-//
-//		RequstClient.post(uriString, param, new LoadCacheResponseLoginouthandler(
-//				User_register.this,
-//				new LoadDatahandler(){
-//
-//			@Override
-//			public void onStart() {
-//				// TODO Auto-generated method stub
-//				super.onStart();
-//			}
-//
-//			@Override
-//			public void onLoadCaches(String data) {
-//				// TODO Auto-generated method stub
-//				super.onLoadCaches(data);
-//			}
-//
-//			@Override
-//			public void onSuccess(String data) {
-//				// TODO Auto-generated method stub
-//				super.onSuccess(data);
-//				try {
-//                    Log.d("log22",data.toString());
-//					JSONObject jsonObject = new JSONObject(data);
-////					if (jsonObject.getInt("is") == 1) {
-//                        Log.d("log22",jsonObject.getString("is"));
-//                        Toast.makeText(User_register.this, "注册成功", Toast.LENGTH_SHORT).show();
-//                        Log.d("log",jsonObject.getString("is"));
-//                        DialogMethod.stopProgressDialog();
-//                        Log.d("log1",jsonObject.getString("is"));
-//                        User_register.this.finish();
-//					}
-//				} catch (Exception e) {
-//					// TODO: handle exception
-//				}
-//
-//			}
-//
-//			@Override
-//			public void onFailure(String error, String message) {
-//				// TODO Auto-generated method stub
-//				super.onFailure(error, message);
-//				DialogMethod.dialogShow(User_register.this,message);
-//			}
-//
-//			@Override
-//			public void onFinish() {
-//				// TODO Auto-generated method stub
-//				super.onFinish();
-//			}
-//
-//		}));
-//	}
+    @Override
+    public void handleNetworkDataGetFail(String message) throws JSONException {
+        super.handleNetworkDataGetFail(message);
+        Toast.makeText(User_register.this, message, Toast.LENGTH_SHORT).show();
+        DialogMethod.stopProgressDialog();
+    }
+
+    @Override
+    public void handleNetworkDataStart() throws JSONException {
+        super.handleNetworkDataStart();
+        DialogMethod.startProgressDialog(User_register.this,"注册中...");
+    }
 }

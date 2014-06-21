@@ -1,22 +1,9 @@
 package com.moto.inform;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import com.moto.main.Moto_RootActivity;
-import com.moto.main.R;
-import com.moto.model.InformNetworkModel;
-import com.moto.utils.DateUtils;
-import com.moto.welcome.MyPushMessageReceiver;
-import com.moto.welcome.MyPushMessageReceiver.EventHandler;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,9 +16,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.moto.main.Moto_RootActivity;
+import com.moto.main.R;
+import com.moto.model.InformNetworkModel;
+import com.moto.utils.DateUtils;
+import com.moto.welcome.MyPushMessageReceiver;
+import com.moto.welcome.MyPushMessageReceiver.EventHandler;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Chat_privateActivity extends Moto_RootActivity implements EventHandler{
     private ImageView sendimage = null;
@@ -40,7 +37,6 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
     private List<ChatEntity> chatList = null;
     private ChatAdapter chatAdapter = null;
     private ImageView inform_chat_return;
-    boolean jianghua;
 
     public String otherUserName;
     public String meName;

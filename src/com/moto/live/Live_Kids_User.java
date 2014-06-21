@@ -66,6 +66,7 @@ import com.moto.photo.UserPhotosView.onPagerPhotoItemClickListener;
 import com.moto.toast.ToastClass;
 import com.moto.utils.DateUtils;
 import com.moto.utils.StringUtils;
+import com.moto.utils.UrlUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener;
@@ -101,7 +102,6 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 	protected NoScrollListview myListView;
 	protected MyAdapter adapter;
 	protected boolean isRefresh = false;
-	protected boolean IsfirstIn = true;
     private boolean isload = false;
 	protected int count = 0;
 	protected DisplayImageOptions options;
@@ -109,7 +109,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 	
 	protected ProgressBar loadingProgressBar;
 	protected int screenWidth;
-	protected String uriString = "http://damp-reef-9073.herokuapp.com/api/live/readdetaillive";
+	protected String uriString = path+"api/live/readdetaillive";
 	//定位所需变量
 	protected AMap aMap;
 	protected MapView mapView;
@@ -174,6 +174,11 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 		aMap.setOnInfoWindowClickListener(this);// 设置点击infoWindow事件监听器
 		aMap.setInfoWindowAdapter(this);// 设置自定义InfoWindow样式
         //		addMarkersToMap();// 往地图上添加marker
+        if(list.size()>0)
+        {
+            aMap.clear();
+            addMarkersToMap();// 往地图上添加marker
+        }
 	}
     
 	protected void scrollListener()
@@ -187,6 +192,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
+
 						isRefresh = true;
 						count = 0;
 						GetAsyData();
@@ -223,6 +229,15 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 				}.execute();
 			}
 		});
+
+        user_img.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("subject",subject);
+                pushToNextActivity(bundle,User_OwnPage.class,304);
+            }
+        });
 	}
 	//设置handler
 	protected void SetHandler()
@@ -256,7 +271,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
                             avatar = list.get(0).get("avatar").toString();
                             if(!avatar.equals("null"))
                             {
-                                MyMapApplication.imageLoader.displayImage(imgPath+avatar+"?imageView2/1/w/40/h/40",  user_img,options,null);
+                                MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl(avatar),  user_img,options,null);
                             }
                         }
 
@@ -428,21 +443,21 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                     long arg3) {
-				// TODO Auto-generated method stub
-				intent = new Intent();
-				intent.putExtra("pid", list.get(arg2).get("pid").toString());
-				intent.putExtra("subject", subject);
-                intent.putExtra("dateline",list.get(arg2).get("dateline").toString());
-				int num = carList.get(arg2).size();
-				if(num == 0)
-				{
-					intent.putExtra("photoname", "null");
-				}
-				else {
-					intent.putExtra("photoname", carList.get(arg2).get(num - 1));
-				}
-				intent.setClass(Live_Kids_User.this, LiveKidsResponse.class);
-				startActivityForResult(intent, 304);
+		// TODO Auto-generated method stub
+		intent = new Intent();
+		intent.putExtra("pid", list.get(arg2).get("pid").toString());
+		intent.putExtra("subject", subject);
+        intent.putExtra("dateline",list.get(arg2).get("dateline").toString());
+	    int num = carList.get(arg2).size();
+		if(num == 0)
+	    {
+		    intent.putExtra("photoname", "null");
+		}
+		else {
+			intent.putExtra("photoname", carList.get(arg2).get(num - 1));
+		}
+		intent.setClass(Live_Kids_User.this, LiveKidsResponse.class);
+		startActivityForResult(intent, 304);
 			}
 		});
 	}
@@ -496,8 +511,17 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 		
 		if(list.size() == 0)
 		{
+            loadingProgressBar.setVisibility(View.VISIBLE);
 			GetAsyData();
 		}
+        else{
+            avatar = list.get(0).get("avatar").toString();
+            if(!avatar.equals("null"))
+            {
+                MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl(avatar),  user_img,options,null);
+            }
+
+        }
 	}
 	
 	protected void GetAsyData() {
@@ -544,9 +568,8 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 				// TODO Auto-generated method stub
 				super.onSuccess(data);
 				try {
-					if(isRefresh || IsfirstIn)
+					if(isRefresh)
 					{
-						IsfirstIn = false;
 						list.clear();
 						LocationList.clear();
 						WidthHeightList.clear();
@@ -719,7 +742,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
             holder.live_kids_item_details = (TextView)convertView.findViewById(R.id.live_kids_item_details);
             holder.live_kids_item_time_text = (TextView)convertView.findViewById(R.id.live_kids_item_time_text);
             holder.live_kids_item_position_text = (TextView)convertView.findViewById(R.id.live_kids_item_position_text);
-            holder.live_kids_item_position = (ImageView)convertView.findViewById(R.id.live_kids_item_position);
+//            holder.live_kids_item_position = (ImageView)convertView.findViewById(R.id.live_kids_item_position);
             holder.live_kids_item_user_img = (ImageView)convertView.findViewById(R.id.live_kids_item_user_img);
             holder.mUpvPhotos = (UserPhotosView)convertView.findViewById(R.id.otherprofile_upv_photos);
             //				convertView.setTag(holder);
@@ -731,8 +754,11 @@ OnInfoWindowClickListener, InfoWindowAdapter{
             holder.live_kids_item_time_text.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
             if(!map.get("location").toString().equals("null"))
             {
-            	holder.live_kids_item_position.setVisibility(View.VISIBLE);
+//            	holder.live_kids_item_position.setVisibility(View.VISIBLE);
             	holder.live_kids_item_position_text.setText((CharSequence) map.get("location"));
+            }
+            else {
+                holder.live_kids_item_position_text.setText(R.string.unknownposition);
             }
             int num = carList.get(position).size();
 			if(num > 0)
@@ -759,7 +785,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 						overridePendingTransition(R.anim.zoom_enter, 0);
 					}
 				});
-				String imageUrl = imgPath+carList.get(position).get(carList.get(position).size()-1);
+				String imageUrl = UrlUtils.imageUrl(carList.get(position).get(carList.get(position).size()-1));
 				holder.live_kids_item_img.setVisibility(View.VISIBLE);
 				MyMapApplication.imageLoader.displayImage(imageUrl, holder.live_kids_item_img,Originaloptions,new SimpleImageLoadingListener(){
 					@Override
@@ -842,7 +868,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 		TextView live_kids_item_details;
 		TextView live_kids_item_time_text;
 		TextView live_kids_item_position_text;
-		ImageView live_kids_item_position;
+//		ImageView live_kids_item_position;
 		ImageView live_kids_item_user_img;
 		UserPhotosView mUpvPhotos;// 照片
 		ProgressBarView progressBarView;

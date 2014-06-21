@@ -30,17 +30,20 @@
         			android:layout_width="40dp"
         			android:layout_height="40dp"
         			android:clickable="true"
+                     android:layout_centerVertical="true"
         			android:layout_marginLeft="3dp"
         			android:layout_marginTop="3dp"
         			android:id="@+id/live_kids_user_img"
         			/>
 	             <LinearLayout 
-	                android:layout_toRightOf="@id/live_kids_user_img"
-	                android:layout_width="wrap_content"
-	            	android:layout_height="wrap_content"
-	            	android:layout_gravity="center_vertical"
-	            	android:layout_marginLeft="5dp"
-	            	android:orientation="vertical"
+	                 android:layout_toRightOf="@id/live_kids_user_img"
+	                 android:layout_width="wrap_content"
+	            	 android:layout_height="wrap_content"
+                     android:gravity="center_vertical"
+                     android:layout_centerVertical="true"
+	            	 android:layout_gravity="center_vertical"
+	            	 android:layout_marginLeft="7dp"
+	            	 android:orientation="vertical"
 	                 >
 	                 <TextView
 	   	    			android:id="@+id/live_kids_title"
@@ -48,19 +51,10 @@
 	   	    			android:layout_width="wrap_content"
 	   	    			android:layout_height="wrap_content"
 	   	    			android:singleLine="true"
+                        android:gravity="center_vertical"
 	   	    			android:layout_gravity="center_vertical"
 	   	    			android:layout_marginTop="3dp"
-	   	    			android:textSize="23sp"
-	   	    			/>
-	                 <TextView
-	   	    			android:id="@+id/live_kids_time"
-	   	    			android:textColor="#ff1200"
-	   	    			android:layout_width="wrap_content"
-	   	    			android:layout_height="wrap_content"
-	   	    			android:singleLine="true"
-	   	    			android:layout_gravity="center_vertical"
-	   	    			android:layout_marginTop="3dp"
-	   	    			android:textSize="16sp"
+	   	    			android:textSize="18sp"
 	   	    			/>
 	             </LinearLayout>
 	             <ProgressBar
@@ -71,6 +65,7 @@
 			        android:layout_centerVertical="true"
 			        android:layout_alignParentRight="true"
 			        android:layout_margin="10dp"
+                    android:visibility="gone"
 			        android:indeterminateDrawable="@drawable/progressbar_loading" />
 	        </RelativeLayout>
 	        <RelativeLayout 

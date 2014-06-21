@@ -32,7 +32,7 @@ public class Live_Kids_Own extends Live_Kids_User{
     
 	private RelativeLayout live_kids_bottom;
 	private TextView live_kids_check;
-	private String checkUri = "http://damp-reef-9073.herokuapp.com/api/live/checkliving";
+	private String checkUri = path+"api/live/checkliving";
 	private Handler mhandler;
 	private boolean isContinueLive = false;
     //	private RelativeLayout.LayoutParams layoutParams;

@@ -76,7 +76,7 @@ public class SquareActivity extends tabActivity{
 	private TextView title;
 	protected DisplayImageOptions options;
 	private DisplayImageOptions Originaloptions;
-	private String readUri = "http://damp-reef-9073.herokuapp.com/api/square/readforumbriefpost";
+	private String readUri = path+"api/square/readforumbriefpost";
 
 	// ============== 广告切换 ===================
     private JazzyViewPager mViewPager = null;
@@ -505,6 +505,7 @@ public class SquareActivity extends tabActivity{
 	{
 		map = new HashMap<String, Object>();
 		try {
+            Log.e("aaaa",jsonObject.toString());
 			String author = jsonObject.getString("author");
 			String subject = jsonObject.getString("subject");
 			String message = jsonObject.getString("message");
