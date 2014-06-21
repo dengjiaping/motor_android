@@ -148,7 +148,7 @@ public class FaceRelativeLayout extends RelativeLayout implements
 	private void Init_View() {
 		lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		bar_layout = (LinearLayout)findViewById(R.id.mybar_layout);
-		vp_face = (ViewPager) findViewById(R.id.vp_contains);
+//		vp_face = (ViewPager) findViewById(R.id.vp_contains);
 		et_sendmessage = (EditText) findViewById(R.id.et_sendmessage);
 		layout_point = (LinearLayout) findViewById(R.id.iv_image);
 		et_sendmessage.setOnClickListener(this);

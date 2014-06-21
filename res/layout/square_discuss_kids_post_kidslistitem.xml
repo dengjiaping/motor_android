@@ -17,7 +17,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginLeft="4dp"
             >
-			<TextView 
+			<com.rockerhieu.emojicon.EmojiconTextView
 	        	android:id="@+id/post_item_kidlist_user_name"
 	        	android:layout_width="wrap_content"
 	        	android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
 	        	android:textSize="16sp"
 	        	android:text=": "
 	        	/>
-			<TextView 
+			<com.rockerhieu.emojicon.EmojiconTextView
 			    android:id="@+id/post_item_kidlist_details"
 	        	android:layout_width="wrap_content"
 	        	android:layout_height="wrap_content"

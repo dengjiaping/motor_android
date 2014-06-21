@@ -40,6 +40,7 @@ import com.moto.mytextview.ShimmerTextView;
 import com.moto.toast.ToastClass;
 import com.moto.utils.UrlUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.rockerhieu.emojicon.EmojiconTextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -467,8 +468,8 @@ public class Theme_Post extends MyActivity{
     }
 	//此类为上面getview里面view的引用，方便快速滑动
 	class ViewHolder{
-		TextView post_item_user_name;
-		TextView post_item_details;
+        EmojiconTextView post_item_user_name;
+        EmojiconTextView post_item_details;
 		TextView post_item_num;
 		LinearLayout post_item_reaponse;
 		ImageView post_item_user_img;
@@ -477,8 +478,8 @@ public class Theme_Post extends MyActivity{
 	}
 	//此类为上面getview里面view的引用，方便快速滑动
 	class ViewHolderKids{
-		TextView post_item_kidlist_details;
-		TextView post_item_kidlist_user_name;
+        EmojiconTextView post_item_kidlist_details;
+        EmojiconTextView post_item_kidlist_user_name;
         TextView post_item_kidlist_time;
 	}
     //	内部类实现BaseAdapter  ，自定义适配器
@@ -524,8 +525,8 @@ public class Theme_Post extends MyActivity{
 			convertView = LayoutInflater.from(context).inflate(R.layout.square_discuss_kids_post_item, null);
 			holder = new ViewHolder();
 			holder.original_item_poster_time = (TextView)convertView.findViewById(R.id.original_item_poster_time);
-			holder.post_item_user_name = (TextView)convertView.findViewById(R.id.post_item_user_name);
-			holder.post_item_details = (TextView)convertView.findViewById(R.id.post_item_details);
+			holder.post_item_user_name = (EmojiconTextView)convertView.findViewById(R.id.post_item_user_name);
+			holder.post_item_details = (EmojiconTextView)convertView.findViewById(R.id.post_item_details);
 			holder.post_item_num = (TextView)convertView.findViewById(R.id.post_item_num);
 			holder.post_item_reaponse = (LinearLayout)convertView.findViewById(R.id.post_item_reaponse);
 			holder.post_item_user_img = (ImageView)convertView.findViewById(R.id.post_item_user_img);
@@ -561,9 +562,9 @@ public class Theme_Post extends MyActivity{
 					LayoutInflater inflater = LayoutInflater.from(context);
 					LinearLayout layout = (LinearLayout) inflater.inflate(
                                                                           R.layout.square_discuss_kids_post_kidslistitem, null);
-					kidsholder.post_item_kidlist_details = (TextView)layout.findViewById(R.id.post_item_kidlist_details);
+					kidsholder.post_item_kidlist_details = (EmojiconTextView)layout.findViewById(R.id.post_item_kidlist_details);
 
-					kidsholder.post_item_kidlist_user_name = (TextView)layout.findViewById(R.id.post_item_kidlist_user_name);
+					kidsholder.post_item_kidlist_user_name = (EmojiconTextView)layout.findViewById(R.id.post_item_kidlist_user_name);
                     kidsholder.post_item_kidlist_time = (TextView)layout.findViewById(R.id.post_item_kidlist_time);
 					layout.setTag(kidsholder);
 					kidsholder = (ViewHolderKids) layout.getTag();

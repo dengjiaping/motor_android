@@ -51,6 +51,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.rockerhieu.emojicon.EmojiconTextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -439,10 +440,10 @@ public class LiveActivity extends Moto_RootActivity{
             convertView = LayoutInflater.from(context).inflate(R.layout.live_item, null);
             holder = new ViewHolder();
             holder.user_img = (ImageView)convertView.findViewById(R.id.user_img);
-            holder.user_name = (TextView)convertView.findViewById(R.id.live_username);
+            holder.user_name = (EmojiconTextView)convertView.findViewById(R.id.live_username);
             holder.img = (ScaleImageView)convertView.findViewById(R.id.live_thing_img);
-            holder.detail = (TextView)convertView.findViewById(R.id.live_detail_thing);
-            holder.time = (TextView)convertView.findViewById(R.id.live_time_text);
+            holder.detail = (EmojiconTextView)convertView.findViewById(R.id.live_detail_thing);
+            holder.time = (EmojiconTextView)convertView.findViewById(R.id.live_time_text);
             holder.live_like_people_num = (TextView)convertView.findViewById(R.id.live_like_people_num);
             holder.live_item_time = (TextView)convertView.findViewById(R.id.live_item_time);
             holder.live_item_layout = (RelativeLayout)convertView.findViewById(R.id.live_item_layout);
@@ -531,12 +532,12 @@ public class LiveActivity extends Moto_RootActivity{
 	//此类为上面getview里面view的引用，方便快速滑动
 	class ViewHolder{
 		ImageView user_img;
-		TextView user_name;
+        EmojiconTextView user_name;
 		ScaleImageView img;
 		RelativeLayout live_item_layout;
 		ProgressBarView progressBarView;
-		TextView detail;
-		TextView time;
+        EmojiconTextView detail;
+        EmojiconTextView time;
 		TextView live_like_people_num;
 		TextView live_item_time;
 		LinearLayout live_item_like_layout;

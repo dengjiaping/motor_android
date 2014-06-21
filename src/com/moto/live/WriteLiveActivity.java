@@ -56,11 +56,6 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 	private ImageView camera;
 	private ImageView photos;
 
-    @Override
-    public void onEmojiconBackspaceClicked(View view) {
-        EmojiconsFragment.backspace(et_sendmessage);
-    }
-
     private GridView image_grid;
     private int picPosition = 0;//记录需要改变的图片位置
 	private View view;
@@ -202,8 +197,11 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 			
 		};
 	}
-	
-	
+
+    @Override
+    public void onEmojiconBackspaceClicked(View view) {
+        EmojiconsFragment.backspace(et_sendmessage);
+    }
 	
 	private void init() {
 		// TODO Auto-generated method stub

@@ -1,18 +1,10 @@
 package com.moto.square;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,12 +20,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.loopj.android.http.RequestParams;
-import com.moto.asydata.LoadCacheResponseLoginouthandler;
-import com.moto.asydata.LoadDatahandler;
-import com.moto.asydata.RequstClient;
 import com.moto.constant.Constant;
 import com.moto.constant.DialogMethod;
-import com.moto.live.WriteLiveActivity;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
 import com.moto.model.NetWorkModelListener;
@@ -41,31 +29,38 @@ import com.moto.model.SquareNetworkModel;
 import com.moto.qiniu.img.Image;
 import com.moto.select_morephoto.ImageManager2;
 import com.moto.toast.ToastClass;
+import com.rockerhieu.emojicon.EmojiconEditText;
+import com.rockerhieu.emojicon.EmojiconGridFragment;
+import com.rockerhieu.emojicon.EmojiconsFragment;
+import com.rockerhieu.emojicon.emoji.Emojicon;
 
-public class Publish_post extends Moto_RootActivity implements OnClickListener,NetWorkModelListener{
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+
+public class Publish_post extends Moto_RootActivity implements OnClickListener,NetWorkModelListener,EmojiconsFragment.OnEmojiconBackspaceClickedListener,EmojiconGridFragment.OnEmojiconClickedListener{
     
 	private String filepath;
 	private ImageView leftpage;
-	private EditText et_sendmessage;
+	private EmojiconEditText et_sendmessage;
 	private String fid;
 	private View view;
 	private EditText write_theme;
 	private ImageView emotion;
 	private ImageView send;
 	private ImageView own_photos;
-	private String photoString = null;
 	private SharedPreferences TokenShared;
 	private String tokenString;
 	private RelativeLayout.LayoutParams layoutParams;
 	private ImageView photos;
 	private boolean isHavePhoto = false;
 	private ImageView camera;
-	private Bitmap photoBitmap;
-	Image[] files;
+    private Image photofiles;
 	RequestParams param;
 	private Handler handler;
 	Intent intent;
-	private String createThemeUri = "http://damp-reef-9073.herokuapp.com/api/square/createnewtheme";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -115,13 +110,21 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
                         //获取成功
                     case Constant.MSG_TESTSTART:
                         DialogMethod.startProgressDialog(Publish_post.this, "正在发送");
+                        break;
 				}
 				super.handleMessage(msg);
 			}
 			
 		};
 	}
-	
+    @Override
+    public void onEmojiconBackspaceClicked(View view) {
+        EmojiconsFragment.backspace(et_sendmessage);
+    }
+    @Override
+    public void onEmojiconClicked(Emojicon emojicon) {
+        EmojiconsFragment.input(et_sendmessage, emojicon);
+    }
 	private void init() {
 		// TODO Auto-generated method stub
 		intent = getIntent();
@@ -131,7 +134,7 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
 		send = (ImageView)findViewById(R.id.square_write_send);
 		emotion = (ImageView)findViewById(R.id.square_publish_theme_emotion);
 		write_theme = (EditText)findViewById(R.id.square_publish_write_theme);
-		et_sendmessage = (EditText)findViewById(R.id.et_sendmessage);
+		et_sendmessage = (EmojiconEditText)findViewById(R.id.et_sendmessage);
 		leftpage = (ImageView)findViewById(R.id.square_publish_theme_return);
 		own_photos = (ImageView)findViewById(R.id.square_publish_own_photos);
 		photos = (ImageView)findViewById(R.id.square_publish_theme_photos);
@@ -194,15 +197,6 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
 				DialogMethod.dialogShow(Publish_post.this,"请编辑内容!");
 			}
 			else {
-				files  = new Image[1];
-				if(isHavePhoto)
-				{
-					Drawable drawable = own_photos.getDrawable();
-					own_photos.setDrawingCacheEnabled(true);
-					photoBitmap = Bitmap.createBitmap(own_photos.getDrawingCache());
-					own_photos.setDrawingCacheEnabled(false);
-					files[0] = new Image(photoBitmap, "file");
-				}
 				GetAsyData();
 			}
 		}
@@ -234,8 +228,9 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
 		SquareNetworkModel squareNetworkModel = new SquareNetworkModel(Publish_post.this, Publish_post.this);
 		if(isHavePhoto)
 		{
+
 			try {
-				Image photofiles = new Image(filepath, "file");
+                photofiles = new Image(filepath, "file");
 				squareNetworkModel.CreateNewTheme(param,photofiles);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

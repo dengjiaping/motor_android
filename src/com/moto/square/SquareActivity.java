@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,10 +43,12 @@ import com.moto.mytextview.ShimmerTextView;
 import com.moto.square.JazzyViewPager.TransitionEffect;
 import com.moto.utils.DateUtils;
 import com.moto.utils.StringUtils;
+import com.moto.utils.UrlUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.rockerhieu.emojicon.EmojiconTextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -502,7 +505,6 @@ public class SquareActivity extends tabActivity{
 	{
 		map = new HashMap<String, Object>();
 		try {
-
 			String author = jsonObject.getString("author");
 			String subject = jsonObject.getString("subject");
 			String message = jsonObject.getString("message");
@@ -567,11 +569,11 @@ public class SquareActivity extends tabActivity{
 
             convertView = LayoutInflater.from(context).inflate(R.layout.square_item, null);
             holder = new ViewHolder();
-            holder.square_item_title = (TextView)convertView.findViewById(R.id.square_item_title);
+            holder.square_item_title = (EmojiconTextView)convertView.findViewById(R.id.square_item_title);
             holder.square_item_image = (ScaleImageView)convertView.findViewById(R.id.square_item_image);
-            holder.square_item_details = (TextView)convertView.findViewById(R.id.square_item_details);
+            holder.square_item_details = (EmojiconTextView)convertView.findViewById(R.id.square_item_details);
             holder.square_item_time = (TextView)convertView.findViewById(R.id.square_item_time);
-            holder.square_item_user = (TextView)convertView.findViewById(R.id.square_item_user);
+            holder.square_item_user = (EmojiconTextView)convertView.findViewById(R.id.square_item_user);
             holder.progressBarView = (ProgressBarView)convertView.findViewById(R.id.square_item_progress_View);
             //				convertView.setTag(holder);
             //				holder = (ViewHolder) convertView.getTag();
@@ -583,7 +585,8 @@ public class SquareActivity extends tabActivity{
 			holder.square_item_user.setText((CharSequence) map.get("author"));
 			if(carList.get(position).size() > 0)
 			{
-				String imageUrl = imgPath+carList.get(position).get(0);
+				String imageUrl = UrlUtils.imageUrl(carList.get(position).get(0));
+                Log.e("aaassss",imageUrl);
 				holder.square_item_image.setVisibility(View.VISIBLE);
 				MyMapApplication.imageLoader.displayImage(imageUrl, holder.square_item_image, Originaloptions,new SimpleImageLoadingListener(){
 					@Override
@@ -633,11 +636,11 @@ public class SquareActivity extends tabActivity{
 	}
 	//此类为上面getview里面view的引用，方便快速滑动
 	class ViewHolder{
-		TextView square_item_title;
+        EmojiconTextView square_item_title;
 		ScaleImageView square_item_image;
-		TextView square_item_details;
+        EmojiconTextView square_item_details;
 		TextView square_item_time;
-		TextView square_item_user;
+        EmojiconTextView square_item_user;
 		ProgressBarView progressBarView;
 	}
 

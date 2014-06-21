@@ -102,7 +102,7 @@ public class MarqueeText extends TextView implements Runnable {
 
     public void run() {
 
-        currentScrollX -= 1;// 滚动速度
+        currentScrollX += 1;// 滚动速度
 
         scrollTo(currentScrollX, 0);
 
@@ -112,11 +112,11 @@ public class MarqueeText extends TextView implements Runnable {
 
         }
 
-        if (getScrollX() <= -(this.getWidth())) {
+        if (getScrollX() >=  textWidth) {
 
-            scrollTo(textWidth, 0);
+            scrollTo(-this.getWidth(), 0);
 
-            currentScrollX = textWidth;
+            currentScrollX = -this.getWidth();
 
 //                        return;
 

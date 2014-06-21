@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:clickable="true"
+    android:descendantFocusability="blocksDescendants"
     android:background="#E7E7E7"
     android:orientation="vertical" >
 
@@ -24,7 +24,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="4dp"
                 />
-            <TextView
+            <com.rockerhieu.emojicon.EmojiconTextView
                 android:id="@+id/post_item_user_name"
                 android:layout_toRightOf="@id/post_item_user_img"
                 android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
                 />
         </RelativeLayout>
 
-        <TextView
+        <com.rockerhieu.emojicon.EmojiconTextView
             android:id="@+id/post_item_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,7 +87,6 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="3dp"
             android:clickable="true"
-            android:focusable="true"
             android:layout_marginRight="3dp"
             android:layout_gravity="right"
             android:orientation="horizontal"
@@ -95,7 +94,7 @@
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:focusable="false"
+
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/comment"
                 />
@@ -114,6 +113,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
+        android:focusable="false"
         android:layout_marginRight="5dp"
         android:background="#E7E7E7"
         android:id="@+id/square_discuss_kids_post_item_groups"

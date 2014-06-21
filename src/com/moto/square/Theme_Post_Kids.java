@@ -34,6 +34,7 @@ import com.moto.mytextview.ShimmerTextView;
 import com.moto.toast.ToastClass;
 import com.moto.utils.UrlUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.rockerhieu.emojicon.EmojiconTextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -404,9 +405,9 @@ public class Theme_Post_Kids extends MyActivity{
 
             convertView = LayoutInflater.from(context).inflate(R.layout.square_discuss_kids_post_kids_item, null);
             holder = new ViewHolderKids();
-            holder.square_discuss_kids_post_kids_details = (TextView)convertView.findViewById(R.id.square_discuss_kids_post_kids_details);
+            holder.square_discuss_kids_post_kids_details = (EmojiconTextView)convertView.findViewById(R.id.square_discuss_kids_post_kids_details);
             holder.square_discuss_kids_post_kids_img = (ImageView)convertView.findViewById(R.id.square_discuss_kids_post_kids_img);
-            holder.square_discuss_kids_post_kids_username = (TextView)convertView.findViewById(R.id.square_discuss_kids_post_kids_username);
+            holder.square_discuss_kids_post_kids_username = (EmojiconTextView)convertView.findViewById(R.id.square_discuss_kids_post_kids_username);
             holder.square_discuss_kids_post_kids_time = (TextView)convertView.findViewById(R.id.square_discuss_kids_post_kids_time);
             convertView.setTag(holder);
             holder = (ViewHolderKids) convertView.getTag();
@@ -423,9 +424,9 @@ public class Theme_Post_Kids extends MyActivity{
     }
     //此类为上面getview里面view的引用，方便快速滑动
     class ViewHolderKids{
-        TextView square_discuss_kids_post_kids_details;
+        EmojiconTextView square_discuss_kids_post_kids_details;
         ImageView square_discuss_kids_post_kids_img;
-        TextView square_discuss_kids_post_kids_username;
+        EmojiconTextView square_discuss_kids_post_kids_username;
         TextView square_discuss_kids_post_kids_time;
     }
 }

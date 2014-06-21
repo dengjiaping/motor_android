@@ -199,7 +199,6 @@ public class MotoNetWorkModel {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				Log.e("upload", respose);
 			}
 			JSONArray photosJson = new JSONArray(photosHash);
 			return photosJson.toString();

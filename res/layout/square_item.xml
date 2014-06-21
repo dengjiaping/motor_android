@@ -5,7 +5,7 @@
     android:background="@drawable/live_item_press"
     android:orientation="vertical" >
    
-	<TextView 
+	<com.rockerhieu.emojicon.EmojiconTextView
 	    android:id="@+id/square_item_title"
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
 	        android:layout_centerInParent="true"
 	        />
     </RelativeLayout>
-	<TextView 
+	<com.rockerhieu.emojicon.EmojiconTextView
 	    android:id="@+id/square_item_details"
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
 	            android:layout_gravity="center_vertical"
 	            android:background="@drawable/user"
 	            />
-	        <TextView
+	        <com.rockerhieu.emojicon.EmojiconTextView
 	            android:id="@+id/square_item_user"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
