@@ -60,11 +60,38 @@
 	    android:layout_marginTop="10dp"
 	    android:layout_marginBottom="5dp"
 	    >
-	    <LinearLayout 
+        <LinearLayout
+            android:id="@+id/sqare_item_layout"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dp"
+            >
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/comment"
+                />
+            <com.rockerhieu.emojicon.EmojiconTextView
+                android:id="@+id/square_item_responsecount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:layout_gravity="center_vertical"
+                android:textSize="15sp"
+                android:textColor="#F0938D"
+                android:layout_marginLeft="4dp"
+                />
+        </LinearLayout>
+	    <LinearLayout
+            android:layout_toRightOf="@id/sqare_item_layout"
 	        android:layout_width="wrap_content"
 	    	android:layout_height="wrap_content"
-	    	android:layout_alignParentLeft="true"
-	    	android:layout_marginLeft="2dp"
+            android:layout_marginLeft="15dp"
 	    	android:orientation="horizontal"
 	        >
 	        <ImageView 
@@ -81,10 +108,11 @@
 	            android:singleLine="true"
 	            android:layout_gravity="center_vertical"
 	            android:textSize="15sp"
-	            android:textColor="#41c1d7"
+	            android:textColor="#F0938D"
 	            android:layout_marginLeft="4dp"
 	            />
 	    </LinearLayout>
+
 	    <LinearLayout 
 	        android:id="@+id/time_layout"
 	        android:layout_width="wrap_content"
@@ -99,7 +127,7 @@
 	            android:layout_height="wrap_content"
 	            android:gravity="center_vertical"
 	            android:textSize="15sp"
-	            android:textColor="#777777"
+	            android:textColor="#F0938D"
 	            android:singleLine="true"
 	            android:layout_gravity="center_vertical"
 	            android:layout_marginLeft="4dp"

@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -72,7 +71,6 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 	private LinearLayout number_post_layout;
 	private LinearLayout friends_layout;
 	private LinearLayout collect_layout;
-	private TextView user_name;
 	private ImageView user_userimg;
 	private TextView no_dongtai;
 	private TextView user_signature;
@@ -97,7 +95,6 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 
 	private Intent intent;
 	private RequestParams param;
-	protected String imgPath = "http://motor.qiniudn.com/";
 
 	private String token;
 	private String recentPostUri = path+"api/me/readrecentpost";
@@ -271,7 +268,7 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
         pullScrollView.setOriginbitmap(this, bitmap);
         if(bitmap != null && !bitmap.isRecycled())
         {
-            Log.e("sdfdsf","sfds");
+
             bitmap.recycle();
             bitmap = null;
         }
@@ -380,7 +377,7 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 			int num = ImgList.get(position).size();
 			if(num > 0)
 			{
-				String imageUrl = imgPath+ImgList.get(position).get(num-1);
+				String imageUrl = UrlUtils.imageUrl(ImgList.get(position).get(num-1));
 				MyMapApplication.imageLoader.displayImage(imageUrl, holder.user_item_img,Originaloptions,null);
 			}
 	        return convertView;
@@ -558,7 +555,7 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 		}
 		if(!ownMessageMap.get("avatar").toString().equals(""))
 		{
-			String imageUrl = imgPath+ownMessageMap.get("avatar")+"?imageView2/1/w/150/h/150";
+			String imageUrl = UrlUtils.imageUrl(ownMessageMap.get("avatar").toString());
 			MyMapApplication.imageLoader.displayImage(imageUrl,  user_userimg,options,null);
 		}
 		if(!ownMessageMap.get("mototype").toString().equals(""))

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,7 +16,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,18 +28,24 @@ import com.moto.asydata.RequstClient;
 import com.moto.constant.Constant;
 import com.moto.constant.DialogMethod;
 import com.moto.constant.ImageMethod;
+import com.moto.img.ScaleImageView;
 import com.moto.listview.CustomScrollView;
 import com.moto.listview.CustomScrollView.OnLoadListener;
 import com.moto.listview.CustomScrollView.OnRefreshListener;
 import com.moto.listview.NoScrollListview;
+import com.moto.listview.ProgressBarView;
 import com.moto.main.R;
 import com.moto.myactivity.MyActivity;
 import com.moto.mymap.MyMapApplication;
 import com.moto.mytextview.MarqueeText;
 import com.moto.mytextview.ShimmerTextView;
 import com.moto.toast.ToastClass;
+import com.moto.utils.StringUtils;
 import com.moto.utils.UrlUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.rockerhieu.emojicon.EmojiconTextView;
 
 import org.json.JSONArray;
@@ -56,11 +62,12 @@ public class Theme_Post extends MyActivity{
 	private LinkedList<HashMap<String, Object>> GroupList = new LinkedList<HashMap<String,Object>>();
 	private LinkedList<LinkedList<HashMap<String, Object>>> ChildList = new LinkedList<LinkedList<HashMap<String,Object>>>();
 	private LinkedList<HashMap<String, Object>> list;
+    private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
+    private DisplayImageOptions Originaloptions;
 	private HashMap<String, Object> map;
 	private int count = 0;
 	private int num_post = 1;
 	private String tid;
-	private ImageView own_photos;
 	private String photoString = null;
 	private String response_theme_message;
 	private MyAdapter adapter;
@@ -69,9 +76,11 @@ public class Theme_Post extends MyActivity{
 	private DisplayImageOptions options;
 	private Handler handler;
     private ShimmerTextView waitText;
-	
-	private EditText response_theme;
-	private ImageView post_send;
+
+	private TextView post_share;
+    private TextView post_publish;
+    private TextView post_collect;
+
 	private CustomScrollView scrollView;
 	private ImageView leftpage;
 	private SharedPreferences TokenShared;
@@ -137,12 +146,11 @@ public class Theme_Post extends MyActivity{
 			
 		};
 		
-		post_send.setOnClickListener(new OnClickListener() {
+		post_publish.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				response_theme_message = response_theme.getText().toString();
 				TokenShared = getSharedPreferences("usermessage", 0);
 				tokenString = TokenShared.getString("token", "");
 				if(tokenString.equals(""))
@@ -151,16 +159,31 @@ public class Theme_Post extends MyActivity{
 					setResult(304);
 					Theme_Post.this.finish();
 				}
-				else if(response_theme_message.replaceAll(" ", "").equals(""))
-				{
-					DialogMethod.dialogShow(Theme_Post.this,"请输入回复内容!");
-				}
-				else
-				{
-					SetAsyResponse();
-				}
+
+//				else
+//				{
+//					SetAsyResponse();
+//				}
 			}
 		});
+
+        post_share.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO Auto-generated method stub
+                Intent intent=new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(Intent.createChooser(intent, "分享"));
+            }
+        });
+
+        post_collect.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ToastClass.SetToast(Theme_Post.this,"收藏成功");
+            }
+        });
 		scrollView.setOnRefreshListener(new OnRefreshListener() {
 			public void onRefresh() {
 				new AsyncTask<Void, Void, Void>() {
@@ -229,6 +252,7 @@ public class Theme_Post extends MyActivity{
 	private void init() {
 		// TODO Auto-generated method stub
 		options = ImageMethod.GetOptions();
+        Originaloptions = ImageMethod.GetOriginalOptions();
 		intent = getIntent();
 		tid = intent.getStringExtra("tid");
 
@@ -238,9 +262,11 @@ public class Theme_Post extends MyActivity{
         post_theme.setText(intent.getStringExtra("subject"));
         post_theme.startScroll();
 		listview = (NoScrollListview)findViewById(R.id.post_main_list);
-		response_theme = (EditText)findViewById(R.id.post_response_theme_edit);
-		post_send = (ImageView)findViewById(R.id.post_send);
-		own_photos = (ImageView)findViewById(R.id.post_camera);
+
+        post_collect = (TextView)findViewById(R.id.post_collect);
+		post_share = (TextView)findViewById(R.id.post_share);
+		post_publish = (TextView)findViewById(R.id.post_publish);
+
 		scrollView = (CustomScrollView)findViewById(R.id.post_scrollview);
 		leftpage = (ImageView)findViewById(R.id.return_post);
 
@@ -424,10 +450,10 @@ public class Theme_Post extends MyActivity{
             map.put("author", author);
             map.put("message", message);
             map.put("dateline", dateline);
-            map.put("photoname", photoname);
             map.put("pid", pid);
             map.put("avatar",avatar);
             pidList.add(pid);
+            carList.add(StringUtils.hashToArray(photoname));
             map.put("num", num_post+"");
             num_post++;
         } catch (JSONException e) {
@@ -473,6 +499,8 @@ public class Theme_Post extends MyActivity{
 		TextView post_item_num;
 		LinearLayout post_item_reaponse;
 		ImageView post_item_user_img;
+        ScaleImageView post_item_detail_img;
+        ProgressBarView post_item_progress_View;
 		TextView original_item_poster_time;
 		LinearLayout square_discuss_kids_post_item_groups;
 	}
@@ -490,7 +518,7 @@ public class Theme_Post extends MyActivity{
 		private LinkedList<LinkedList<HashMap<String, Object>>> ChildList;
 		private HashMap<String, Object> map;
 		private LinkedList<HashMap<String, Object>> list;
-		private int num;
+        long time = 0;
 		public MyAdapter(Activity activity, Context context, LinkedList<HashMap<String, Object>> GroupList, LinkedList<LinkedList<HashMap<String, Object>>> ChildList)
 		{
 			this.context = context;
@@ -519,7 +547,7 @@ public class Theme_Post extends MyActivity{
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent)
 		{
-			ViewHolder holder = null;
+            final ViewHolder holder;
 			// TODO Auto-generated method stub
 			
 			convertView = LayoutInflater.from(context).inflate(R.layout.square_discuss_kids_post_item, null);
@@ -531,8 +559,9 @@ public class Theme_Post extends MyActivity{
 			holder.post_item_reaponse = (LinearLayout)convertView.findViewById(R.id.post_item_reaponse);
 			holder.post_item_user_img = (ImageView)convertView.findViewById(R.id.post_item_user_img);
 			holder.square_discuss_kids_post_item_groups = (LinearLayout)convertView.findViewById(R.id.square_discuss_kids_post_item_groups);
-			convertView.setTag(holder);
-			holder = (ViewHolder) convertView.getTag();
+            holder.post_item_progress_View = (ProgressBarView)convertView.findViewById(R.id.post_item_progress_View);
+            holder.post_item_detail_img = (ScaleImageView)convertView.findViewById(R.id.post_item_detail_img);
+
 			
 			map = GroupList.get(position);	
 			holder.post_item_user_name.setText((CharSequence) map.get("author"));
@@ -540,7 +569,6 @@ public class Theme_Post extends MyActivity{
 			holder.post_item_num.setText((CharSequence) map.get("num"));
 			holder.original_item_poster_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
 			MyMapApplication.imageLoader.displayImage(UrlUtils.avatarUrl(map.get("avatar").toString()),  holder.post_item_user_img,options,null);
-			num = position;
 			holder.post_item_reaponse.setOnClickListener(new OnClickListener() {
 				
 				@Override
@@ -552,6 +580,54 @@ public class Theme_Post extends MyActivity{
 					startActivityForResult(intent, 304);
 				}
 			});
+            if(carList.get(position).size() > 0)
+            {
+                String imageUrl = UrlUtils.imageUrl(carList.get(position).get(0));
+
+                holder.post_item_detail_img.setVisibility(View.VISIBLE);
+                MyMapApplication.imageLoader.displayImage(imageUrl, holder.post_item_detail_img, Originaloptions,new SimpleImageLoadingListener(){
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+                        // TODO Auto-generated method stub
+                        super.onLoadingStarted(imageUri, view);
+                        holder.post_item_progress_View.setProgressNotInUiThread(0);
+                        holder.post_item_progress_View.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view,
+                                                FailReason failReason) {
+                        // TODO Auto-generated method stub
+                        super.onLoadingFailed(imageUri, view, failReason);
+                        holder.post_item_progress_View.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view,
+                                                  Bitmap loadedImage) {
+                        // TODO Auto-generated method stub
+                        super.onLoadingComplete(imageUri, view, loadedImage);
+                        holder.post_item_progress_View.setVisibility(View.GONE);
+                        holder.post_item_progress_View.setProgressNotInUiThread(100);
+                    }
+
+                },new ImageLoadingProgressListener() {
+
+                    @Override
+                    public void onProgressUpdate(String imageUri, View view, int current,
+                                                 int total) {
+                        // TODO Auto-generated method stub
+                        if((System.currentTimeMillis() - time)>1000)
+                        {
+                            time = System.currentTimeMillis();
+                            holder.post_item_progress_View.setProgressNotInUiThread(Math.round(100.0f * current / total));
+                        }
+
+                    }
+                });
+                holder.post_item_detail_img.setImageHeight(80);
+                holder.post_item_detail_img.setImageWidth(100);
+            }
 			list = ChildList.get(position);
 			int num = list.size();
 			if(num > 0)

@@ -25,13 +25,14 @@
                 android:layout_marginTop="4dp"
                 />
             <com.rockerhieu.emojicon.EmojiconTextView
+                android:layout_marginTop="5dp"
                 android:id="@+id/post_item_user_name"
                 android:layout_toRightOf="@id/post_item_user_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_marginLeft="3dp"
-                android:textColor="#41c1d7"
+                android:textColor="#AFAFAF"
                 android:textSize="16sp"
                 />
             <TextView
@@ -40,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/post_item_user_name"
                 android:layout_toRightOf="@id/post_item_user_img"
-                android:textColor="#AFAFAF"
+                android:textColor="#F0938D"
                 android:layout_marginLeft="3dp"
                 android:textSize="12sp"
                 />
@@ -73,13 +74,27 @@
             android:layout_marginTop="3dp"
             android:textSize="18sp"
             />
-        <ImageView
-            android:id="@+id/post_item_detail_img"
+        <RelativeLayout
+            android:background="#E6F3F8"
             android:layout_marginTop="5dp"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            />
+            >
+            <com.moto.img.ScaleImageView
+                android:id="@+id/post_item_detail_img"
+                android:layout_width="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                />
+            <com.moto.listview.ProgressBarView
+                android:id="@+id/post_item_progress_View"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:visibility="gone"
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
         <LinearLayout
             android:id="@+id/post_item_reaponse"
             android:layout_width="wrap_content"

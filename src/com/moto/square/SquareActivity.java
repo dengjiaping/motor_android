@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -66,10 +65,10 @@ public class SquareActivity extends tabActivity{
 	private TextView edit_theme;
 	private LinkedList<HashMap<String, Object>> list = new LinkedList<HashMap<String,Object>>();
 	private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
+    private LinkedList<String> countList = new LinkedList<String>();
 	private HashMap<String, Object> map;
 	private boolean isRefresh = false;
     private boolean isload = false;
-	private int count = 0;
 	private MyAdapter adapter;
 	private String fid;
 	private Handler handler;
@@ -453,10 +452,19 @@ public class SquareActivity extends tabActivity{
 						String data_details = jsonObject
                         .getString("fourm_post_list");
 						JSONArray array = new JSONArray(data_details);
-						for (int i = 0; i < array.length(); i++) {
+                        int post_count = array.length();
+						for (int i = 0; i < post_count; i++) {
 							JSONObject jsonObject2 = (JSONObject) array.get(i);
 							list.add(GetMap(jsonObject2));
 						}
+                        String data_count = jsonObject.getString("count_list");
+                        JSONArray countArray = new JSONArray(data_count);
+                        int count = countArray.length();
+                        for(int i = 0; i < count; i++)
+                        {
+                            JSONObject jsonObject1 = (JSONObject)countArray.get(i);
+                            countList.add(jsonObject1.getString("count"));
+                        }
 						if(list.size() > 0)
                         {
                             if (!isload) {
@@ -475,7 +483,7 @@ public class SquareActivity extends tabActivity{
                             handler.obtainMessage(Constant.MSG_HAVENOTHING)
                                     .sendToTarget();
                         }
-						count++;
+
 
 					} else {
 						handler.obtainMessage(Constant.MSG_NULL).sendToTarget();
@@ -505,7 +513,7 @@ public class SquareActivity extends tabActivity{
 	{
 		map = new HashMap<String, Object>();
 		try {
-            Log.e("aaaa",jsonObject.toString());
+
 			String author = jsonObject.getString("author");
 			String subject = jsonObject.getString("subject");
 			String message = jsonObject.getString("message");
@@ -518,9 +526,8 @@ public class SquareActivity extends tabActivity{
 			map.put("subject", subject);
 			map.put("message", message);
 			map.put("dateline", dateline);
-			map.put("photoname", photoname);
 			map.put("tid", tid);
-			carList.add(StringUtils.hashToArray(jsonObject.getString("photoname").toString()));
+			carList.add(StringUtils.hashToArray(photoname));
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -576,6 +583,8 @@ public class SquareActivity extends tabActivity{
             holder.square_item_time = (TextView)convertView.findViewById(R.id.square_item_time);
             holder.square_item_user = (EmojiconTextView)convertView.findViewById(R.id.square_item_user);
             holder.progressBarView = (ProgressBarView)convertView.findViewById(R.id.square_item_progress_View);
+            holder.square_item_responsecount = (EmojiconTextView)convertView.findViewById(R.id.square_item_responsecount);
+
             //				convertView.setTag(holder);
             //				holder = (ViewHolder) convertView.getTag();
 			map = list.get(position);
@@ -584,10 +593,11 @@ public class SquareActivity extends tabActivity{
             //			holder.square_discuss_kids_num.setText("30");
 			holder.square_item_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
 			holder.square_item_user.setText((CharSequence) map.get("author"));
+            holder.square_item_responsecount.setText(countList.get(position));
 			if(carList.get(position).size() > 0)
 			{
 				String imageUrl = UrlUtils.imageUrl(carList.get(position).get(0));
-                Log.e("aaassss",imageUrl);
+
 				holder.square_item_image.setVisibility(View.VISIBLE);
 				MyMapApplication.imageLoader.displayImage(imageUrl, holder.square_item_image, Originaloptions,new SimpleImageLoadingListener(){
 					@Override
@@ -643,6 +653,7 @@ public class SquareActivity extends tabActivity{
 		TextView square_item_time;
         EmojiconTextView square_item_user;
 		ProgressBarView progressBarView;
+        EmojiconTextView square_item_responsecount;
 	}
 
 	@Override
