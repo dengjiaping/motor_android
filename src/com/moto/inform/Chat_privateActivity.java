@@ -146,7 +146,13 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
         chatEntity.setContent(message);
         chatEntity.setComeMsg(false);
         chatEntity.setUserImage(meImage);
-        chatEntity.setChatTime(DateUtils.timestampToDeatil(DateUtils.getUTCCurrentTimestamp()));
+        if((chatList.size()) % 8 ==0)
+        {
+            chatEntity.setChatTime(DateUtils.timestampToDeatilDateWithMillisecond(DateUtils.getUTCCurrentTimestampWithMillisecond()));
+        }
+        else{
+            chatEntity.setChatTime("");
+        }
         chatEntity.setUtcTimeStamp(DateUtils.getUTCCurrentTimestampWithMillisecond());
         chatEntity.setUsername(meName);
         chatList.add(chatEntity);
@@ -238,8 +244,7 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
             }else {
                 chatHolder = (ChatHolder)convertView.getTag();
             }
-
-            chatHolder.timeTextView.setText(myList.get(position).getChatTime());
+                chatHolder.timeTextView.setText(myList.get(position).getChatTime());
             chatHolder.contentTextView.setText(myList.get(position).getContent());
             chatHolder.inform_chat_user_username.setText(myList.get(position).getUsername());
             MotorApplication.imageLoader.displayImage(UrlUtils.avatarUrl(myList.get(position).getUserImage()),  chatHolder.userImageView,options,null);
@@ -297,7 +302,7 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
                 String avatar = jsonObject.getString("avatar");
                 String username = jsonObject.getString("username");
                 String utcTimestamp = jsonObject.getString("created_at");
-                String timestamp = DateUtils.StimestampToDeatil(utcTimestamp);
+                String timestamp = DateUtils.timestampToDeatilDateWithMillisecond(utcTimestamp);
                 String message = jsonObject.getString("message");
 
                 ChatEntity chatEntity = new ChatEntity();
@@ -305,7 +310,14 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
                 chatEntity.setUserImage(avatar);
                 chatEntity.setComeMsg(isMe(username));
                 chatEntity.setContent(message);
-                chatEntity.setChatTime(timestamp);
+                if((chatList.size()) % 8 ==0)
+                {
+                    chatEntity.setChatTime(timestamp);
+                }
+                else{
+                    chatEntity.setChatTime("");
+                }
+
                 chatEntity.setUtcTimeStamp(utcTimestamp);
 
 
@@ -326,7 +338,7 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
                 String avatar = jsonObject.getString("avatar");
                 String username = jsonObject.getString("username");
                 String utcTimestamp = jsonObject.getString("created_at");
-                String timestamp = DateUtils.StimestampToDeatil(utcTimestamp);
+                String timestamp = DateUtils.timestampToDeatilDateWithMillisecond(utcTimestamp);
                 String message = jsonObject.getString("message");
 
                 ChatEntity chatEntity = new ChatEntity();
@@ -335,7 +347,13 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
                 chatEntity.setUsername(username);
                 chatEntity.setComeMsg(isMe(username));
                 chatEntity.setContent(message);
-                chatEntity.setChatTime(timestamp);
+                if((chatList.size()) % 8 ==0)
+                {
+                    chatEntity.setChatTime(timestamp);
+                }
+                else{
+                    chatEntity.setChatTime("");
+                }
                 chatEntity.setUtcTimeStamp(utcTimestamp);
 
                 String firstTimestamp = chatList.size() > 0 ? chatList.get(0).getUtcTimeStamp():"1990-12-12T12:12:12.122Z";

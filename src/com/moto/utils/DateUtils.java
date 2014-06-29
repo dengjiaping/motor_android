@@ -206,4 +206,19 @@ public class DateUtils {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm");
 		return sdf.format(date);
 	}
+
+
+    /**
+     * 根据传入的时间计算距离该时间是几分钟前，几小时前，还是显示具体时间
+     *
+     *
+     *
+     * @param timestamp UTC时间
+     * @return String 	根据传入的的时间距离当前时间的时长，返回不同的字符串
+     */
+    public static String timestampToDeatilDateWithMillisecond(String timestamp){
+        Date date = DateUtils.timestampToLocalDateWithMillisecond(timestamp);
+
+        return formatDeatilDate(date);
+    }
 }

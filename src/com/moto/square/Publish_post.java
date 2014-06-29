@@ -12,6 +12,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -49,6 +50,7 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
 	private String fid;
 	private View view;
 	private EditText write_theme;
+    private ImageView mention;
 	private ImageView emotion;
 	private ImageView send;
 	private ImageView own_photos;
@@ -61,6 +63,8 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
     private Image photofiles;
 	RequestParams param;
 	private Handler handler;
+    private String mentionUsername;
+    private boolean IsHaveUserName = false;
 	Intent intent;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -152,15 +156,21 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
 		own_photos = (ImageView)findViewById(R.id.square_publish_own_photos);
 		photos = (ImageView)findViewById(R.id.square_publish_theme_photos);
 		camera = (ImageView)findViewById(R.id.square_publish_theme_camera);
+        mention = (ImageView)findViewById(R.id.square_publish_theme_mention);
 		leftpage.setOnClickListener(this);
 		emotion.setOnClickListener(this);
 		send.setOnClickListener(this);
 		photos.setOnClickListener(this);
 		camera.setOnClickListener(this);
+        mention.setOnClickListener(this);
 	}
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
+        if(v == mention)
+        {
+            pushToNextActivity(Theme_Post_Touchme.class,304);
+        }
 		if(v == leftpage)
 		{
 			Publish_post.this.finish();
@@ -238,6 +248,10 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
 		param.put("fid",fid);
 		param.put("subject", write_theme.getText().toString());
 		param.put("message", et_sendmessage.getText().toString());
+        if(IsHaveUserName)
+        {
+            param.put("atuser",mentionUsername);
+        }
 		SquareNetworkModel squareNetworkModel = new SquareNetworkModel(Publish_post.this, Publish_post.this);
 		if(isHavePhoto)
 		{
@@ -284,6 +298,14 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
             cursor.close();
             ImageManager2.from(Publish_post.this).displayImage(own_photos, filepath,R.drawable.default_add_img,100,100);
             isHavePhoto = true;
+        }
+        Log.e("gggg","sdsfdsfds");
+        if(resultCode == 3)
+        {
+            Log.e("aaaaa","sdsfdsfds");
+            mentionUsername = data.getExtras().getString("name");
+            IsHaveUserName = true;
+            et_sendmessage.setText(et_sendmessage.getText().toString()+"@"+mentionUsername);
         }
         
     }

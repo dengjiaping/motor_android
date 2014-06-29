@@ -11,10 +11,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
 import com.moto.model.NetWorkModelListener;
 import com.moto.model.UserNetworkModel;
-import com.moto.myactivity.MyActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,11 +23,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Inform_Friends extends MyActivity implements OnClickListener,NetWorkModelListener{
-    private ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
-    private ListView friendsListView;
-    private FriendsAdapter adapter;
-    private ImageView inform_private_friends_return;
+public class Inform_Friends extends Moto_RootActivity implements OnClickListener,NetWorkModelListener{
+    protected ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
+    protected ListView friendsListView;
+    protected FriendsAdapter adapter;
+    protected ImageView inform_private_friends_return;
+    protected Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

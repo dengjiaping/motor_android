@@ -187,6 +187,19 @@ public class Moto_RootActivity extends FragmentActivity implements NetWorkModelL
     }
 
     /**
+     *
+     * 进入下一个Activity
+     *
+     *
+     * @param cls 	The name of a class inside of the application package that will be used as the component for this Intent.
+     */
+    public void pushToNextActivity(Class<?>cls,int requestCode){
+        Intent intent = new Intent();
+        intent.setClass(this, cls);
+        startActivityForResult(intent, requestCode);
+    }
+
+    /**
      * 关闭输入法
      */
     protected void manageInput(Activity activity)
