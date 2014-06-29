@@ -34,12 +34,12 @@ public class BitmapUtils {
 
     public void SetBitmapToSD()
     {
-        String str1 = "icon"+7;
+        String str1 = "icon"+4;
         try {
             FileOutputStream localFileOutputStream1 = context.openFileOutput(str1, 0);
 
 
-            Bitmap.CompressFormat localCompressFormat = Bitmap.CompressFormat.PNG;
+            Bitmap.CompressFormat localCompressFormat = Bitmap.CompressFormat.JPEG;
 
             bitmap.compress(localCompressFormat, 100, localFileOutputStream1);
 
@@ -55,7 +55,7 @@ public class BitmapUtils {
     }
     private Bitmap GetBitmapFromSD()
     {
-        String localIconNormal = "icon"+7;
+        String localIconNormal = "icon"+4;
         Bitmap bitmap = null;
         FileInputStream localStream = null;
         try {
@@ -68,5 +68,13 @@ public class BitmapUtils {
         }catch (OutOfMemoryError o)
         {}
         return bitmap;
+    }
+
+    public void DeleteSDBitmap(){
+        for(int i = 0; i < 5; i++)
+        {
+            String filepath = context.getFilesDir().getAbsolutePath();
+            CompressUtils.deleteTempFile(filepath+"/icon4");
+        }
     }
 }

@@ -1,9 +1,9 @@
 package com.moto.model;
 
-import com.loopj.android.http.RequestParams;
-
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.loopj.android.http.RequestParams;
 
 public class InformNetworkModel extends MotoNetWorkModel{
 	
@@ -56,6 +56,15 @@ public class InformNetworkModel extends MotoNetWorkModel{
         String token = sharedPreferences.getString("token", "");
         params.put("token", token);
         this.connectWithPostData(params, "readconversation");
+    }
+
+    public void deleteconversation(String ucid) {
+        RequestParams params = new RequestParams();
+        SharedPreferences sharedPreferences = this.context.getSharedPreferences("usermessage", 0);
+        String token = sharedPreferences.getString("token", "");
+        params.put("token", token);
+        params.put("ucid",ucid);
+        this.connectWithPostData(params, "deleteconversation");
     }
 
 }

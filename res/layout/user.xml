@@ -7,6 +7,7 @@
     android:orientation="vertical" >
 
     <RelativeLayout
+        android:background="@drawable/cuttedbackground_me"
         android:id="@+id/user_head_layout"
         android:layout_width="match_parent"
         android:layout_height="460dp"

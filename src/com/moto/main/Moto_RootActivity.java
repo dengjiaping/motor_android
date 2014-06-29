@@ -142,6 +142,23 @@ public class Moto_RootActivity extends FragmentActivity implements NetWorkModelL
         handleIconType(leftBarButton,rightText,rightBarTextView, leftType);
         handleIconType(rightBarButton, rightText,rightBarTextView,rightType);
     }
+
+    /**
+     * 从res的layout中加载一个界面附在当前视图表面上,并给导航栏赋值
+     *
+     *
+     * @param resource 	R.layout.id
+     * @param navigationBarTitle 	导航栏标题
+     * @param leftType 	导航栏左按钮样式
+     * @param rightType 导航栏右按钮样式
+     * @param rightText 导航栏右文本样式
+     */
+    public void addContentView(int resource, String navigationBarTitle,int rightText, barButtonIconType leftType, barButtonIconType rightType) {
+        addContentView(resource);
+        setNavigationBarTitle(navigationBarTitle);
+        handleIconType(leftBarButton,rightText,rightBarTextView, leftType);
+        handleIconType(rightBarButton, rightText,rightBarTextView,rightType);
+    }
     /**
      * 
      * 进入下一个Activity
@@ -209,7 +226,8 @@ public class Moto_RootActivity extends FragmentActivity implements NetWorkModelL
      * @param resid 	导航栏标题string id
      */
 	public void setNavigationBarTitle(int resid) {
-    	navigationBarTitleTextView.setText(resid);
+
+        navigationBarTitleTextView.setText(resid);
 	}
 	
 
@@ -222,6 +240,26 @@ public class Moto_RootActivity extends FragmentActivity implements NetWorkModelL
 	public void setNavigationBarTitle(String navigationBarTitle){
 		navigationBarTitleTextView.setText(navigationBarTitle);
 	}
+
+    /**
+     * 给右面text一个标题
+     *
+     *
+     * @param RightBarText 	导航栏标题字符串变量
+     */
+    public void setRightBarText(String RightBarText) {
+        rightBarTextView .setText(RightBarText);
+    }
+
+    /**
+     * 给右面text一个标题
+     *
+     *
+     * @param RightBarText 	导航栏标题ID
+     */
+    public void setRightBarText(int RightBarText) {
+        rightBarTextView .setText(RightBarText);
+    }
 	
 	@Override
 	public void handleNetworkDataWithSuccess(JSONObject jsonObject)
@@ -266,6 +304,8 @@ public class Moto_RootActivity extends FragmentActivity implements NetWorkModelL
 	public void rightBarButtonItemEvent() {
 		
 	}
+
+
 	
 	private void handleIconType(ImageView button, barButtonIconType type) {
 		switch (type) {

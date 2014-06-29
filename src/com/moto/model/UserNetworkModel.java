@@ -1,9 +1,8 @@
 package com.moto.model;
 
-import com.loopj.android.http.RequestParams;
-
 import android.content.Context;
-import android.content.SharedPreferences;
+
+import com.loopj.android.http.RequestParams;
 
 public class UserNetworkModel extends MotoNetWorkModel {
 
@@ -17,4 +16,30 @@ public class UserNetworkModel extends MotoNetWorkModel {
  		params.put("username", name);
  		this.connectWithPostData(params, "searchuser");
 	}
+
+    public void readUserproFile(String name,String token) {
+        RequestParams params = new RequestParams();
+        params.put("username", name);
+        params.put("token", token);
+        this.connectWithPostData(params, "readuserprofile");
+    }
+
+    public void readrecentpost(String name) {
+        RequestParams params = new RequestParams();
+        params.put("username", name);
+        this.connectWithPostData(params, "readrecentpost");
+    }
+
+    public void followuser(String name,String token) {
+        RequestParams params = new RequestParams();
+        params.put("username", name);
+        params.put("token", token);
+        this.connectWithPostData(params, "followuser");
+    }
+
+    public void readfriendlist(String name) {
+        RequestParams params = new RequestParams();
+        params.put("username", name);
+        this.connectWithPostData(params, "readfriendlist");
+    }
 }

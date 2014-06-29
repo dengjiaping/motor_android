@@ -3,7 +3,10 @@ package com.moto.inform;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,16 +15,21 @@ import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.moto.constant.Constant;
+import com.moto.constant.ImageMethod;
+import com.moto.listview.MyListView;
 import com.moto.main.Moto_RootActivity;
+import com.moto.main.MotorApplication;
 import com.moto.main.R;
 import com.moto.model.InformNetworkModel;
+import com.moto.toast.ToastClass;
 import com.moto.utils.DateUtils;
+import com.moto.utils.UrlUtils;
 import com.moto.welcome.MyPushMessageReceiver;
 import com.moto.welcome.MyPushMessageReceiver.EventHandler;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,25 +41,30 @@ import java.util.List;
 public class Chat_privateActivity extends Moto_RootActivity implements EventHandler{
     private ImageView sendimage = null;
     private EditText contentEditText = null;
-    private ListView chatListView = null;
+    private MyListView chatListView = null;
     private List<ChatEntity> chatList = null;
     private ChatAdapter chatAdapter = null;
-    private ImageView inform_chat_return;
 
     public String otherUserName;
+    public String meImage;
     public String meName;
+
+    private Handler handler;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        addContentView(R.layout.inform_chat, "聊天",barButtonIconType.barButtonIconType_None, barButtonIconType.barButtonIconType_None);
-        init();
-        chatList = new ArrayList<ChatEntity>(8);
         Intent intent = this.getIntent();
         Bundle extras = getIntent().getExtras();
         otherUserName = extras.getString("otherUserName");
+
+        addContentView(R.layout.inform_chat, otherUserName,barButtonIconType.barButtonIconType_Back, barButtonIconType.barButtonIconType_None);
+        init();
+        chatList = new ArrayList<ChatEntity>(8);
+
         SharedPreferences sharepreferences = this.getSharedPreferences("usermessage", 0);
         meName = sharepreferences.getString("username", "");
+        meImage = sharepreferences.getString("avatar","");
 
         chatAdapter = new ChatAdapter(this,chatList);
         chatListView.setAdapter(chatAdapter);
@@ -60,29 +73,71 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
 
             @Override
             public void onClick(View v) {
-                if (!contentEditText.getText().toString().equals("")) {
+                if (!contentEditText.getText().toString().trim().equals("")) {
                     send();
                 }else {
-                    Toast.makeText(Chat_privateActivity.this, "Content is empty", Toast.LENGTH_SHORT).show();
+                    ToastClass.SetToast(Chat_privateActivity.this, "请输入要说的话");
                 }
             }
         });
 
-        inform_chat_return.setOnClickListener(new OnClickListener() {
+        handler = new Handler(){
 
             @Override
-            public void onClick(View v) {
-                finish();
+            public void handleMessage(Message msg) {
+                // TODO Auto-generated method stub
+
+                switch(msg.what)
+                {
+                    //获取成功
+                    case Constant.MSG_SUCCESS:
+                        chatAdapter.notifyDataSetChanged();
+                        chatListView.onRefreshComplete();
+                        chatListView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                chatListView.setSelection(chatListView.getCount());
+                            }
+                        });
+                        break;
+                }
+                super.handleMessage(msg);
+            }
+
+        };
+
+        chatListView.setonRefreshListener(new MyListView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new AsyncTask<Void, Void, Void>() {
+                    protected Void doInBackground(Void... params) {
+                        try {
+                            Thread.sleep(1500);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        new InformNetworkModel(Chat_privateActivity.this,Chat_privateActivity.this).readPrivateMessage(otherUserName, chatList.get(0).getUtcTimeStamp());
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void result) {
+                        //						refresh_scrollview.onRefreshComplete();
+                    }
+
+                }.execute();
             }
         });
+
+
         new InformNetworkModel(this,this).readPrivateMessage(otherUserName, DateUtils.getUTCCurrentTimestamp());
     }
 
     private void init() {
         contentEditText = (EditText) this.findViewById(R.id.inform_chat_content);
         sendimage = (ImageView) this.findViewById(R.id.inform_chat_send);
-        chatListView = (ListView) this.findViewById(R.id.inform_chat_listview);
-        inform_chat_return = (ImageView)findViewById(R.id.inform_chat_return);
+        chatListView = (MyListView) this.findViewById(R.id.inform_chat_listview);
+
     }
 
     private void send(){
@@ -90,6 +145,10 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
         String message = contentEditText.getText().toString();
         chatEntity.setContent(message);
         chatEntity.setComeMsg(false);
+        chatEntity.setUserImage(meImage);
+        chatEntity.setChatTime(DateUtils.timestampToDeatil(DateUtils.getUTCCurrentTimestamp()));
+        chatEntity.setUtcTimeStamp(DateUtils.getUTCCurrentTimestampWithMillisecond());
+        chatEntity.setUsername(meName);
         chatList.add(chatEntity);
         chatAdapter.notifyDataSetChanged();
         chatListView.setSelection(chatList.size() - 1);
@@ -119,11 +178,13 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
         private LayoutInflater inflater = null;
         private int COME_MSG = 0;
         private int TO_MSG = 1;
+        private DisplayImageOptions options;
 
         public ChatAdapter(Context context,List<ChatEntity> chatList){
             this.context = context;
             this.myList = chatList;
             inflater = LayoutInflater.from(this.context);
+            options = ImageMethod.GetOptions();
         }
 
         @Override
@@ -172,6 +233,7 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
                 chatHolder.timeTextView = (TextView) convertView.findViewById(R.id.inform_chat_time);
                 chatHolder.contentTextView = (TextView) convertView.findViewById(R.id.inform_chat_content);
                 chatHolder.userImageView = (ImageView) convertView.findViewById(R.id.inform_chat_user_image);
+                chatHolder.inform_chat_user_username = (TextView)convertView.findViewById(R.id.inform_chat_user_username);
                 convertView.setTag(chatHolder);
             }else {
                 chatHolder = (ChatHolder)convertView.getTag();
@@ -179,15 +241,17 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
 
             chatHolder.timeTextView.setText(myList.get(position).getChatTime());
             chatHolder.contentTextView.setText(myList.get(position).getContent());
-            chatHolder.userImageView.setImageResource(myList.get(position).getUserImage());
+            chatHolder.inform_chat_user_username.setText(myList.get(position).getUsername());
+            MotorApplication.imageLoader.displayImage(UrlUtils.avatarUrl(myList.get(position).getUserImage()),  chatHolder.userImageView,options,null);
 
             return convertView;
         }
 
         private class ChatHolder{
-            private TextView timeTextView;
-            private ImageView userImageView;
-            private TextView contentTextView;
+            TextView timeTextView;
+            ImageView userImageView;
+            TextView contentTextView;
+            TextView inform_chat_user_username;
         }
 
     }
@@ -227,13 +291,18 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
 
         if (DateUtils.compareUTCTimestamp(firstJsonTimestamp,lastListTimestamp))
         {
-            for (int i = jsonArray.length()-1; i > -1 ; i--) {
+            int num = jsonArray.length()-1;
+            for (int i = num; i > -1 ; i--) {
                 jsonObject = jsonArray.getJSONObject(i);
+                String avatar = jsonObject.getString("avatar");
                 String username = jsonObject.getString("username");
                 String utcTimestamp = jsonObject.getString("created_at");
-                String timestamp = DateUtils.timestampToDeatil(utcTimestamp);
+                String timestamp = DateUtils.StimestampToDeatil(utcTimestamp);
                 String message = jsonObject.getString("message");
+
                 ChatEntity chatEntity = new ChatEntity();
+                chatEntity.setUsername(username);
+                chatEntity.setUserImage(avatar);
                 chatEntity.setComeMsg(isMe(username));
                 chatEntity.setContent(message);
                 chatEntity.setChatTime(timestamp);
@@ -251,14 +320,19 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
                 }
             }
         }else{
-            for (int i = 0; i < jsonArray.length(); i++) {
+            int num = jsonArray.length();
+            for (int i = 0; i < num; i++) {
                 jsonObject = jsonArray.getJSONObject(i);
+                String avatar = jsonObject.getString("avatar");
                 String username = jsonObject.getString("username");
                 String utcTimestamp = jsonObject.getString("created_at");
-                String timestamp = DateUtils.timestampToDeatil(utcTimestamp);
+                String timestamp = DateUtils.StimestampToDeatil(utcTimestamp);
                 String message = jsonObject.getString("message");
 
                 ChatEntity chatEntity = new ChatEntity();
+                chatEntity.setUserImage(avatar);
+                chatEntity.setUsername(username);
+                chatEntity.setUsername(username);
                 chatEntity.setComeMsg(isMe(username));
                 chatEntity.setContent(message);
                 chatEntity.setChatTime(timestamp);
@@ -275,16 +349,18 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
                 }
             }
         }
-        chatAdapter.notifyDataSetChanged();
+        handler.obtainMessage(Constant.MSG_SUCCESS)
+                .sendToTarget();
+
     }
 
 
     public boolean isMe(String username)
     {
         if (username.equals(meName))
-            return true;
-        else
             return false;
+        else
+            return true;
     }
     @Override
     public void handleNetworkDataWithFail(JSONObject jsonObject) throws JSONException {

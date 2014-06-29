@@ -115,7 +115,7 @@ public class SquareActivity extends tabActivity{
 				intent.putExtra("fid", fid);
 
 				intent.setClass(SquareActivity.this, Publish_post.class);
-				startActivityForResult(intent, 304);
+				startActivityForResult(intent, 305);
 			}
 		});
 
@@ -255,7 +255,7 @@ public class SquareActivity extends tabActivity{
 //
 				intent.putExtra("subject", list.get(arg2).get("subject").toString());
 				intent.setClass(SquareActivity.this, Theme_Post.class);
-				startActivityForResult(intent, 304);
+				startActivityForResult(intent, 305);
                 //				Intent intent = new Intent(SquareActivity.this,LoginDialog.class);
                 //				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 //				startActivity(intent);
@@ -446,6 +446,7 @@ public class SquareActivity extends tabActivity{
 					{
 						list.clear();
 						carList.clear();
+                        countList.clear();
 					}
 					JSONObject jsonObject = new JSONObject(data);
 					if (jsonObject.getString("is").equals("1")) {
@@ -659,10 +660,14 @@ public class SquareActivity extends tabActivity{
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-		switch(resultCode)
+		switch(requestCode)
 		{
-            case 304:
-                setResult(304);
+
+            case 305:
+                scrollView.state = scrollView.REFRESHING;
+                scrollView.changeHeaderViewByState();
+                isRefresh = true;
+                GetAsyData();
                 break;
 		}
 

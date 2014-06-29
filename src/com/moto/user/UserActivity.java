@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,6 +32,7 @@ import com.moto.constant.ImageMethod;
 import com.moto.listview.MyGridView;
 import com.moto.live.Live_Kids_User;
 import com.moto.main.Moto_RootActivity;
+import com.moto.main.MotorApplication;
 import com.moto.main.R;
 import com.moto.model.SignNetWorkModel;
 import com.moto.mymap.MyMapApplication;
@@ -41,7 +40,6 @@ import com.moto.photo.ImageBrowserActivity;
 import com.moto.qiniu.img.Image;
 import com.moto.qiniu.img.UploadImage;
 import com.moto.toast.ToastClass;
-import com.moto.utils.BitmapUtils;
 import com.moto.utils.StringUtils;
 import com.moto.utils.UrlUtils;
 import com.moto.validation.Validation;
@@ -95,6 +93,8 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 
 	private Intent intent;
 	private RequestParams param;
+
+//    private Bitmap bmap;
 
 	private String token;
 	private String recentPostUri = path+"api/me/readrecentpost";
@@ -156,6 +156,16 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 				case Constant.MSG_TESTSTART:
 					DialogMethod.startProgressDialog(UserActivity.this,"正在登录");	
 					break;
+//                case Constant.MSG_GETIMGESUCCESS:
+//
+//
+//                    pullScrollView.destoryBitmap();
+//                    BitmapUtils.getInstance(UserActivity.this,bmap).DeleteSDBitmap();
+//                    BitmapUtils.getInstance(UserActivity.this,bmap).SetBitmapToSD();
+//                    Blur.getInstance(UserActivity.this, bmap).SetBitmapToSD();
+//                    SetBackgroundPhoto(R.drawable.male);
+//
+//                    break;
 				}
 				super.handleMessage(msg);
 			}
@@ -173,15 +183,6 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 		login_init();
 	}
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if(pullScrollView != null)
-        {
-
-            pullScrollView.destoryBitmap();
-        }
-    }
 
     private void user(){
         ViewGroup viewGroup = (ViewGroup) findViewById(android.R.id.content);
@@ -198,7 +199,10 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 
 		adapter = new MyAdapter(this, list);
 		listView.setAdapter(adapter);
-		
+        ownMessageMapNum.clear();
+        ownphotoMessage.clear();
+        ownMessageMap.clear();
+        carList.clear();
 		GetAsyMessageData();
 		GetAsyData();
 		
@@ -220,7 +224,8 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 
 
 	}
-	private void init() {
+
+    private void init() {
 		// TODO Auto-generated method stub
 		options = ImageMethod.GetOptions();
 		Originaloptions = ImageMethod.GetOriginalOptions();
@@ -253,26 +258,7 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 
             }
         });
-        Bitmap bitmap = null;
-        try {
-            bitmap = BitmapUtils.getInstance(UserActivity.this,bitmap).GetBitmap();
-            if(bitmap ==null)
-            {
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cuttedbackground_me);
-
-                BitmapUtils.getInstance(UserActivity.this,bitmap);
-            }
-        }catch (OutOfMemoryError o)
-        {}
-
-        pullScrollView.setOriginbitmap(this, bitmap);
-        if(bitmap != null && !bitmap.isRecycled())
-        {
-
-            bitmap.recycle();
-            bitmap = null;
-        }
-        System.gc(); //回收
+//        SetBackgroundPhoto(R.drawable.male);
 
         LinearLayout rightLinearLayout = (LinearLayout)findViewById(R.id.right_linear_nav);
         rightLinearLayout.setOnClickListener(new OnClickListener() {
@@ -287,16 +273,16 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
                 else
                 {
                     intent.putExtra("is", "1");
-                    intent.putExtra("avatar", ownMessageMap.get("avatar").toString());
+                    intent.putExtra("avatar", ownMessageMap.get("avatar")+"");
                     intent.putStringArrayListExtra("motophoto", ownphotoMessage);
-                    intent.putExtra("gender", ownMessageMap.get("gender").toString());
-                    intent.putExtra("username", ownMessageMap.get("username").toString());
-                    intent.putExtra("profile", ownMessageMap.get("profile").toString());
-                    intent.putExtra("mototype", ownMessageMap.get("mototype").toString());
-                    intent.putExtra("outputvolume", ownMessageMap.get("outputvolume").toString());
+                    intent.putExtra("gender", ownMessageMap.get("gender")+"");
+                    intent.putExtra("username", ownMessageMap.get("username")+"");
+                    intent.putExtra("profile", ownMessageMap.get("profile")+"");
+                    intent.putExtra("mototype", ownMessageMap.get("mototype")+"");
+                    intent.putExtra("outputvolume", ownMessageMap.get("outputvolume")+"");
                 }
                 intent.setClass(UserActivity.this, User_SystemSetting.class);
-                startActivityForResult(intent, 301);
+                startActivityForResult(intent, 0);
             }
         });
 	}
@@ -399,9 +385,10 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 		}
 		if(v == friends_layout)
 		{
-			intent = new Intent();
-			intent.setClass(UserActivity.this, User_friends.class);
-			startActivity(intent);
+
+            Bundle bundle = new Bundle();
+            bundle.putString("author",ownMessageMap.get("username")+"");
+            pushToNextActivity(bundle,User_friends.class,304);
 		}
 		if(v == collect_layout)
 		{
@@ -515,6 +502,11 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 			ownMessageMap.put("profile", jsonObject.getString("profile"));
 			ownMessageMap.put("mototype", jsonObject.getString("mototype"));
 			ownMessageMap.put("outputvolume", jsonObject.getString("outputvolume"));
+
+            editor = mshared.edit();
+            editor.putString("avatar", jsonObject.getString("avatar"));
+
+            editor.commit();
 			GetOwnPhoto(jsonObject.getString("motophoto"));
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -542,6 +534,17 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 		}
 	}
 	private void SetMessage(){
+
+        if(!ownMessageMap.get("avatar").toString().equals(""))
+        {
+
+            String imageUrl = UrlUtils.imageUrl(ownMessageMap.get("avatar").toString());
+//            GetAsyBitmap(imageUrl);
+            MotorApplication.imageLoader.displayImage(imageUrl,  user_userimg,options,null);
+
+
+        }
+
 		int num = ownphotoMessage.size();
 		if(num > 0)
 		{
@@ -553,20 +556,66 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 			SetMotoPhoto(carList);
 			
 		}
-		if(!ownMessageMap.get("avatar").toString().equals(""))
-		{
-			String imageUrl = UrlUtils.imageUrl(ownMessageMap.get("avatar").toString());
-			MyMapApplication.imageLoader.displayImage(imageUrl,  user_userimg,options,null);
-		}
-		if(!ownMessageMap.get("mototype").toString().equals(""))
+
+		if(!ownMessageMap.get("mototype").equals("null"))
 			user_mototype.setText(ownMessageMap.get("mototype").toString());
-		if(!ownMessageMap.get("outputvolume").toString().equals(""))
+        else{
+            user_mototype.setText("无");
+        }
+		if(!ownMessageMap.get("outputvolume").equals("null"))
 			user_outputvolume.setText(ownMessageMap.get("outputvolume").toString());
+        else
+        {
+            user_outputvolume.setText("无");
+        }
 		if(!ownMessageMap.get("profile").toString().equals(""))
 			user_signature.setText(ownMessageMap.get("profile").toString());
 		user_number_post.setText(ownMessageMapNum.get("post_count").toString());
 		user_friends.setText(ownMessageMapNum.get("friend_count").toString());
 	}
+
+//    private void GetAsyBitmap(String image_url){
+//        AsyncHttpClient client = new AsyncHttpClient();
+//
+//        client.get(image_url, new AsyncHttpResponseHandler() {
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+//                super.onSuccess(statusCode, headers, responseBody);
+//
+//                bmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
+//                handler.obtainMessage(Constant.MSG_GETIMGESUCCESS)
+//                        .sendToTarget();
+//            }
+//        });
+//
+//    }
+
+//    private void SetBackgroundPhoto(int drawable)
+//    {
+//        Bitmap bitmap = null;
+//        try {
+//            bitmap = BitmapUtils.getInstance(UserActivity.this, bitmap).GetBitmap();
+//            if(bitmap ==null)
+//            {
+//
+//                bitmap = BitmapFactory.decodeResource(getResources(), drawable);
+//
+//                BitmapUtils.getInstance(UserActivity.this,bitmap);
+//            }
+//        }catch (OutOfMemoryError o)
+//        {}
+//
+//        pullScrollView.setOriginbitmap(this, bitmap);
+//        if(bitmap != null && !bitmap.isRecycled())
+//        {
+//
+//            bitmap.recycle();
+//
+//
+//            bitmap = null;
+//        }
+//        System.gc(); //回收
+//    }
 	
 	private void SetMotoPhoto(final ArrayList<String> carList)
 	{
@@ -583,7 +632,7 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 						.findViewById(R.id.user_moto_photo_img);
 				moto_photo.addView(mLayout);
 				moto_photo.invalidate();
-				MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl(carList.get(i)),  mPhoto,Originaloptions,null);
+				MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(carList.get(i)),  mPhoto,Originaloptions,null);
 				final int position = i;
 				mPhoto.setOnClickListener(new OnClickListener() {
 					
@@ -674,13 +723,11 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 			String subject = jsonObject.getString("subject");
 			String message = jsonObject.getString("message");
 			String dateline = jsonObject.getString("dateline");
-//			String photoname = jsonObject.getString("photoname");			
 			String tid = jsonObject.getString("tid");
 			map.put("author", author);
 			map.put("subject", subject);
 			map.put("message", message);
 			map.put("dateline", dateline);
-//			map.put("photoname", photoname);
 			map.put("tid", tid);
 			ImgList.add(StringUtils.hashToArray(jsonObject.getString("photoname").toString()));
 			WidthHeightList.add(StringUtils.hashToWidthHeightArray(jsonObject.getString("photoinfo")));
@@ -699,19 +746,25 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 		{
 		case 301:
 			login();
-            pullScrollView.destoryBitmap();
-			break;
-		case 302:
-			GetAsyMessageData();
+//            pullScrollView.destoryBitmap();
 			break;
 		}
+        switch (requestCode)
+        {
+            case 0:
+                ownMessageMapNum.clear();
+                ownphotoMessage.clear();
+                ownMessageMap.clear();
+                carList.clear();
+                GetAsyMessageData();
+                break;
+        }
 		
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 	@Override
 	public void handleNetworkDataWithSuccess(JSONObject jsonObject) throws JSONException {
 		// TODO Auto-generated method stub
-
 		JSONObject jsonObject2 = new JSONObject(jsonObject.getString("userinfo"));
 		String uidString = jsonObject2.getString("email");
 		String usernameString = jsonObject2.getString("username");
@@ -780,6 +833,8 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 			// TODO Auto-generated method stub
 			super.onProgressUpdate(values);
 		}
+
+
 	}
 
 

@@ -2,16 +2,17 @@ package com.moto.inform;
 
 public class ChatEntity {
     
-	private int userImage;
+	private String userImage;
 	private String content;
 	private String chatTime;
 	private boolean isComeMsg;
     private String utcTimeStamp;
+    private String username;
 
-    public int getUserImage() {
+    public String getUserImage() {
 		return userImage;
 	}
-	public void setUserImage(int userImage) {
+	public void setUserImage(String userImage) {
 		this.userImage = userImage;
 	}
 	public String getContent() {
@@ -40,4 +41,6 @@ public class ChatEntity {
     {
         return this.utcTimeStamp;
     }
+    public String getUsername(){return username;}
+    public void setUsername(String username){this.username = username;}
 }

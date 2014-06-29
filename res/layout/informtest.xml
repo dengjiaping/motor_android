@@ -65,16 +65,21 @@
                             style="@style/RadioButton" />
                     </info.hoang8f.android.segmented.SegmentedGroup>
 
-                    <ImageView
-                        android:id="@+id/inform_add_img"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                    <RelativeLayout
+                        android:layout_width="40dp"
+                        android:id="@+id/inform_add_layout"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="10dp"
                         android:clickable="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/add_tabbar"
-                        />
+                        android:layout_marginRight="10dp"
+                        android:layout_height="fill_parent">
+                        <ImageView
+                            android:id="@+id/inform_add_img"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/add_tabbar"
+                            />
+                        </RelativeLayout>
                     </RelativeLayout>
             </LinearLayout>
 

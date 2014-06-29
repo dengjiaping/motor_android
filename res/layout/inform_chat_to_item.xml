@@ -3,20 +3,21 @@
     android:layout_width="fill_parent"
     android:orientation="vertical"
     android:paddingBottom="5dp"
+    android:background="#ffffff"
     android:layout_height="wrap_content" >
 
     <TextView
-        	android:id="@+id/inform_chat_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#bfbfbf"
-            android:layout_gravity="center_horizontal"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:textColor="#ffffff"
-            android:textSize="12sp" />
+        android:id="@+id/inform_chat_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textColor="#000000"
+        android:textSize="15sp" />
     
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -25,12 +26,14 @@
 
         <ImageView
             android:id="@+id/inform_chat_user_image"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/mypic"
+
             android:focusable="false" />
+
+
 
         <TextView
             android:id="@+id/inform_chat_content"
@@ -49,4 +52,14 @@
             android:textSize="14sp" />
         
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/inform_chat_user_username"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:layout_marginRight="3dp"
+        android:textSize="15sp"
+        android:textColor="#777777"
+        />
 </LinearLayout>

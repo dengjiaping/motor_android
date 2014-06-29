@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -200,39 +199,10 @@ public class User_SystemSetting extends MyActivity implements OnClickListener,Ne
 			intent.setClass(User_SystemSetting.this, User_EditUserMassage.class);
 			startActivityForResult(intent, 301);
 		}
-		if(v == checkVersion)
-		{
-			new UpdateNetworkModel(User_SystemSetting.this, User_SystemSetting.this);
+		if(v == checkVersion) {
+            new UpdateNetworkModel(User_SystemSetting.this, User_SystemSetting.this);
 
-			new AsyncTask<Integer, String, Integer>(){
-
-				@Override
-				protected Integer doInBackground(Integer... params) {
-					// TODO Auto-generated method stub
-					try {
-						Thread.sleep(40 * 1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					return null;
-				}
-				@Override
-				protected void onCancelled() {
-					DialogMethod.stopProgressDialog();
-					super.onCancelled();
-				}
-				@Override
-				protected void onPreExecute() {
-					DialogMethod.startProgressDialog(User_SystemSetting.this,"正在检查");	
-				}
-
-				@Override
-				protected void onPostExecute(Integer result) {
-					DialogMethod.stopProgressDialog();
-				}
-				
-			}.execute();
-		}
+        }
 	}
 
     @Override
@@ -252,7 +222,7 @@ public class User_SystemSetting extends MyActivity implements OnClickListener,Ne
 	public void handleNetworkDataWithFail(JSONObject jsonObject)
 			throws JSONException {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void handleNetworkDataWithUpdate(float progress)
@@ -266,6 +236,12 @@ public class User_SystemSetting extends MyActivity implements OnClickListener,Ne
 		// TODO Auto-generated method stub
 		DialogMethod.stopProgressDialog();
 	}
+    @Override
+    public void handleNetworkDataStart() throws JSONException {
+        // TODO Auto-generated method stub
+        DialogMethod.startProgressDialog(User_SystemSetting.this,"正在检查");
+
+    }
 	private void Getcode(JSONObject jsonObject){
 		int versionCode = 0;
 		int code = 0;
@@ -291,7 +267,6 @@ public class User_SystemSetting extends MyActivity implements OnClickListener,Ne
 	
 	private void mydialog(final String uri)
 	{
-		Log.e("sdsdfd", uri);
 		final errorDialog.Builder builder = new errorDialog.Builder(this);
 //		builder.setTitle("错误提示");
 		builder.setMessage("版本有更新，是否下载？");
@@ -323,8 +298,7 @@ public class User_SystemSetting extends MyActivity implements OnClickListener,Ne
 		errorDialog dialog = builder.create();//need a <span style="font-family: 'Microsoft YaHei';">AlertDialog</span>  
         dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);//use alert.  
         // dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY);  
-        dialog.show();  
-        Log.e("s", uri);
+        dialog.show();
 	}
 	
 private void downloadApk(String uri)
@@ -392,10 +366,6 @@ private void downloadApk(String uri)
 	  intent.setDataAndType(Uri.fromFile(file), type);  //设置数据类型
 	  startActivity(intent);
 	 }
-	@Override
-	public void handleNetworkDataStart() throws JSONException {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 }

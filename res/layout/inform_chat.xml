@@ -2,30 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#E7E7E7" >
+    android:background="#ffffff" >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="50.0dip" 
-        android:id="@+id/inform_chat_title">"
 
-    <include 
-        layout="@layout/title"
-        />
-    <TextView
-        android:id="@+id/inform_chat_user_name"      
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#ffffff"
-        android:textSize="26sp"
-        android:layout_centerInParent="true"
-        android:text="by"
-        />
-	<include 
-        android:id="@+id/inform_chat_return"
-        layout="@layout/back"
-        />
-	</RelativeLayout> 
     <RelativeLayout 
         android:id="@+id/inform_chat_bottom"
         android:layout_alignParentBottom="true"
@@ -65,15 +44,12 @@
         android:background="#AFAFAF"
         />
     
-    <ListView 
+    <com.moto.listview.MyListView
         android:id="@+id/inform_chat_listview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@id/interval"
-        android:layout_below="@id/inform_chat_title"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="60dp"
         android:cacheColorHint="#00000000"
         android:divider="@null"
         android:listSelector="#00000000"

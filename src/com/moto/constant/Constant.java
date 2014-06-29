@@ -11,4 +11,5 @@ public class Constant {
 	public static final int MSG_TESTSTART = 7;
 	public static final int MSG_TESTFALTH = 8;
     public static final int MSG_HAVENOTHING = 9;   //还没有任何数据
+    public static final int MSG_GETIMGESUCCESS = 10;
 }

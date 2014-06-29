@@ -77,6 +77,23 @@ public class DateUtils {
      *
      * @return String 	返回当前UTC时间
      */
+    public static String getUTCCurrentTimestampWithMillisecond()
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date date = new Date();
+
+        String timestamp = sdf.format(date);
+        return timestamp;
+    }
+
+    /**
+     * 获取当前的UTC时间
+     *
+     *
+     *
+     * @return String 	返回当前UTC时间
+     */
     public static String getUTCCurrentTimestamp()
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");

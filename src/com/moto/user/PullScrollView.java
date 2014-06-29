@@ -2,11 +2,7 @@ package com.moto.user;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,11 +10,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ScrollView;
 
 import com.moto.main.R;
-import com.moto.utils.Blur;
-
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 /**
  * 自定义ScrollView
@@ -70,7 +61,7 @@ public class PullScrollView extends ScrollView {
     private OnTurnListener mOnTurnListener;
 
 
-    private Bitmap originbitmap;
+//    private Bitmap originbitmap;
 
 
     private boolean Isone = true;
@@ -133,57 +124,57 @@ public class PullScrollView extends ScrollView {
         }
     }
 
-    public void setOriginbitmap(Context context,Bitmap originbitmap) {
-
-        this.context = context;
-        this.originbitmap = originbitmap;
-//        blurbitmaps.set(4,this.originbitmap.get());
-        try {
-           new BitmapBlurTask().execute(this.originbitmap, context).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        GetIconOne();
-//        mHeader.setBackgroundDrawable(new BitmapDrawable(blurbitmaps.get(0)));
-    }
-
-    public class BitmapBlurTask extends AsyncTask<Object, String, Bitmap>{
-
-        @Override
-        protected Bitmap doInBackground(Object... params) {
-            Bitmap bitmaps = (Bitmap)params[0];
-//            int radius = (int)(Math.sqrt(Math.pow(bitmaps.get(9).getWidth(),2)+Math.pow(bitmaps.get(9).getHeight(),2))) / 2;
-            Context context = (Context)params[1];
-            Blur.getInstance(context,bitmaps);
-//            mybitmap = new SoftReference<>(bitmaps.get(4));
-//            for( int i = 3,j = 2; i >= 0; i--,j+=4)
-//            {
+//    public void setOriginbitmap(Context context,Bitmap originbitmap) {
 //
-//
-//               try {
-//                   String localIconNormal = "icon"+i;
-//
-//                   FileInputStream localStream = context.openFileInput(localIconNormal);
-//
-//                  mybitmap = new SoftReference<Bitmap>(BitmapFactory.decodeStream(localStream));
-//               }catch (Exception ex)
-//               {
-//
-//               }
-//               bitmaps.set(i, mybitmap.get());
-//
-//            }
+//        this.context = context;
+//        this.originbitmap = originbitmap;
+////        blurbitmaps.set(4,this.originbitmap.get());
+//        try {
+//           new BitmapBlurTask().execute(this.originbitmap, context).get();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//        GetIconOne();
+////        mHeader.setBackgroundDrawable(new BitmapDrawable(blurbitmaps.get(0)));
+//    }
 
-            return bitmaps;
-        }
-
-        protected void onPostExecute(ArrayList<Bitmap> result) {
-            // TODO Auto-generated method stub
-
-        }
-    }
+//    public class BitmapBlurTask extends AsyncTask<Object, String, Bitmap>{
+//
+//        @Override
+//        protected Bitmap doInBackground(Object... params) {
+//            Bitmap bitmaps = (Bitmap)params[0];
+////            int radius = (int)(Math.sqrt(Math.pow(bitmaps.get(9).getWidth(),2)+Math.pow(bitmaps.get(9).getHeight(),2))) / 2;
+//            Context context = (Context)params[1];
+//            Blur.getInstance(context,bitmaps);
+////            mybitmap = new SoftReference<>(bitmaps.get(4));
+////            for( int i = 3,j = 2; i >= 0; i--,j+=4)
+////            {
+////
+////
+////               try {
+////                   String localIconNormal = "icon"+i;
+////
+////                   FileInputStream localStream = context.openFileInput(localIconNormal);
+////
+////                  mybitmap = new SoftReference<Bitmap>(BitmapFactory.decodeStream(localStream));
+////               }catch (Exception ex)
+////               {
+////
+////               }
+////               bitmaps.set(i, mybitmap.get());
+////
+////            }
+//
+//            return bitmaps;
+//        }
+//
+//        protected void onPostExecute(ArrayList<Bitmap> result) {
+//            // TODO Auto-generated method stub
+//
+//        }
+//    }
 
     /**
      * 设置Header
@@ -261,8 +252,6 @@ public class PullScrollView extends ScrollView {
                 if (getScrollY() == 0) {
                     mState = State.NORMAL;
                 }
-                SetTrue();
-                GetIconOne();
                 isMoving = false;
                 mEnableTouch = false;
                 break;
@@ -340,163 +329,163 @@ public class PullScrollView extends ScrollView {
                 mHeader.layout(mHeader.getLeft(), mCurrentTop, mHeader.getRight(), mCurrentBottom);
             }
 
-            if(contentMoveHeight >= 0)
-            {
-//                Log.e("ssss", blurbitmaps.size() + "");
-                int count = (int)contentMoveHeight / everyheight;
-               if(count == 1 && Isone)
-               {
-                   GetIcontwo();
-                   Isone = false;
-               }
-                else if( count == 2 && Istwo)
-               {
-//                   Log.e("two",blurbitmaps.get((int)(contentMoveHeight / everyheight)).toString());
-                   GetIconthree();
-                   Istwo = false;
-               }
-                else if(count == 3 && Isthree)
-               {
-//                   Log.e("three",blurbitmaps.get((int)(contentMoveHeight / everyheight))+"");
-//                   mHeader.setBackgroundDrawable(new BitmapDrawable(blurbitmaps.get((int)(contentMoveHeight / everyheight))));
-                   GetIconfour();
-                   Isthree = false;
-               }
-                else if(count == 4 && Isfour)
-               {
-//                   Log.e("four",blurbitmaps.get((int)(contentMoveHeight / everyheight))+"");
-//                   mHeader.setBackgroundDrawable(new BitmapDrawable(blurbitmaps.get((int)(contentMoveHeight / everyheight))));
-                   GetIconfive();
-                   Isfour = false;
-               }
-            }
-            else
-            {
-//                mHeader.setBackgroundDrawable(new BitmapDrawable(blurbitmaps.get(0)));
-                GetIconOne();
-                SetTrue();
-            }
+//            if(contentMoveHeight >= 0)
+//            {
+////                Log.e("ssss", blurbitmaps.size() + "");
+//                int count = (int)contentMoveHeight / everyheight;
+//               if(count == 1 && Isone)
+//               {
+//                   GetIcontwo();
+//                   Isone = false;
+//               }
+//                else if( count == 2 && Istwo)
+//               {
+////                   Log.e("two",blurbitmaps.get((int)(contentMoveHeight / everyheight)).toString());
+//                   GetIconthree();
+//                   Istwo = false;
+//               }
+//                else if(count == 3 && Isthree)
+//               {
+////                   Log.e("three",blurbitmaps.get((int)(contentMoveHeight / everyheight))+"");
+////                   mHeader.setBackgroundDrawable(new BitmapDrawable(blurbitmaps.get((int)(contentMoveHeight / everyheight))));
+//                   GetIconfour();
+//                   Isthree = false;
+//               }
+//                else if(count == 4 && Isfour)
+//               {
+////                   Log.e("four",blurbitmaps.get((int)(contentMoveHeight / everyheight))+"");
+////                   mHeader.setBackgroundDrawable(new BitmapDrawable(blurbitmaps.get((int)(contentMoveHeight / everyheight))));
+//                   GetIconfive();
+//                   Isfour = false;
+//               }
+//            }
+//            else
+//            {
+////                mHeader.setBackgroundDrawable(new BitmapDrawable(blurbitmaps.get(0)));
+//                GetIconOne();
+//                SetTrue();
+//            }
         }
     }
 
-    private void SetTrue()
-    {
-        Isone = true;
-        Istwo = true;
-        Isthree = true;
-        Isfour = true;
-    }
-
-    private void GetIconOne()
-    {
-        String localIconNormal = "icon"+0;
-        Bitmap bitmap = originbitmap;
-        FileInputStream localStream = null;
-        try {
-            localStream = context.openFileInput(localIconNormal);
-
-        }catch (Exception e)
-        {}
-        try {
-            bitmap = BitmapFactory.decodeStream(localStream);
-        }catch (OutOfMemoryError o)
-        {}
-//                   Log.e("one",blurbitmaps.get((int)(contentMoveHeight / everyheight)).toString());
-        mHeader.setBackgroundDrawable(new BitmapDrawable(bitmap));
-//        if(bitmap != null && !bitmap.isRecycled())
-//        {
-//            bitmap.recycle();
-//            bitmap = null;
-//        }不能够recycle,否则会报错
-    }
-    private void GetIcontwo()
-    {
-        String localIconNormal = "icon"+1;
-        Bitmap bitmap = originbitmap;
-        FileInputStream localStream = null;
-        try {
-            localStream = context.openFileInput(localIconNormal);
-
-        }catch (Exception e)
-        {}
-        try {
-            bitmap = BitmapFactory.decodeStream(localStream);
-        }catch (OutOfMemoryError o)
-        {}
-//                   Log.e("one",blurbitmaps.get((int)(contentMoveHeight / everyheight)).toString());
-        mHeader.setBackgroundDrawable(new BitmapDrawable(bitmap));
-//        if(bitmap != null && !bitmap.isRecycled())
-//        {
-//            bitmap.recycle();
-//            bitmap = null;
-//        }不能够recycle,否则会报错
-    }
-    private void GetIconthree()
-    {
-        String localIconNormal = "icon"+2;
-        Bitmap bitmap = originbitmap;
-        FileInputStream localStream = null;
-        try {
-            localStream = context.openFileInput(localIconNormal);
-
-        }catch (Exception e)
-        {}
-        try {
-            bitmap = BitmapFactory.decodeStream(localStream);
-        }catch (OutOfMemoryError o)
-        {}
-//                   Log.e("one",blurbitmaps.get((int)(contentMoveHeight / everyheight)).toString());
-        mHeader.setBackgroundDrawable(new BitmapDrawable(bitmap));
-//        if(bitmap != null && !bitmap.isRecycled())
-//        {
-//            bitmap.recycle();
-//            bitmap = null;
-//        }//不能够recycle,否则会报错
-    }
-    private void GetIconfour()
-    {
-        String localIconNormal = "icon"+3;
-        Bitmap bitmap = originbitmap;
-        FileInputStream localStream = null;
-        try {
-            localStream = context.openFileInput(localIconNormal);
-
-        }catch (Exception e)
-        {}
-        try {
-            bitmap = BitmapFactory.decodeStream(localStream);
-        }catch (OutOfMemoryError o)
-        {}
-//                   Log.e("one",blurbitmaps.get((int)(contentMoveHeight / everyheight)).toString());
-        mHeader.setBackgroundDrawable(new BitmapDrawable(bitmap));
-//        if(bitmap != null && !bitmap.isRecycled())
-//        {
-//            bitmap.recycle();
-//            bitmap = null;
-//        }不能够recycle,否则会报错
-    }
-    private void GetIconfive()
-    {
-        String localIconNormal = "icon"+4;
-        Bitmap bitmap = originbitmap;
-        FileInputStream localStream = null;
-        try {
-            localStream = context.openFileInput(localIconNormal);
-
-        }catch (Exception e)
-        {}
-        try {
-            bitmap = BitmapFactory.decodeStream(localStream);
-        }catch (OutOfMemoryError o)
-        {}
-//                   Log.e("one",blurbitmaps.get((int)(contentMoveHeight / everyheight)).toString());
-        mHeader.setBackgroundDrawable(new BitmapDrawable(bitmap));
-//        if(bitmap != null && !bitmap.isRecycled())
-//        {
-//            bitmap.recycle();
-//            bitmap = null;
-//        }不能够recycle,否则会报错
-    }
+//    private void SetTrue()
+//    {
+//        Isone = true;
+//        Istwo = true;
+//        Isthree = true;
+//        Isfour = true;
+//    }
+//
+//    private void GetIconOne()
+//    {
+//        String localIconNormal = "icon"+0;
+//        Bitmap bitmap = originbitmap;
+//        FileInputStream localStream = null;
+//        try {
+//            localStream = context.openFileInput(localIconNormal);
+//
+//        }catch (Exception e)
+//        {}
+//        try {
+//            bitmap = BitmapFactory.decodeStream(localStream);
+//        }catch (OutOfMemoryError o)
+//        {}
+////                   Log.e("one",blurbitmaps.get((int)(contentMoveHeight / everyheight)).toString());
+//        mHeader.setBackgroundDrawable(new BitmapDrawable(bitmap));
+////        if(bitmap != null && !bitmap.isRecycled())
+////        {
+////            bitmap.recycle();
+////            bitmap = null;
+////        }不能够recycle,否则会报错
+//    }
+//    private void GetIcontwo()
+//    {
+//        String localIconNormal = "icon"+1;
+//        Bitmap bitmap = originbitmap;
+//        FileInputStream localStream = null;
+//        try {
+//            localStream = context.openFileInput(localIconNormal);
+//
+//        }catch (Exception e)
+//        {}
+//        try {
+//            bitmap = BitmapFactory.decodeStream(localStream);
+//        }catch (OutOfMemoryError o)
+//        {}
+////                   Log.e("one",blurbitmaps.get((int)(contentMoveHeight / everyheight)).toString());
+//        mHeader.setBackgroundDrawable(new BitmapDrawable(bitmap));
+////        if(bitmap != null && !bitmap.isRecycled())
+////        {
+////            bitmap.recycle();
+////            bitmap = null;
+////        }不能够recycle,否则会报错
+//    }
+//    private void GetIconthree()
+//    {
+//        String localIconNormal = "icon"+2;
+//        Bitmap bitmap = originbitmap;
+//        FileInputStream localStream = null;
+//        try {
+//            localStream = context.openFileInput(localIconNormal);
+//
+//        }catch (Exception e)
+//        {}
+//        try {
+//            bitmap = BitmapFactory.decodeStream(localStream);
+//        }catch (OutOfMemoryError o)
+//        {}
+////                   Log.e("one",blurbitmaps.get((int)(contentMoveHeight / everyheight)).toString());
+//        mHeader.setBackgroundDrawable(new BitmapDrawable(bitmap));
+////        if(bitmap != null && !bitmap.isRecycled())
+////        {
+////            bitmap.recycle();
+////            bitmap = null;
+////        }//不能够recycle,否则会报错
+//    }
+//    private void GetIconfour()
+//    {
+//        String localIconNormal = "icon"+3;
+//        Bitmap bitmap = originbitmap;
+//        FileInputStream localStream = null;
+//        try {
+//            localStream = context.openFileInput(localIconNormal);
+//
+//        }catch (Exception e)
+//        {}
+//        try {
+//            bitmap = BitmapFactory.decodeStream(localStream);
+//        }catch (OutOfMemoryError o)
+//        {}
+////                   Log.e("one",blurbitmaps.get((int)(contentMoveHeight / everyheight)).toString());
+//        mHeader.setBackgroundDrawable(new BitmapDrawable(bitmap));
+////        if(bitmap != null && !bitmap.isRecycled())
+////        {
+////            bitmap.recycle();
+////            bitmap = null;
+////        }不能够recycle,否则会报错
+//    }
+//    private void GetIconfive()
+//    {
+//        String localIconNormal = "icon"+4;
+//        Bitmap bitmap = originbitmap;
+//        FileInputStream localStream = null;
+//        try {
+//            localStream = context.openFileInput(localIconNormal);
+//
+//        }catch (Exception e)
+//        {}
+//        try {
+//            bitmap = BitmapFactory.decodeStream(localStream);
+//        }catch (OutOfMemoryError o)
+//        {}
+////                   Log.e("one",blurbitmaps.get((int)(contentMoveHeight / everyheight)).toString());
+//        mHeader.setBackgroundDrawable(new BitmapDrawable(bitmap));
+////        if(bitmap != null && !bitmap.isRecycled())
+////        {
+////            bitmap.recycle();
+////            bitmap = null;
+////        }不能够recycle,否则会报错
+//    }
 
     private void rollBackAnimation() {
         TranslateAnimation tranAnim = new TranslateAnimation(0, 0,
@@ -538,27 +527,27 @@ public class PullScrollView extends ScrollView {
          */
         public void onTurn();
     }
-    public void destoryBitmap(){
-//        int num = blurbitmaps.size();
-//        for(int i = 0; i < num; i++) {
-//            if (blurbitmaps.get(i) != null && !blurbitmaps.get(i).isRecycled()) {
-//                blurbitmaps.get(i).recycle();
-//                blurbitmaps.set(i, null);
-//            }
-//        }
-        if(originbitmap != null && !originbitmap.isRecycled())
-        {
-            originbitmap.recycle();
-            originbitmap = null;
-        }
-//        if(mybitmap.get() != null && !mybitmap.get().isRecycled())
+//    public void destoryBitmap(){
+////        int num = blurbitmaps.size();
+////        for(int i = 0; i < num; i++) {
+////            if (blurbitmaps.get(i) != null && !blurbitmaps.get(i).isRecycled()) {
+////                blurbitmaps.get(i).recycle();
+////                blurbitmaps.set(i, null);
+////            }
+////        }
+//        if(originbitmap != null && !originbitmap.isRecycled())
 //        {
-//            mybitmap.get().recycle();
-//            mybitmap = null;
+//            originbitmap.recycle();
+//            originbitmap = null;
 //        }
-//        blurbitmaps.clear();
-
-    }
+////        if(mybitmap.get() != null && !mybitmap.get().isRecycled())
+////        {
+////            mybitmap.get().recycle();
+////            mybitmap = null;
+////        }
+////        blurbitmaps.clear();
+//
+//    }
 
 
 }

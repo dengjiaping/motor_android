@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#F7F7F7"
+    android:background="#E7E7E7"
     >
     <RelativeLayout
         android:id="@+id/square_titlebg"
@@ -13,7 +13,7 @@
         layout="@layout/title"
         />
 
-    <TextView     
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#ffffff"
@@ -38,6 +38,87 @@
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"
 	        >
+
+            <LinearLayout
+                android:id="@+id/kids_post_response_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:orientation="vertical"
+                >
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp">
+                    <ImageView
+                        android:contentDescription="@string/desc"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:clickable="true"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginTop="3dp"
+                        android:id="@+id/kids_post_response_avatar"
+                        />
+                    <com.rockerhieu.emojicon.EmojiconTextView
+                        android:id="@+id/kids_post_response_username"
+                        android:textColor="#AFAFAF"
+                        android:layout_marginLeft="4dp"
+                        android:layout_toRightOf="@id/kids_post_response_avatar"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textSize="18sp"
+                        />
+                </RelativeLayout>
+                <com.rockerhieu.emojicon.EmojiconTextView
+                    android:id="@+id/kids_post_response_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:textColor="#000000"
+                    android:layout_marginLeft="45dp"
+                    android:layout_marginTop="3dp"
+                    android:textSize="20sp"
+                    />
+
+                <RelativeLayout
+                    android:background="#E6F3F8"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+                    <com.moto.img.ScaleImageView
+                        android:id="@+id/kids_post_response_detail_img"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"
+                        />
+                    <com.moto.listview.ProgressBarView
+                        android:id="@+id/kids_post_response_progress_View"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:visibility="gone"
+                        android:layout_centerInParent="true"
+                        />
+                </RelativeLayout>
+                <TextView
+                    android:id="@+id/kids_post_response_time"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:gravity="center_vertical|right"
+                    android:textColor="#F0938D"
+                    android:layout_margin="4dp"
+                    android:textSize="12sp"
+                    />
+            </LinearLayout>
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="#E7E7E7"
+                />
             <com.moto.mytextview.ShimmerTextView
                 android:id="@+id/kids_post_response_waittext"
                 android:layout_width="fill_parent"
@@ -48,6 +129,7 @@
                 android:gravity="center"
                 android:text="@string/refresh"
                 />
+
    		    <com.moto.listview.NoScrollListview
                 android:visibility="gone"
 	        	android:id="@+id/kids_post_response_listview"
@@ -72,7 +154,7 @@
 	    	android:layout_height="48dp"
 	    	android:orientation="horizontal"
 	    	>
-	    <EditText
+	    <com.rockerhieu.emojicon.EmojiconEditText
 	        android:id="@+id/post_kids_response_theme_edit"
 	        android:layout_width="0dp"
 	        android:layout_weight="9"

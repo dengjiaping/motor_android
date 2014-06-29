@@ -1,12 +1,5 @@
 package com.moto.inform;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import com.moto.constant.Constant;
-import com.moto.constant.ImageMethod;
-import com.moto.main.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -16,17 +9,25 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.moto.constant.ImageMethod;
+import com.moto.main.MotorApplication;
+import com.moto.main.R;
+import com.moto.utils.UrlUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class FriendsAdapter extends BaseAdapter{
 	private Context context;
 	private ArrayList<HashMap<String, Object>> list;
 	private HashMap<String, Object> map;
-	private Activity activity;
+    private DisplayImageOptions options = ImageMethod.GetOptions();
 	
 	public FriendsAdapter(Activity activity, Context context, ArrayList<HashMap<String, Object>> list)
 	{
 		this.context = context;
 		this.list = list;
-		this.activity = activity;
 	}
     
 	@Override
@@ -64,7 +65,7 @@ public class FriendsAdapter extends BaseAdapter{
 		map = list.get(position);
 		holder.inform_private_friends_username.setText((CharSequence)map.get("name"));
         holder.inform_private_friends_write.setText((CharSequence)map.get("details"));
-        ImageMethod.setImageSourse(activity).loadImage(Constant.imgPath, holder.inform_private_friends_userimg);
+        MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(map.get("avatar").toString()),  holder.inform_private_friends_userimg,options,null);
         
         return convertView;
 	}

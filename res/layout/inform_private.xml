@@ -2,15 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#E9E9E9"
-    android:orientation="horizontal" 
+    android:background="#FFFFFF"
+    android:orientation="horizontal"
     >
-   <com.moto.listview.MyListView
-	    android:id="@+id/inform_private_listview"
-    	android:layout_width="fill_parent"
-    	android:layout_height="fill_parent"
-    	android:dividerHeight="1dp"
-        android:divider="#CCCCCC"
-        android:scrollbars="none"
-	    />
+    <com.moto.listview.SlideCutListView
+
+        android:id="@+id/inform_private_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="50dp"
+        android:divider="#E7E7E7"
+        android:dividerHeight="1dp"
+        />
 </LinearLayout>

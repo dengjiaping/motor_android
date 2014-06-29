@@ -27,6 +27,12 @@ public class SquareNetworkModel extends MotoNetWorkModel{
 		this.avatarParam = param;
 		connectWithPostData(avatarParam, "createnewtheme");
 	}
+
+    public void CreateNewPostForTheme(RequestParams param)
+    {
+        this.avatarParam = param;
+        connectWithPostData(avatarParam, "createpostfortheme");
+    }
 	
 	public void CreateNewTheme(RequestParams param,Image image) 
 	{
@@ -40,6 +46,18 @@ public class SquareNetworkModel extends MotoNetWorkModel{
 		task.execute(image);
 
 	}
+    public void CreateNewPostForTheme(RequestParams param,Image image)
+    {
+        this.avatarParam = param;
+//		connectWithPostData(avatarParam, "createnewtheme");
+//		ArrayList<Image> arrayList = new ArrayList<Image>();
+//		arrayList.add(image);
+//		String photoWidthHeight = GetWidthHeightHash(arrayList);
+//        this.avatarParam.put("photoinfo", photoWidthHeight);
+        PostForThemeUploadTask task = new PostForThemeUploadTask();
+        task.execute(image);
+
+    }
 	class AvatarUploadTask extends AsyncTask<Image, Float, String>{
 		private final static String qiniu_url = "http://up.qiniu.com/";
 		private String avatHash;
@@ -81,4 +99,46 @@ public class SquareNetworkModel extends MotoNetWorkModel{
 			connectWithPostData(avatarParam,"createnewtheme");
 		}
 		}
+
+    class PostForThemeUploadTask extends AsyncTask<Image, Float, String>{
+        private final static String qiniu_url = "http://up.qiniu.com/";
+        private String avatHash;
+        private ArrayList<String> photosHash = new ArrayList<String>();
+        @Override
+        protected String doInBackground(Image... params) {
+            Image avatar  = params[0];
+            UploadImage uploadImage = new UploadImage();
+
+            String respose = uploadImage.post(qiniu_url,avatar);
+            try {
+                JSONObject jsonObject = new JSONObject(respose);
+                avatHash = jsonObject.getString("hash");
+                photosHash.add(avatHash);
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            JSONArray photosJson = new JSONArray(photosHash);
+            return photosJson.toString();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Float... values) {
+            // TODO Auto-generated method stub
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+            avatarParam.put("photo", result);
+            connectWithPostData(avatarParam,"createpostfortheme");
+        }
+    }
 }

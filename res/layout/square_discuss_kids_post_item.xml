@@ -25,7 +25,7 @@
                 android:layout_marginTop="4dp"
                 />
             <com.rockerhieu.emojicon.EmojiconTextView
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="7dp"
                 android:id="@+id/post_item_user_name"
                 android:layout_toRightOf="@id/post_item_user_img"
                 android:layout_width="wrap_content"
@@ -95,34 +95,7 @@
                 android:layout_centerInParent="true"
                 />
         </RelativeLayout>
-        <LinearLayout
-            android:id="@+id/post_item_reaponse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="3dp"
-            android:clickable="true"
-            android:layout_marginRight="3dp"
-            android:layout_gravity="right"
-            android:orientation="horizontal"
-            >
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
 
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/comment"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#AFAFAF"
-                android:textSize="16sp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="2dp"
-                android:text="@string/response"
-                />
-        </LinearLayout>
     </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"

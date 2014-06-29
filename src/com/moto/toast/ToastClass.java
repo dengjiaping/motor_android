@@ -1,14 +1,17 @@
 package com.moto.toast;
 
-import com.moto.main.R;
-
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.moto.main.R;
+
 public class ToastClass {
+    private static SharedPreferences TokenShared;
+    private static String tokenString;
 	public static void SetToast(Activity activity, String string)
 	{
 		Toast.makeText(activity, string, Toast.LENGTH_SHORT).show();
@@ -25,4 +28,28 @@ public class ToastClass {
         toast.show();
         
 	}
+
+    public static boolean IsHaveToken(Activity activity)
+    {
+        TokenShared = activity.getSharedPreferences("usermessage", 0);
+        tokenString = TokenShared.getString("token", "");
+        if(tokenString.equals(""))
+        {
+            return false;
+
+        }
+        return true;
+    }
+
+    public static String GetTokenString(Activity activity)
+    {
+        TokenShared = activity.getSharedPreferences("usermessage", 0);
+        tokenString = TokenShared.getString("token", "");
+        if(tokenString.equals(""))
+        {
+            return "";
+
+        }
+        return tokenString;
+    }
 }

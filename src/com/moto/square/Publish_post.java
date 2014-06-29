@@ -29,6 +29,7 @@ import com.moto.model.SquareNetworkModel;
 import com.moto.qiniu.img.Image;
 import com.moto.select_morephoto.ImageManager2;
 import com.moto.toast.ToastClass;
+import com.moto.utils.CompressUtils;
 import com.rockerhieu.emojicon.EmojiconEditText;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
 import com.rockerhieu.emojicon.EmojiconsFragment;
@@ -42,7 +43,7 @@ import java.io.IOException;
 
 public class Publish_post extends Moto_RootActivity implements OnClickListener,NetWorkModelListener,EmojiconsFragment.OnEmojiconBackspaceClickedListener,EmojiconGridFragment.OnEmojiconClickedListener{
     
-	private String filepath;
+	private String filepath="";
 	private ImageView leftpage;
 	private EmojiconEditText et_sendmessage;
 	private String fid;
@@ -106,10 +107,22 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
                         DialogMethod.stopProgressDialog();
                         ToastClass.SetImageToast(Publish_post.this,"成功发送主题帖");
                         Publish_post.this.finish();
+                        setResult(305);
                         break;
                         //获取成功
                     case Constant.MSG_TESTSTART:
                         DialogMethod.startProgressDialog(Publish_post.this, "正在发送");
+                        break;
+                    case Constant.MSG_FALTH:
+                        String messageString = (String) msg.obj;
+                        ToastClass.SetToast(Publish_post.this, messageString);
+                        DialogMethod.stopProgressDialog();
+                        CompressUtils.deleteTempFile(filepath);
+                        break;
+                    case Constant.MSG_NULL:
+                        DialogMethod.stopProgressDialog();
+                        CompressUtils.deleteTempFile(filepath);
+                        ToastClass.SetToast(Publish_post.this,"发送失败");
                         break;
 				}
 				super.handleMessage(msg);
@@ -230,6 +243,7 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
 		{
 
 			try {
+                filepath = CompressUtils.GetCompressPath(filepath, 480);
                 photofiles = new Image(filepath, "file");
 				squareNetworkModel.CreateNewTheme(param,photofiles);
 			} catch (IOException e) {
@@ -289,6 +303,8 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
     throws JSONException {
         // TODO Auto-generated method stub
         super.handleNetworkDataWithFail(jsonObject);
+        handler.obtainMessage(Constant.MSG_NULL)
+                .sendToTarget();
     }
     
     @Override
@@ -296,6 +312,13 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
     throws JSONException {
         // TODO Auto-generated method stub
         super.handleNetworkDataGetFail(message);
+        // 获取一个Message对象，设置what为1
+        Message msg = Message.obtain();
+        msg.obj = message;
+        msg.what = Constant.MSG_FALTH;
+        // 发送这个消息到消息队列中
+        handler.sendMessage(msg);
+        DialogMethod.stopProgressDialog();
     }
     
     @Override

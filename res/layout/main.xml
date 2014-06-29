@@ -70,8 +70,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:textSize="23sp"
-        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:textColor="@drawable/text_press_style"
         android:layout_gravity="right|center_vertical"
         android:layout_marginTop="17.5dp"
         android:layout_marginRight="12dp"/>

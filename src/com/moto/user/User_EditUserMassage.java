@@ -1,11 +1,5 @@
 package com.moto.user;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,15 +23,17 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loopj.android.http.RequestParams;
 import com.moto.constant.Constant;
 import com.moto.constant.DialogMethod;
 import com.moto.constant.ImageMethod;
 import com.moto.img.MyImageView;
+import com.moto.main.Moto_RootActivity;
+import com.moto.main.MotorApplication;
 import com.moto.main.R;
 import com.moto.model.MeNetworkModel;
 import com.moto.model.NetWorkModelListener;
-import com.moto.myactivity.MyActivity;
 import com.moto.mymap.MyMapApplication;
 import com.moto.qiniu.img.Image;
 import com.moto.select_morephoto.AlbumActivity;
@@ -47,9 +42,16 @@ import com.moto.toast.ToastClass;
 import com.moto.tryimage.FileUtils;
 import com.moto.tryimage.PhotoUtils;
 import com.moto.utils.StringUtils;
+import com.moto.utils.UrlUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
-public class User_EditUserMassage extends MyActivity implements OnClickListener,NetWorkModelListener{
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+public class User_EditUserMassage extends Moto_RootActivity implements OnClickListener,NetWorkModelListener{
 	private ImageView user_edit_return;
 	private SharedPreferences mshared;
 	private String token;
@@ -70,6 +72,8 @@ public class User_EditUserMassage extends MyActivity implements OnClickListener,
     //	public ProgressDialog progressDialog;
 	
 	private Handler handler;
+    private Intent intent;
+    private RequestParams param;
 	private String nickname = "";
 	private RadioGroup radioGroup;
 	private RadioButton radioButtonMale;
@@ -118,8 +122,17 @@ public class User_EditUserMassage extends MyActivity implements OnClickListener,
                         //获取成功
                     case Constant.MSG_SUCCESS:
                         ToastClass.SetImageToast(User_EditUserMassage.this,"成功修改资料");
+                        DialogMethod.stopProgressDialog();
                         setResult(302);
                         User_EditUserMassage.this.finish();
+
+                        break;
+                    case Constant.MSG_START:
+
+                        DialogMethod.startProgressDialog(User_EditUserMassage.this,"正在提交");
+                        break;
+                    case Constant.MSG_FALTH:
+                        ToastClass.SetToast(User_EditUserMassage.this, msg.obj.toString());
                         break;
 				}
 				super.handleMessage(msg);
@@ -181,44 +194,7 @@ public class User_EditUserMassage extends MyActivity implements OnClickListener,
                 DialogMethod.dialogShow(User_EditUserMassage.this,"请输入爱骑排量!");
 			}
 			else {
-				try {
-					new AsyncTask<Integer, String, Integer>(){
-                        
-                        @Override
-                        protected Integer doInBackground(Integer... params) {
-                            // TODO Auto-generated method stub
-                            try {
-                                SetAsyMessageData();
-                                Thread.sleep(40 * 1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-							return null;
-						}
-						@Override
-						protected void onCancelled() {
-							DialogMethod.stopProgressDialog();
-							super.onCancelled();
-                        }
-                        @Override
-                        protected void onPreExecute() {
-							DialogMethod.startProgressDialog(User_EditUserMassage.this,"正在提交");
-                            //		progressDialog = new ProgressDialog(User_EditUserMassage.this);
-                            //		progressDialog.setMessage("正在提交,请稍候...");
-                            //		progressDialog.show();
-                        }
-                        
-                        @Override
-                        protected void onPostExecute(Integer result) {
-                            DialogMethod.stopProgressDialog();
-                            //			DialogMethod.dialogShow(User_EditUserMassage.this, "修改失败!");
-                        }
-                        
-					}.execute();
-				} catch (Exception e) {
-					// TODO: handle exception
-					
-				}
+                SetAsyMessageData();
 			}
 			
 		}
@@ -249,20 +225,34 @@ public class User_EditUserMassage extends MyActivity implements OnClickListener,
 			{
 				for(int i = 0; i < num; i++)
 				{
-					String imageUrl = imgPath+ownphotoMessage.get(i)+"?imageView2/1/w/100/h/100";
+					String imageUrl = UrlUtils.imageUrl(ownphotoMessage.get(i));
 					carList.add(imageUrl) ;
 				}
 				SetMotoPhoto();
 			}
 			photoString = intent.getStringExtra("avatar");
-			MyMapApplication.imageLoader.displayImage(imgPath+photoString+"?imageView2/1/w/50/h/50",  user_img,options,null);
+			MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(photoString),  user_img,options,null);
 			user_nickname_edit.setText(intent.getStringExtra("username"));
 			if(intent.getStringExtra("gender").equals("1"))
 				radioButtonMale.setChecked(true);
 			else
 				radioButtonFemale.setChecked(true);
-			user_models_edit.setText(intent.getStringExtra("mototype"));
-			user_displacement_edit.setText(intent.getStringExtra("outputvolume"));
+            if(intent.getStringExtra("mototype").equals("null"))
+            {
+                user_models_edit.setText("无");
+            }
+            else {
+                user_models_edit.setText(intent.getStringExtra("mototype"));
+            }
+
+            if(intent.getStringExtra("outputvolume").equals("null"))
+            {
+                user_displacement_edit.setText("无");
+            }
+			else{
+                user_displacement_edit.setText(intent.getStringExtra("outputvolume"));
+            }
+
 			user_signature_edit.setText(intent.getStringExtra("profile"));
 		}
 	}
@@ -448,11 +438,18 @@ public class User_EditUserMassage extends MyActivity implements OnClickListener,
 	@Override
 	public void handleNetworkDataGetFail(String message) throws JSONException {
 		// TODO Auto-generated method stub
+        Message msg = Message.obtain();
+        msg.obj = message;
+        msg.what = Constant.MSG_FALTH;
+        // 发送这个消息到消息队列中
+        handler.sendMessage(msg);
 		
 	}
 	@Override
 	public void handleNetworkDataStart() throws JSONException {
 		// TODO Auto-generated method stub
+        handler.obtainMessage(Constant.MSG_START)
+                .sendToTarget();
 		
 	}
     

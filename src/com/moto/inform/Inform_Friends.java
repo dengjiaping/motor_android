@@ -1,34 +1,27 @@
 package com.moto.inform;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 import com.moto.main.R;
 import com.moto.model.NetWorkModelListener;
 import com.moto.model.UserNetworkModel;
 import com.moto.myactivity.MyActivity;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Inform_Friends extends MyActivity implements OnClickListener,NetWorkModelListener{
     private ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
@@ -68,7 +61,7 @@ public class Inform_Friends extends MyActivity implements OnClickListener,NetWor
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.e("JSONObject", s.toString());
+
 
                 UserNetworkModel userNetworkModel = new UserNetworkModel(Inform_Friends.this, Inform_Friends.this);
                 userNetworkModel.searchUser(s.toString());
@@ -101,6 +94,7 @@ public class Inform_Friends extends MyActivity implements OnClickListener,NetWor
         for (int i = 0; i < jsonArray.length(); i++) {
             jsonObject = jsonArray.getJSONObject(i);
             HashMap<String, Object> map = new HashMap<String, Object>();
+            map.put("avatar",jsonObject.getString("avatar"));
             map.put("name", jsonObject.getString("username"));
             map.put("details", jsonObject.getString("profile"));
             list.add(map);

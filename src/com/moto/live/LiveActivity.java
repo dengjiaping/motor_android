@@ -38,10 +38,10 @@ import com.moto.listview.NoScrollListview;
 import com.moto.listview.ProgressBarView;
 import com.moto.main.Moto_MainActivity;
 import com.moto.main.Moto_RootActivity;
+import com.moto.main.MotorApplication;
 import com.moto.main.R;
 import com.moto.model.CacheModel;
 import com.moto.model.LiveNetworkModel;
-import com.moto.mymap.MyMapApplication;
 import com.moto.toast.ToastClass;
 import com.moto.utils.DateUtils;
 import com.moto.utils.StringUtils;
@@ -72,7 +72,6 @@ public class LiveActivity extends Moto_RootActivity{
 	private MyAdapter adapter;
 	private NoScrollListview myListView;
 	private CustomScrollView scrollView;
-	private int count = 0;
 	private boolean isrefresh = false;
 	private boolean isfirst = true;
     private boolean isload = false;
@@ -215,7 +214,6 @@ public class LiveActivity extends Moto_RootActivity{
 		scrollView.state = scrollView.REFRESHING;
 		scrollView.changeHeaderViewByState();
 		isrefresh = true;
-		count = 0;
 		GetAsyData();
 		
 	}
@@ -466,7 +464,7 @@ public class LiveActivity extends Moto_RootActivity{
 			if(carList.get(position).size() > 0)
 			{
 				holder.live_item_layout.setVisibility(View.VISIBLE);
-				MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl(carList.get(position).get(carList.get(position).size()-1)),  holder.img,Originaloptions,new SimpleImageLoadingListener(){
+				MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(carList.get(position).get(carList.get(position).size()-1)),  holder.img,Originaloptions,new SimpleImageLoadingListener(){
                     
 					@Override
 					public void onLoadingStarted(String imageUri, View view) {
@@ -513,7 +511,7 @@ public class LiveActivity extends Moto_RootActivity{
 			}
 			if(!map.get("avatar").toString().equals("null"))
 			{
-				MyMapApplication.imageLoader.displayImage(UrlUtils.avatarUrl(map.get("avatar").toString()),  holder.user_img,options,null);
+                MotorApplication.imageLoader.displayImage(UrlUtils.avatarUrl(map.get("avatar").toString()),  holder.user_img,options,null);
 			}
 			
 			holder.live_item_like_layout.setOnClickListener(new OnClickListener() {

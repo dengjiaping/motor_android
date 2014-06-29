@@ -1,9 +1,5 @@
 package com.moto.listview;
 
-import java.util.Date;
-
-import com.moto.main.R;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -14,13 +10,17 @@ import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.moto.main.R;
+
+import java.util.Date;
 
 public class MyListView extends ListView implements OnScrollListener {
     
@@ -95,7 +95,7 @@ public class MyListView extends ListView implements OnScrollListener {
         
 		headView.setPadding(0, -1 * headContentHeight, 0, 0);
 		headView.invalidate();
-        
+
 		Log.v("size", "width:" + headContentWidth + " height:"
               + headContentHeight);
         

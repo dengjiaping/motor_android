@@ -90,7 +90,6 @@ public class MotoNetWorkModel {
 				super.onSuccess(data);
 				try {
 					JSONObject jsonObject = new JSONObject(data);
-					Log.e("data", jsonObject.toString());
 					if (jsonObject.getString("is").equals("1")) {
 						netWorkModelListener.handleNetworkDataWithSuccess(jsonObject);
 					}

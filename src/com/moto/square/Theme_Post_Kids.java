@@ -1,7 +1,9 @@
 package com.moto.square;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,7 +13,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,17 +24,24 @@ import com.moto.asydata.RequstClient;
 import com.moto.constant.Constant;
 import com.moto.constant.DialogMethod;
 import com.moto.constant.ImageMethod;
+import com.moto.img.ScaleImageView;
 import com.moto.listview.CustomScrollView;
 import com.moto.listview.CustomScrollView.OnLoadListener;
 import com.moto.listview.CustomScrollView.OnRefreshListener;
 import com.moto.listview.NoScrollListview;
+import com.moto.listview.ProgressBarView;
+import com.moto.live.User_OwnPage;
+import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
-import com.moto.myactivity.MyActivity;
 import com.moto.mymap.MyMapApplication;
 import com.moto.mytextview.ShimmerTextView;
 import com.moto.toast.ToastClass;
 import com.moto.utils.UrlUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.rockerhieu.emojicon.EmojiconEditText;
 import com.rockerhieu.emojicon.EmojiconTextView;
 
 import org.json.JSONArray;
@@ -43,10 +51,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public class Theme_Post_Kids extends MyActivity{
+public class Theme_Post_Kids extends Moto_RootActivity{
 
     private ImageView send;
-    private EditText editText;
+    private EmojiconEditText editText;
     private NoScrollListview listview;
     private LinkedList<HashMap<String, Object>> Item_list = new LinkedList<HashMap<String,Object>>();
     private HashMap<String, Object> map;
@@ -54,14 +62,32 @@ public class Theme_Post_Kids extends MyActivity{
     private KidsAdapter adapter;
     private boolean isrefresh = false;
     private String pid;
+    private String author;
+    private String message;
+    private String dateline;
+    private String avatar;
+    private String photoname;
+    private long time = 0;
+    private Intent intent;
+    RequestParams param;
+
+    private ImageView kids_post_response_avatar;
+    private EmojiconTextView kids_post_response_username;
+    private EmojiconTextView kids_post_response_details;
+    private ScaleImageView kids_post_response_detail_img;
+    private ProgressBarView kids_post_response_progress_View;
+    private TextView kids_post_response_time;
+
     private CustomScrollView scrollView;
     private String response_theme_message;
     private SharedPreferences TokenShared;
     private String tokenString;
     private DisplayImageOptions options;
+    private DisplayImageOptions Originaloptions;
     private Handler handler;
     private ImageView leftpage;
     private ShimmerTextView waitText;
+
 
     private String readcommentUri = path+"api/square/readcommentforpost";
     private String CreatecommentUri = path+"api/square/createcommentforpost";
@@ -198,14 +224,102 @@ public class Theme_Post_Kids extends MyActivity{
     private void init() {
         // TODO Auto-generated method stub
         intent = getIntent();
-        pid = intent.getStringExtra("pid");
+        Bundle bundle = intent.getExtras();
+        pid = bundle.getString("pid");
+        author = bundle.getString("author");
+        message = bundle.getString("message");
+        dateline = bundle.getString("dateline");
+        avatar = bundle.getString("avatar");
+        photoname = bundle.getString("photoname");
+
         options = ImageMethod.GetOptions();
+        Originaloptions = ImageMethod.GetOriginalOptions();
         waitText = (ShimmerTextView)findViewById(R.id.kids_post_response_waittext);
         leftpage = (ImageView)findViewById(R.id.kids_post_response_listview_return);
         send = (ImageView)findViewById(R.id.post_kids_send);
-        editText = (EditText)findViewById(R.id.post_kids_response_theme_edit);
+        editText = (EmojiconEditText)findViewById(R.id.post_kids_response_theme_edit);
         listview = (NoScrollListview)findViewById(R.id.kids_post_response_listview);
         scrollView = (CustomScrollView)findViewById(R.id.kids_post_response_scrollview);
+
+
+        kids_post_response_avatar = (ImageView)findViewById(R.id.kids_post_response_avatar);
+        kids_post_response_username = (EmojiconTextView)findViewById(R.id.kids_post_response_username);
+        kids_post_response_details = (EmojiconTextView)findViewById(R.id.kids_post_response_details);
+        kids_post_response_detail_img = (ScaleImageView)findViewById(R.id.kids_post_response_detail_img);
+        kids_post_response_progress_View = (ProgressBarView)findViewById(R.id.kids_post_response_progress_View);
+        kids_post_response_time = (TextView)findViewById(R.id.kids_post_response_time);
+
+        SetThemeMessage();
+    }
+
+    private void SetThemeMessage(){
+        kids_post_response_username.setText(author);
+        kids_post_response_details.setText(message);
+        kids_post_response_time.setText(com.moto.utils.DateUtils.timestampToDeatil(dateline));
+        MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl(avatar),kids_post_response_avatar  ,options,null);
+        kids_post_response_avatar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(ToastClass.IsHaveToken(Theme_Post_Kids.this))
+                {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("author",author);
+                    bundle.putString("token",ToastClass.GetTokenString(Theme_Post_Kids.this));
+                    pushToNextActivity(bundle,User_OwnPage.class,304);
+                }
+                else{
+                    ToastClass.SetToast(Theme_Post_Kids.this,"请先登录之后再查看");
+                }
+            }
+        });
+        if(!photoname.equals(""))
+        {
+            String imageUrl = UrlUtils.imageUrl(photoname);
+
+            kids_post_response_detail_img.setVisibility(View.VISIBLE);
+            MyMapApplication.imageLoader.displayImage(imageUrl, kids_post_response_detail_img, Originaloptions,new SimpleImageLoadingListener(){
+                @Override
+                public void onLoadingStarted(String imageUri, View view) {
+                    // TODO Auto-generated method stub
+                    super.onLoadingStarted(imageUri, view);
+                    kids_post_response_progress_View.setProgressNotInUiThread(0);
+                    kids_post_response_progress_View.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onLoadingFailed(String imageUri, View view,
+                                            FailReason failReason) {
+                    // TODO Auto-generated method stub
+                    super.onLoadingFailed(imageUri, view, failReason);
+                    kids_post_response_progress_View.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onLoadingComplete(String imageUri, View view,
+                                              Bitmap loadedImage) {
+                    // TODO Auto-generated method stub
+                    super.onLoadingComplete(imageUri, view, loadedImage);
+                    kids_post_response_progress_View.setVisibility(View.GONE);
+                    kids_post_response_progress_View.setProgressNotInUiThread(100);
+                }
+
+            },new ImageLoadingProgressListener() {
+
+                @Override
+                public void onProgressUpdate(String imageUri, View view, int current,
+                                             int total) {
+                    // TODO Auto-generated method stub
+                    if((System.currentTimeMillis() - time)>1000)
+                    {
+                        time = System.currentTimeMillis();
+                        kids_post_response_progress_View.setProgressNotInUiThread(Math.round(100.0f * current / total));
+                    }
+
+                }
+            });
+            kids_post_response_detail_img.setImageHeight(80);
+            kids_post_response_detail_img.setImageWidth(100);
+        }
     }
 
     private void SetAsyResponse() {
@@ -223,6 +337,7 @@ public class Theme_Post_Kids extends MyActivity{
                     public void onStart() {
                         // TODO Auto-generated method stub
                         super.onStart();
+                        DialogMethod.startProgressDialog(Theme_Post_Kids.this,"正在发送");
                     }
 
                     @Override
@@ -238,7 +353,9 @@ public class Theme_Post_Kids extends MyActivity{
                         try {
                             JSONObject jsonObject = new JSONObject(data);
                             if (jsonObject.getString("is").equals("1")) {
+                                DialogMethod.stopProgressDialog();
                                 Toast.makeText(Theme_Post_Kids.this, "发送成功", Toast.LENGTH_SHORT).show();
+
                                 Theme_Post_Kids.this.finish();
                             }
                         } catch (Exception e) {
@@ -251,6 +368,7 @@ public class Theme_Post_Kids extends MyActivity{
                     public void onFailure(String error, String message) {
                         // TODO Auto-generated method stub
                         super.onFailure(error, message);
+                        ToastClass.SetToast(Theme_Post_Kids.this,message);
                     }
 
                     @Override
@@ -398,7 +516,7 @@ public class Theme_Post_Kids extends MyActivity{
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent)
+        public View getView(final int position, View convertView, ViewGroup parent)
         {
             ViewHolderKids holder;
             // TODO Auto-generated method stub
@@ -417,6 +535,21 @@ public class Theme_Post_Kids extends MyActivity{
             holder.square_discuss_kids_post_kids_username.setText((CharSequence) map.get("author"));
             holder.square_discuss_kids_post_kids_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
             MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl(map.get("avatar").toString()),  holder.square_discuss_kids_post_kids_img,options,null);
+            holder.square_discuss_kids_post_kids_img.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(ToastClass.IsHaveToken(Theme_Post_Kids.this))
+                    {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("author",list.get(position).get("author").toString());
+                        bundle.putString("token",ToastClass.GetTokenString(Theme_Post_Kids.this));
+                        pushToNextActivity(bundle,User_OwnPage.class,304);
+                    }
+                    else{
+                        ToastClass.SetToast(Theme_Post_Kids.this,"请先登录之后再查看");
+                    }
+                }
+            });
             return convertView;
         }
 

@@ -233,9 +233,22 @@ OnInfoWindowClickListener, InfoWindowAdapter{
         user_img.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putString("subject",subject);
-                pushToNextActivity(bundle,User_OwnPage.class,304);
+                if(list.size() == 0)
+                {
+                    ToastClass.SetToast(Live_Kids_User.this,"查看失败");
+                }
+                else if(!ToastClass.IsHaveToken(Live_Kids_User.this))
+                {
+                    ToastClass.SetToast(Live_Kids_User.this,"请先登录之后再查看");
+                }
+                else{
+                    Bundle bundle = new Bundle();
+                    bundle.putString("author",list.get(0).get("author").toString());
+                    bundle.putString("token",ToastClass.GetTokenString(Live_Kids_User.this));
+                    pushToNextActivity(bundle,User_OwnPage.class,304);
+
+                }
+
             }
         });
 	}
@@ -361,8 +374,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 	}
 	//点击收藏执行方法
 	private void SendKeepMessage(){
-		TokenShared = getSharedPreferences("usermessage", 0);
-		tokenString = TokenShared.getString("token", "");
+		tokenString = ToastClass.GetTokenString(Live_Kids_User.this);
 		if(tokenString.equals(""))
 		{
 			ToastClass.SetToast(Live_Kids_User.this, "登录之后才能够收藏哟");

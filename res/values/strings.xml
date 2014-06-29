@@ -30,9 +30,12 @@
     <string name="ok">创建</string>
     <string name="select_photo">图片选择</string>
     <string name="cancel">取消</string>
+    <string name="focus">关注</string>
+    <string name="nofocus">取消关注</string>
     <string name="endlive">结束直播</string>
     <string name="continuelive">续写直播</string>
     <string name="share">分享</string>
+    <string name="del">删除</string>
     <string name="comment">评论</string>
     <string name="writelive">记录您的游记......</string>
     <string name="insertlocation">插入位置</string>

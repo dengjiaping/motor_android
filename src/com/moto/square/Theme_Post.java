@@ -3,7 +3,6 @@ package com.moto.square;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
 import com.moto.asydata.LoadCacheResponseLoginouthandler;
@@ -34,9 +32,10 @@ import com.moto.listview.CustomScrollView.OnLoadListener;
 import com.moto.listview.CustomScrollView.OnRefreshListener;
 import com.moto.listview.NoScrollListview;
 import com.moto.listview.ProgressBarView;
+import com.moto.live.User_OwnPage;
+import com.moto.main.Moto_RootActivity;
+import com.moto.main.MotorApplication;
 import com.moto.main.R;
-import com.moto.myactivity.MyActivity;
-import com.moto.mymap.MyMapApplication;
 import com.moto.mytextview.MarqueeText;
 import com.moto.mytextview.ShimmerTextView;
 import com.moto.toast.ToastClass;
@@ -56,7 +55,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public class Theme_Post extends MyActivity{
+public class Theme_Post extends Moto_RootActivity{
     
 	private NoScrollListview listview;
 	private LinkedList<HashMap<String, Object>> GroupList = new LinkedList<HashMap<String,Object>>();
@@ -68,11 +67,10 @@ public class Theme_Post extends MyActivity{
 	private int count = 0;
 	private int num_post = 1;
 	private String tid;
-	private String photoString = null;
-	private String response_theme_message;
 	private MyAdapter adapter;
 	private boolean isrefresh = false;
 	private MarqueeText post_theme;
+    private String subject;
 	private DisplayImageOptions options;
 	private Handler handler;
     private ShimmerTextView waitText;
@@ -80,13 +78,14 @@ public class Theme_Post extends MyActivity{
 	private TextView post_share;
     private TextView post_publish;
     private TextView post_collect;
+    private Intent intent;
+    RequestParams param;
 
 	private CustomScrollView scrollView;
 	private ImageView leftpage;
-	private SharedPreferences TokenShared;
 	private String tokenString;
 	ArrayList<String> pidList = new ArrayList<String>();
-	private String CreateCommentUri = path+"api/square/createpostfortheme";
+
 	private String readDetailUri = path+"api/square/readdetailtheme";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -151,19 +150,22 @@ public class Theme_Post extends MyActivity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				TokenShared = getSharedPreferences("usermessage", 0);
-				tokenString = TokenShared.getString("token", "");
+
+				tokenString = ToastClass.GetTokenString(Theme_Post.this);
 				if(tokenString.equals(""))
 				{
 					ToastClass.SetToast(Theme_Post.this, "需要先登录才能够发送");
-					setResult(304);
-					Theme_Post.this.finish();
+
 				}
 
-//				else
-//				{
-//					SetAsyResponse();
-//				}
+				else
+				{
+                    Bundle bundle = new Bundle();
+                    bundle.putString("token",tokenString);
+                    bundle.putString("tid",tid);
+                    bundle.putString("subject",subject);
+                    pushToNextActivity(bundle,Theme_Post_publish.class,305);
+				}
 			}
 		});
 
@@ -241,10 +243,18 @@ public class Theme_Post extends MyActivity{
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                intent = new Intent();
-                intent.putExtra("pid", pidList.get(i));
-                intent.setClass(Theme_Post.this, Theme_Post_Kids.class);
-                startActivityForResult(intent, 304);
+                Bundle bundle = new Bundle();
+                bundle.putString("pid",pidList.get(i));
+                bundle.putString("author",GroupList.get(i).get("author").toString());
+                bundle.putString("message",GroupList.get(i).get("message").toString());
+                bundle.putString("dateline",GroupList.get(i).get("dateline").toString());
+                bundle.putString("avatar",GroupList.get(i).get("avatar").toString());
+                if(carList.get(i).size() > 0)
+                bundle.putString("photoname",carList.get(i).get(0));
+                else
+                bundle.putString("photoname","");
+                pushToNextActivity(bundle,Theme_Post_Kids.class,305);
+
             }
         });
 	}
@@ -255,11 +265,11 @@ public class Theme_Post extends MyActivity{
         Originaloptions = ImageMethod.GetOriginalOptions();
 		intent = getIntent();
 		tid = intent.getStringExtra("tid");
-
+        subject = intent.getStringExtra("subject");
         waitText = (ShimmerTextView)findViewById(R.id.post_waittext);
 
         post_theme = (MarqueeText)findViewById(R.id.post_title);
-        post_theme.setText(intent.getStringExtra("subject"));
+        post_theme.setText(subject);
         post_theme.startScroll();
 		listview = (NoScrollListview)findViewById(R.id.post_main_list);
 
@@ -271,71 +281,7 @@ public class Theme_Post extends MyActivity{
 		leftpage = (ImageView)findViewById(R.id.return_post);
 
     }
-	private void SetAsyResponse() {
-		// TODO Auto-generated method stub
-		param = new RequestParams();
-		param.put("tid", tid);
-		param.put("token", tokenString);
-		param.put("subject", "");
-		param.put("message", response_theme_message);
-		param.put("photos", photoString);
-		
-		RequstClient.post(CreateCommentUri, param, new LoadCacheResponseLoginouthandler(
-                                                                                        Theme_Post.this,
-                                                                                        new LoadDatahandler(){
-            
-			@Override
-			public void onStart() {
-				// TODO Auto-generated method stub
-				super.onStart();
-				handler.obtainMessage(Constant.MSG_TESTSTART)
-				.sendToTarget();
-			}
-            
-			@Override
-			public void onLoadCaches(String data) {
-				// TODO Auto-generated method stub
-				super.onLoadCaches(data);
-			}
-            
-			@Override
-			public void onSuccess(String data) {
-				// TODO Auto-generated method stub
-				super.onSuccess(data);
-				try {
-					JSONObject jsonObject = new JSONObject(data);
-					if (jsonObject.getString("is").equals("1")) {
-						Toast.makeText(Theme_Post.this, "发送成功", Toast.LENGTH_SHORT).show();
-						Theme_Post.this.finish();
-					}
-					DialogMethod.stopProgressDialog();
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-				
-			}
-            
-			@Override
-			public void onFailure(String error, String message) {
-				// TODO Auto-generated method stub
-				super.onFailure(error, message);
-				// 获取一个Message对象，设置what为1
-				Message msg = Message.obtain();
-				msg.obj = message;
-				msg.what = Constant.MSG_TESTFALTH;
-				// 发送这个消息到消息队列中
-				handler.sendMessage(msg);
-			}
-            
-			@Override
-			public void onFinish() {
-				// TODO Auto-generated method stub
-				super.onFinish();
-				
-			}
-			
-		}));
-	}
+
     private void GetAsyData() {
         // TODO Auto-generated method stub
         param = new RequestParams();
@@ -368,6 +314,9 @@ public class Theme_Post extends MyActivity{
                         GroupList.clear();
                         num_post = 1;
                         ChildList.clear();
+                        carList.clear();
+                        pidList.clear();
+
                     }
                     JSONObject jsonObject = new JSONObject(data);
                     if (jsonObject.getString("is").equals("1")) {
@@ -497,7 +446,6 @@ public class Theme_Post extends MyActivity{
         EmojiconTextView post_item_user_name;
         EmojiconTextView post_item_details;
 		TextView post_item_num;
-		LinearLayout post_item_reaponse;
 		ImageView post_item_user_img;
         ScaleImageView post_item_detail_img;
         ProgressBarView post_item_progress_View;
@@ -556,7 +504,7 @@ public class Theme_Post extends MyActivity{
 			holder.post_item_user_name = (EmojiconTextView)convertView.findViewById(R.id.post_item_user_name);
 			holder.post_item_details = (EmojiconTextView)convertView.findViewById(R.id.post_item_details);
 			holder.post_item_num = (TextView)convertView.findViewById(R.id.post_item_num);
-			holder.post_item_reaponse = (LinearLayout)convertView.findViewById(R.id.post_item_reaponse);
+
 			holder.post_item_user_img = (ImageView)convertView.findViewById(R.id.post_item_user_img);
 			holder.square_discuss_kids_post_item_groups = (LinearLayout)convertView.findViewById(R.id.square_discuss_kids_post_item_groups);
             holder.post_item_progress_View = (ProgressBarView)convertView.findViewById(R.id.post_item_progress_View);
@@ -568,24 +516,28 @@ public class Theme_Post extends MyActivity{
 			holder.post_item_details.setText((CharSequence) map.get("message"));
 			holder.post_item_num.setText((CharSequence) map.get("num"));
 			holder.original_item_poster_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
-			MyMapApplication.imageLoader.displayImage(UrlUtils.avatarUrl(map.get("avatar").toString()),  holder.post_item_user_img,options,null);
-			holder.post_item_reaponse.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					intent = new Intent();
-					intent.putExtra("pid", pidList.get(position));
-					intent.setClass(Theme_Post.this, Theme_Post_Kids.class);
-					startActivityForResult(intent, 304);
-				}
-			});
+            MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(map.get("avatar").toString()),  holder.post_item_user_img,options,null);
+            holder.post_item_user_img.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(ToastClass.IsHaveToken(Theme_Post.this))
+                    {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("author",GroupList.get(position).get("author").toString());
+                        bundle.putString("token",ToastClass.GetTokenString(Theme_Post.this));
+                        pushToNextActivity(bundle,User_OwnPage.class,304);
+                    }
+                    else{
+                        ToastClass.SetToast(Theme_Post.this,"请先登录之后再查看");
+                    }
+                }
+            });
             if(carList.get(position).size() > 0)
             {
                 String imageUrl = UrlUtils.imageUrl(carList.get(position).get(0));
 
                 holder.post_item_detail_img.setVisibility(View.VISIBLE);
-                MyMapApplication.imageLoader.displayImage(imageUrl, holder.post_item_detail_img, Originaloptions,new SimpleImageLoadingListener(){
+                MotorApplication.imageLoader.displayImage(imageUrl, holder.post_item_detail_img, Originaloptions,new SimpleImageLoadingListener(){
                     @Override
                     public void onLoadingStarted(String imageUri, View view) {
                         // TODO Auto-generated method stub
@@ -664,11 +616,14 @@ public class Theme_Post extends MyActivity{
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-		switch(resultCode)
+		switch(requestCode)
 		{
-            case 304:
-                setResult(304);
-                Theme_Post.this.finish();
+            case 305:
+                scrollView.state = scrollView.REFRESHING;
+                scrollView.changeHeaderViewByState();
+                isrefresh = true;
+                count = 0;
+                GetAsyData();
                 break;
 		}
 		

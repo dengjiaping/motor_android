@@ -4,17 +4,22 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 
-import com.moto.live.LiveActivity;
-import com.moto.live.Live_Kids_Own;
+import com.facebook.rebound.BaseSpringSystem;
+import com.facebook.rebound.SimpleSpringListener;
+import com.facebook.rebound.Spring;
+import com.facebook.rebound.SpringConfig;
+import com.facebook.rebound.SpringSystem;
+import com.facebook.rebound.SpringUtil;
 import com.moto.main.R;
-import com.moto.square.SquareActivity;
 
 import info.hoang8f.android.segmented.SegmentedGroup;
 
@@ -27,6 +32,8 @@ public class Inform_main extends TabActivity{
     public static SegmentedGroup radioGroup;
     //	private TextView main_tab_new_message;
     private ImageView inform_add_img;
+    private RelativeLayout inform_add_layout;
+    private static final SpringConfig ORIGAMI_SPRING_CONFIG = SpringConfig.fromOrigamiTensionAndFriction(40, 7);
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,14 +88,47 @@ public class Inform_main extends TabActivity{
                 }
             }
         });
+        BaseSpringSystem springSystem = SpringSystem.create();
+        // Add a spring to the system.
+        final Spring spring = springSystem.createSpring()
+                .setSpringConfig(ORIGAMI_SPRING_CONFIG);
 
         inform_add_img = (ImageView)findViewById(R.id.inform_add_img);
-        inform_add_img.setOnClickListener(new View.OnClickListener() {
+        inform_add_layout= (RelativeLayout)findViewById(R.id.inform_add_layout);
+        inform_add_layout.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(Inform_main.this, Inform_Friends.class);
-                startActivity(intent);
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        spring.setEndValue(1);
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        Intent intent = new Intent();
+                        intent.setClass(Inform_main.this, Inform_Friends.class);
+                        startActivity(intent);
+                        spring.setEndValue(0);
+                        break;
+                }
+                return false;
+            }
+        });
+        // Add a listener to observe the motion of the spring.
+        spring.addListener(new SimpleSpringListener() {
+
+            @Override
+            public void onSpringUpdate(Spring spring) {
+                // You can observe the updates in the spring
+                // state by asking its current value in onSpringUpdate.
+//                float value = (float) spring.getCurrentValue();
+//                float scale = 1f - (value * 0.5f);
+                float mappedValue = (float) SpringUtil.mapValueFromRangeToRange(spring.getCurrentValue(), 0, 1, 1, 0.5);
+                inform_add_img.setScaleX(mappedValue);
+                inform_add_img.setScaleY(mappedValue);
+
             }
         });
 
