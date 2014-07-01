@@ -12,7 +12,6 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -111,7 +110,7 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
                         DialogMethod.stopProgressDialog();
                         ToastClass.SetImageToast(Publish_post.this,"成功发送主题帖");
                         Publish_post.this.finish();
-                        setResult(305);
+                        setResult(304);
                         break;
                         //获取成功
                     case Constant.MSG_TESTSTART:
@@ -243,6 +242,8 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
 	}
 	private void GetAsyData() {
 		// TODO Auto-generated method stub
+        handler.obtainMessage(Constant.MSG_TESTSTART)
+                .sendToTarget();
 		param = new RequestParams();
 		param.put("token", tokenString);
 		param.put("fid",fid);
@@ -299,10 +300,8 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
             ImageManager2.from(Publish_post.this).displayImage(own_photos, filepath,R.drawable.default_add_img,100,100);
             isHavePhoto = true;
         }
-        Log.e("gggg","sdsfdsfds");
         if(resultCode == 3)
         {
-            Log.e("aaaaa","sdsfdsfds");
             mentionUsername = data.getExtras().getString("name");
             IsHaveUserName = true;
             et_sendmessage.setText(et_sendmessage.getText().toString()+"@"+mentionUsername);
@@ -340,15 +339,14 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
         msg.what = Constant.MSG_FALTH;
         // 发送这个消息到消息队列中
         handler.sendMessage(msg);
-        DialogMethod.stopProgressDialog();
+
     }
     
     @Override
     public void handleNetworkDataStart() throws JSONException {
         // TODO Auto-generated method stub
         super.handleNetworkDataStart();
-        handler.obtainMessage(Constant.MSG_TESTSTART)
-        .sendToTarget();
+
     }
     
 }

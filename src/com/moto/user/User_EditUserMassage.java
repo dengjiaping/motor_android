@@ -34,7 +34,6 @@ import com.moto.main.MotorApplication;
 import com.moto.main.R;
 import com.moto.model.MeNetworkModel;
 import com.moto.model.NetWorkModelListener;
-import com.moto.mymap.MyMapApplication;
 import com.moto.qiniu.img.Image;
 import com.moto.select_morephoto.AlbumActivity;
 import com.moto.select_morephoto.ImageManager2;
@@ -289,7 +288,7 @@ public class User_EditUserMassage extends Moto_RootActivity implements OnClickLi
                 .findViewById(R.id.user_moto_photo_img);
 				moto_photo.addView(mLayout);
 				moto_photo.invalidate();
-				MyMapApplication.imageLoader.displayImage(carList.get(i),  mPhoto,Originaloptions,null);
+				MotorApplication.imageLoader.displayImage(carList.get(i),  mPhoto,Originaloptions,null);
 				
 			}
 		} else {
@@ -299,6 +298,8 @@ public class User_EditUserMassage extends Moto_RootActivity implements OnClickLi
 	
 	private void SetAsyMessageData() {
 		// TODO Auto-generated method stub
+        handler.obtainMessage(Constant.MSG_START)
+                .sendToTarget();
 		param = new RequestParams();
 		param.put("token", token);
 		param.put("username", nickname);
@@ -448,8 +449,7 @@ public class User_EditUserMassage extends Moto_RootActivity implements OnClickLi
 	@Override
 	public void handleNetworkDataStart() throws JSONException {
 		// TODO Auto-generated method stub
-        handler.obtainMessage(Constant.MSG_START)
-                .sendToTarget();
+
 		
 	}
     

@@ -105,7 +105,7 @@ public class SquareActivity extends tabActivity{
 		init();
 		adapter = new MyAdapter(this, list);
 		listview.setAdapter(adapter);
-		GetAsyData();
+//		GetAsyData();
 		edit_theme.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -115,7 +115,7 @@ public class SquareActivity extends tabActivity{
 				intent.putExtra("fid", fid);
 
 				intent.setClass(SquareActivity.this, Publish_post.class);
-				startActivityForResult(intent, 305);
+				startActivityForResult(intent, 304);
 			}
 		});
 
@@ -657,20 +657,29 @@ public class SquareActivity extends tabActivity{
         EmojiconTextView square_item_responsecount;
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		switch(requestCode)
-		{
+//	@Override
+//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		// TODO Auto-generated method stub
+//		switch(resultCode)
+//		{
+//
+//            case 304:
+//                scrollView.state = scrollView.REFRESHING;
+//                scrollView.changeHeaderViewByState();
+//                isRefresh = true;
+//                GetAsyData();
+//                break;
+//		}
+//
+//		super.onActivityResult(requestCode, resultCode, data);
+//	}
 
-            case 305:
-                scrollView.state = scrollView.REFRESHING;
-                scrollView.changeHeaderViewByState();
-                isRefresh = true;
-                GetAsyData();
-                break;
-		}
-
-		super.onActivityResult(requestCode, resultCode, data);
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        scrollView.state = scrollView.REFRESHING;
+//        scrollView.changeHeaderViewByState();
+        isRefresh = true;
+        GetAsyData();
+    }
 }

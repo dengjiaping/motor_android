@@ -17,7 +17,6 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 
@@ -36,19 +35,33 @@ import com.moto.select_morephoto.AlbumActivity;
 import com.moto.square.SquareActivity;
 import com.moto.toast.ToastClass;
 import com.moto.user.UserActivity;
+import com.moto.user.User_Login;
 import com.moto.utils.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class Moto_MainActivity extends TabActivity {
+public class Moto_MainActivity extends TabActivity implements View.OnClickListener{
     /** Called when the activity is first created. */
-	private TabHost tabHost;
-	public static RadioGroup radioGroup;
-	private RadioButton radioButton;
+    public static TabHost tabHost;
+    public static RadioGroup radioGroup;
+    public static RadioButton radioButton;
+    public static RadioButton main_tab_hot;
+    public static RadioButton main_tab_live;
+    public static RadioButton main_tab_inform;
+    public static RadioButton main_tab_user;
+    public static RelativeLayout layout;
+
+    static boolean hot_check;
+    static boolean live_check;
+    static boolean inform_check;
+    static boolean user_check;
+
+
     private ImageView main_add_img;
     private RotateAnimation rAnimation; //设置旋转
     private boolean IsRotate = true;
+    private SharedPreferences mshared;
     // Create a spring configuration based on Origami values from the Photo Grid example.
     private static final SpringConfig ORIGAMI_SPRING_CONFIG = SpringConfig.fromOrigamiTensionAndFriction(40, 7);
     //	private TextView main_tab_new_message;
@@ -73,6 +86,14 @@ public class Moto_MainActivity extends TabActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(com.moto.main.R.layout.activity_moto__main);
         radioButton = (RadioButton)findViewById(com.moto.main.R.id.main_tab_square);
+        main_tab_hot = (RadioButton)findViewById(com.moto.main.R.id.main_tab_hot);
+        main_tab_live = (RadioButton)findViewById(com.moto.main.R.id.main_tab_live);
+        main_tab_inform = (RadioButton)findViewById(com.moto.main.R.id.main_tab_inform);
+        main_tab_user = (RadioButton)findViewById(com.moto.main.R.id.main_tab_user);
+        main_tab_hot.setOnClickListener(this);
+        main_tab_live.setOnClickListener(this);
+        main_tab_inform.setOnClickListener(this);
+        main_tab_user.setOnClickListener(this);
         tabHost=this.getTabHost();
         TabHost.TabSpec spec;
         Intent intent;
@@ -82,7 +103,7 @@ public class Moto_MainActivity extends TabActivity {
         button_photo = (InOutImageButton)findViewById(R.id.button_photo);
         button_live = (InOutImageButton)findViewById(R.id.button_live);
         button_write = (InOutImageButton)findViewById(R.id.button_write);
-        
+
         intent=new Intent().setClass(this, SquareActivity.class);
         spec=tabHost.newTabSpec("square").setIndicator("square").setContent(intent);
         tabHost.addTab(spec);
@@ -90,7 +111,7 @@ public class Moto_MainActivity extends TabActivity {
         intent=new Intent().setClass(this,LiveActivity.class);
         spec=tabHost.newTabSpec("live").setIndicator("live").setContent(intent);
         tabHost.addTab(spec);
-        
+
         intent=new Intent().setClass(this, Live_Kids_Own.class);
         spec=tabHost.newTabSpec("liveown").setIndicator("liveown").setContent(intent);
         tabHost.addTab(spec);
@@ -104,9 +125,9 @@ public class Moto_MainActivity extends TabActivity {
         spec=tabHost.newTabSpec("me").setIndicator("me").setContent(intent);
         tabHost.addTab(spec);
         tabHost.setCurrentTab(0);
-		final RelativeLayout layout =(RelativeLayout)findViewById(com.moto.main.R.id.console_line_bottom);
+        layout =(RelativeLayout)findViewById(com.moto.main.R.id.console_line_bottom);
         radioGroup = (RadioGroup) this.findViewById(com.moto.main.R.id.main_tab_group);
-        
+
 //        radioButton.setOnClickListener(new OnClickListener() {
 //
 //			@Override
@@ -118,6 +139,8 @@ public class Moto_MainActivity extends TabActivity {
 //                overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
 //			}
 //		});
+
+        getChecked();
 
         // 所有弹出收回按钮视图集合
         mButtonsWrapper = (InOutRelativeLayout) findViewById(R.id.buttons_wrapper);
@@ -195,39 +218,54 @@ public class Moto_MainActivity extends TabActivity {
 
             }
         });
-        radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				// TODO Auto-generated method stub
-				switch (checkedId) {
-                    case com.moto.main.R.id.main_tab_hot://热门
-                        tabHost.setCurrentTabByTag("square");
-                        layout.bringToFront();
-                        break;
-                    case com.moto.main.R.id.main_tab_live://直播
-                        tabHost.setCurrentTabByTag("live");
-                        layout.bringToFront();
-                        
-                        break;
-                        //				case R.id.main_tab_square://广场
-                        //					tabHost.setCurrentTabByTag("liveown");
-                        //					layout.bringToFront();
-                        //					break;
-                    case com.moto.main.R.id.main_tab_inform://通知
-                        tabHost.setCurrentTabByTag("inform");
-                        layout.bringToFront();
-                        break;
-                    case com.moto.main.R.id.main_tab_user:
-                        tabHost.setCurrentTabByTag("me");
-                        layout.bringToFront();
-                    default:
-                        
-                        break;
-				}
-			}
-		});
-        
-		layout.bringToFront();
+        layout.bringToFront();
+
+//        radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                // TODO Auto-generated method stub
+//                switch (checkedId) {
+//                    case com.moto.main.R.id.main_tab_hot://热门
+//                        tabHost.setCurrentTabByTag("square");
+//                        layout.bringToFront();
+//                        break;
+//                    case com.moto.main.R.id.main_tab_live://直播
+//                        tabHost.setCurrentTabByTag("live");
+//                        layout.bringToFront();
+//
+//                        break;
+//                    //				case R.id.main_tab_square://广场
+//                    //					tabHost.setCurrentTabByTag("liveown");
+//                    //					layout.bringToFront();
+//                    //					break;
+//                    case com.moto.main.R.id.main_tab_inform://通知
+//                        tabHost.setCurrentTabByTag("inform");
+//                        layout.bringToFront();
+//                        break;
+//                    case com.moto.main.R.id.main_tab_user:
+//                        mshared = getSharedPreferences("usermessage", 0);
+//                        String str = mshared.getString("token", "");
+//                        if(str.equals(""))
+//                        {
+//                            Intent intent1 = new Intent();
+//                            intent1.setClass(Moto_MainActivity.this, User_Login.class);
+//                            startActivityForResult(intent1,304);
+//                            overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
+//                        }
+//                        else
+//                        {
+//                            tabHost.setCurrentTabByTag("me");
+//                            layout.bringToFront();
+//                        }
+//
+//                    default:
+//
+//                        break;
+//                }
+//            }
+//        });
+//
+//        layout.bringToFront();
     }
 
     //分别设置旋转角度
@@ -366,6 +404,48 @@ public class Moto_MainActivity extends TabActivity {
         resetAnimationSet.setInterpolator(new OvershootInterpolator(2.0F));
         radioButton.startAnimation(resetAnimationSet);
     }
+
+    @Override
+    public void onClick(View view) {
+
+        if(view.equals(main_tab_hot))
+        {
+            tabHost.setCurrentTabByTag("square");
+            layout.bringToFront();
+        }
+        else if(view.equals(main_tab_live))
+        {
+            tabHost.setCurrentTabByTag("live");
+            layout.bringToFront();
+        }
+        else if(view.equals(main_tab_inform))
+        {
+            tabHost.setCurrentTabByTag("inform");
+            layout.bringToFront();
+        }
+        else if(view.equals(main_tab_user))
+        {
+            mshared = getSharedPreferences("usermessage", 0);
+            String str = mshared.getString("token", "");
+            if(str.equals(""))
+            {
+                main_tab_user.setChecked(user_check);
+                main_tab_live.setChecked(live_check);
+                main_tab_inform.setChecked(inform_check);
+                main_tab_hot.setChecked(hot_check);
+                Intent intent1 = new Intent();
+                intent1.setClass(Moto_MainActivity.this, User_Login.class);
+                startActivityForResult(intent1,304);
+                overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
+            }
+            else
+            {
+                tabHost.setCurrentTabByTag("me");
+                layout.bringToFront();
+            }
+        }
+    }
+
     /**
      *	按钮点击监听器
      */
@@ -389,6 +469,33 @@ public class Moto_MainActivity extends TabActivity {
         }
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+
+        switch (resultCode)
+        {
+            case 100:
+
+                tabHost.setCurrentTabByTag("me");
+                layout.bringToFront();
+                main_tab_user.setChecked(true);
+                break;
+
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public static void getChecked()
+    {
+        //获取check状态
+        hot_check = main_tab_hot.isChecked();
+        live_check = main_tab_live.isChecked();
+        inform_check = main_tab_inform.isChecked();
+        user_check = main_tab_user.isChecked();
     }
 
 

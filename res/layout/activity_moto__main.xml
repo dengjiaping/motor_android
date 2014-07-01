@@ -8,7 +8,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" >
-		<TabWidget
+        <TabWidget
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -61,28 +61,39 @@
                         android:text="@string/live" />
 
 
-                    <RelativeLayout
+                    <FrameLayout
                         android:layout_width="fill_parent"
                         android:layout_weight="1.0"
                         android:layout_height="fill_parent">
-                        <RadioButton
-                            android:id="@+id/main_tab_square"
-                            style="@style/MMTabButton"
-                            android:layout_centerInParent="true"
-                            android:background="@drawable/bg_checkbox_icon_menu_2"
-                            android:gravity="center"
-                            android:layout_gravity="center"
+                        <ImageView
+                            android:id="@+id/main_add_null_img"
+                            android:layout_width="fill_parent"
 
+                            android:layout_height="fill_parent"
+                            android:background="@drawable/bg_checkbox_icon_menu_2"
+                            android:layout_centerInParent="true"
                             />
                         <ImageView
                             android:id="@+id/main_add_img"
                             android:layout_width="45dp"
-
+                            android:layout_gravity="center"
                             android:layout_height="45dp"
                             android:background="@drawable/add_tabbar"
                             android:layout_centerInParent="true"
                             />
-                    </RelativeLayout>
+
+                        <RadioButton
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/main_tab_square"
+                            style="@style/MMTabButton"
+                            android:clickable="true"
+                            android:layout_centerInParent="true"
+                            android:background="#00000000"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            />
+                    </FrameLayout>
 
                     <RadioButton
                         android:id="@+id/main_tab_inform"
@@ -118,6 +129,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:background="@null"
+                        android:layout_marginBottom="100.0px"
                         android:id="@+id/button"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"/>
@@ -129,7 +141,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_toLeftOf="@id/button"
                         android:layout_marginBottom="100.0px"
-                        android:layout_marginRight="100.0px"
+                        android:layout_marginRight="90.0px"
                         android:background="@drawable/button_camera"
                         android:visibility="gone"/>
 
@@ -140,7 +152,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_toLeftOf="@id/button"
                         android:layout_marginBottom="213.0px"
-                        android:layout_marginRight="25.0px"
+                        android:layout_marginRight="15.0px"
                         android:background="@drawable/button_photo"
                         android:visibility="gone"/>
 
@@ -151,7 +163,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_toRightOf="@id/button"
                         android:layout_marginBottom="213.0px"
-                        android:layout_marginLeft="25.0px"
+                        android:layout_marginLeft="15.0px"
                         android:background="@drawable/button_live"
                         android:visibility="gone"/>
 
@@ -162,14 +174,14 @@
                         android:layout_alignParentBottom="true"
                         android:layout_toRightOf="@id/button"
                         android:layout_marginBottom="100.0px"
-                        android:layout_marginLeft="100.0px"
+                        android:layout_marginLeft="90.0px"
                         android:background="@drawable/button_write"
                         android:visibility="gone"/>
                 </com.moto.main.InOutRelativeLayout>
 
-                </RelativeLayout>
+            </RelativeLayout>
         </FrameLayout>
 
-        
-        </LinearLayout>
+
+    </LinearLayout>
 </TabHost>

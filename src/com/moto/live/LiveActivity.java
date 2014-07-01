@@ -618,6 +618,7 @@ public class LiveActivity extends Moto_RootActivity{
 		switch(resultCode)
 		{
             case 301:
+
                 break;
                 //		case 302:
                 //			edit_live.setVisibility(View.GONE);

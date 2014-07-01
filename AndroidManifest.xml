@@ -69,6 +69,7 @@
          <activity 
             android:name="com.moto.main.Moto_MainActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
             android:theme="@android:style/Theme.NoTitleBar" />
 
         <activity
@@ -94,6 +95,11 @@
         
         <activity 
             android:name="com.moto.user.UserActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+
+        <activity
+            android:name="com.moto.user.User_Login"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
         
@@ -123,6 +129,7 @@
         <activity 
             android:name="com.moto.square.Publish_post"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:theme="@android:style/Theme.NoTitleBar" />
          
          <activity 
@@ -155,6 +162,7 @@
           <activity 
             android:name="com.moto.inform.Inform_Friends"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:theme="@android:style/Theme.NoTitleBar" />
           
           <activity 
@@ -216,6 +224,7 @@
 
         <activity
             android:name="com.moto.square.Theme_Post_publish"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
 

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -31,18 +30,14 @@ import com.moto.constant.DialogMethod;
 import com.moto.constant.ImageMethod;
 import com.moto.listview.MyGridView;
 import com.moto.live.Live_Kids_User;
+import com.moto.main.Moto_MainActivity;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.MotorApplication;
 import com.moto.main.R;
-import com.moto.model.SignNetWorkModel;
-import com.moto.mymap.MyMapApplication;
 import com.moto.photo.ImageBrowserActivity;
-import com.moto.qiniu.img.Image;
-import com.moto.qiniu.img.UploadImage;
 import com.moto.toast.ToastClass;
 import com.moto.utils.StringUtils;
 import com.moto.utils.UrlUtils;
-import com.moto.validation.Validation;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import org.json.JSONArray;
@@ -51,7 +46,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 public class UserActivity extends Moto_RootActivity implements OnClickListener{
@@ -79,12 +73,6 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 	private Handler handler;
 	private DisplayImageOptions options;
 	private DisplayImageOptions Originaloptions;
-	private BootstrapEditText login_name;
-	private BootstrapEditText login_password;
-	private BootstrapButton login_button;
-	private String nameString;
-	private String passwordString;
-	private String emailString = "";
 	private SharedPreferences mshared;
 	private LinearLayout moto_photo;
 	private Editor editor;
@@ -103,14 +91,8 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		mshared = getSharedPreferences("usermessage", 0);
-		String str = mshared.getString("token", "");
 
-		if(str.equals(""))
-			login();
-		else {
-			user();
-		}
+	    user();
 		handler = new Handler(){
 
 			@Override
@@ -173,26 +155,12 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 		};
 		
 	}
-	private void login(){
-//		setContentView(R.layout.user_login);
-        ViewGroup viewGroup = (ViewGroup) findViewById(android.R.id.content);
-
-        addContentView(R.layout.user_login, R.string.userlogin, R.string.bit_register,barButtonIconType.barButtonIconType_None, barButtonIconType.barRightTextViewType );
-        if(viewGroup.getChildCount() >= 3)
-            viewGroup.removeView(viewGroup.getChildAt(0));
-		login_init();
-	}
 
 
     private void user(){
-        ViewGroup viewGroup = (ViewGroup) findViewById(android.R.id.content);
-
-//		setContentView(R.layout.user);
+        mshared = getSharedPreferences("usermessage", 0);
 		token = mshared.getString("token", "");
-//		user_name.setText(mshared.getString("username", ""));
 		addContentView(R.layout.user, mshared.getString("username", ""), barButtonIconType.barButtonIconType_None, barButtonIconType.barButtonIconType_setting );
-        if(viewGroup.getChildCount() >= 3)
-            viewGroup.removeView(viewGroup.getChildAt(0));
 		navigationBar.setBackgroundColor(Color.rgb(0,0,0));
 		navigationBar.getBackground().setAlpha(0);
 		init();
@@ -287,26 +255,6 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
         });
 	}
 	
-	private void login_init(){
-		login_name = (BootstrapEditText)findViewById(R.id.user_login_name);
-		login_password = (BootstrapEditText)findViewById(R.id.user_login_password);
-		login_button = (BootstrapButton)findViewById(R.id.user_login_button);
-		login_button.setOnClickListener(this);
-        this.rightBarButton.setVisibility(View.GONE);
-        this.rightBarTextView.setVisibility(View.VISIBLE);
-        navigationBar.setBackgroundColor(Color.rgb(107,233,242));
-        navigationBar.getBackground().setAlpha(255);
-        LinearLayout rightLinearLayout = (LinearLayout)findViewById(R.id.right_linear_nav);
-        rightLinearLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                intent = new Intent();
-                intent.setClass(UserActivity.this, User_register.class);
-                startActivity(intent);
-            }
-        });
-	}
-	
 	class MyAdapter extends BaseAdapter{
 		private Context context;
 		private LinkedList<HashMap<String, Object>> list;
@@ -364,7 +312,7 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 			if(num > 0)
 			{
 				String imageUrl = UrlUtils.imageUrl(ImgList.get(position).get(num-1));
-				MyMapApplication.imageLoader.displayImage(imageUrl, holder.user_item_img,Originaloptions,null);
+				MotorApplication.imageLoader.displayImage(imageUrl, holder.user_item_img,Originaloptions,null);
 			}
 	        return convertView;
 		}	
@@ -397,38 +345,6 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 			startActivity(intent);
 		}
 
-		if(v == login_button)
-		{
-			nameString = login_name.getText().toString();
-			passwordString = login_password.getText().toString();
-			if(nameString.replaceAll(" ", "").equals(""))
-			{
-                DialogMethod.dialogShow(UserActivity.this,"请输入用户名!");
-			}
-			else if (passwordString.replaceAll(" ", "").equals("")) {
-				DialogMethod.dialogShow(UserActivity.this,"请输入密码!");
-			}
-			else {
-				login_setData();
-			}
-		}
-	}
-	private void login_setData() {
-		// TODO Auto-generated method stub
-		param = new RequestParams();
-		if(!Validation.checkEmail(nameString))
-		{
-			emailString = nameString;
-			param.put("email", emailString);
-			param.put("password", passwordString);
-		}
-		else
-		{
-			param.put("username", nameString);
-			param.put("password", passwordString);
-		}
-		SignNetWorkModel signNetWorkModel = new SignNetWorkModel(this, this);
-		signNetWorkModel.signUp(param);
 
 	}
 	private void GetAsyMessageData() {
@@ -744,9 +660,11 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 		// TODO Auto-generated method stub
 		switch(resultCode)
 		{
-		case 301:
-			login();
-//            pullScrollView.destoryBitmap();
+		    case 301:
+            Moto_MainActivity.main_tab_live.setChecked(true);
+            Moto_MainActivity.tabHost.setCurrentTabByTag("live");
+            Moto_MainActivity.layout.bringToFront();
+            Moto_MainActivity.getChecked();
 			break;
 		}
         switch (requestCode)
@@ -761,80 +679,6 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
         }
 		
 		super.onActivityResult(requestCode, resultCode, data);
-	}
-	@Override
-	public void handleNetworkDataWithSuccess(JSONObject jsonObject) throws JSONException {
-		// TODO Auto-generated method stub
-		JSONObject jsonObject2 = new JSONObject(jsonObject.getString("userinfo"));
-		String uidString = jsonObject2.getString("email");
-		String usernameString = jsonObject2.getString("username");
-		String tokenString = jsonObject2.getString("token");
-		editor = mshared.edit();
-		editor.putString("email", uidString);
-		editor.putString("username", usernameString);
-		editor.putString("token", tokenString);
-		editor.commit();
-		handler.obtainMessage(Constant.MSG_SUCCESS)
-		.sendToTarget();
-	}
-	@Override
-	public void handleNetworkDataWithFail(JSONObject jsonObject) throws JSONException{
-		handler.obtainMessage(Constant.MSG_NULL)
-		.sendToTarget();
-	}
-	@Override
-	public void handleNetworkDataWithUpdate(float progress)
-			throws JSONException {
-		
-	}
-	@Override
-	public void handleNetworkDataGetFail(String message) throws JSONException {
-		// TODO Auto-generated method stub
-		super.handleNetworkDataGetFail(message);
-		// 获取一个Message对象，设置what为1
-		Message msg = Message.obtain();
-		msg.obj = message;
-		msg.what = Constant.MSG_TESTFALTH;
-		// 发送这个消息到消息队列中
-		handler.sendMessage(msg);
-	}
-	@Override
-	public void handleNetworkDataStart() throws JSONException {
-		// TODO Auto-generated method stub
-		super.handleNetworkDataStart();
-		handler.obtainMessage(Constant.MSG_TESTSTART)
-		.sendToTarget();
-	}
-
-	public class ImageArrayUploadTask extends AsyncTask<ArrayList<Image>, Float, String>{
-		private String qiniu_url = "http://up.qiniu.com/";
-	
-		@Override
-		protected String doInBackground(ArrayList<Image>... params) {
-			ArrayList<Image> imageArray  = params[0];
-			UploadImage uploadImage = new UploadImage();
-
-			for (Iterator iterator = imageArray.iterator(); iterator.hasNext();) {
-				Image image = (Image) iterator.next();
-				String respose = uploadImage.post(qiniu_url,image);
-				imageArray.remove(image);
-			}
-			return qiniu_url;
-		}
-		
-		@Override
-		protected void onPreExecute() {
-			// TODO Auto-generated method stub
-	
-		}
-		
-		@Override
-		protected void onProgressUpdate(Float... values) {
-			// TODO Auto-generated method stub
-			super.onProgressUpdate(values);
-		}
-
-
 	}
 
 
