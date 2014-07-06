@@ -17,6 +17,7 @@ dependencies {
     compile 'com.rockerhieu.emojicon:library:1.0'
     compile 'com.facebook.rebound:rebound:0.3.3'
     compile files('libs/nineoldandroids-2.4.0')
+    compile files('libs/ActiveAndroid')
 }
 
 android {

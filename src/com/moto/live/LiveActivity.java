@@ -87,15 +87,12 @@ public class LiveActivity extends Moto_RootActivity{
 	private String tokenString;
 	private int likenum = 0;
 	private int position = 0;
-
-    private TextView live_height_text;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		addContentView(R.layout.live, R.string.live, barButtonIconType.barButtonIconType_None, barButtonIconType.barButtonIconType_refresh );
-		
-		init();
+		addContentView(R.layout.live, R.string.live, barButtonIconType.barButtonIconType_None, barButtonIconType.barButtonIconType_refresh);
+        init();
 		adapter = new MyAdapter(LiveActivity.this,LiveActivity.this, live_list);
 		myListView.setAdapter(adapter);
 		handler = new Handler(){
@@ -112,7 +109,7 @@ public class LiveActivity extends Moto_RootActivity{
                         isload = false;
                         //					progressBar_loading.setVisibility(View.GONE);
                         adapter.notifyDataSetChanged();
-                        DialogMethod.stopProgressDialog();
+//                        DialogMethod.stopProgressDialog();
                         break;
                         
                     case Constant.MSG_SUCCESSAGAIN:
@@ -136,7 +133,7 @@ public class LiveActivity extends Moto_RootActivity{
                         isload = false;
                         String str = (String) msg.obj;
                         ToastClass.SetToast(LiveActivity.this, str);
-                        DialogMethod.stopProgressDialog();
+//                        DialogMethod.stopProgressDialog();
                         break;
                     case Constant.MSG_TESTSTART:
                         isrefresh = false;
@@ -261,12 +258,12 @@ public class LiveActivity extends Moto_RootActivity{
 				// TODO Auto-generated method stub
 				super.onSuccess(data);
 				try {
-					if(isrefresh || isfirst)
+					if(isrefresh)
 					{
 						live_list.clear();
 						carList.clear();
 						like_list.clear();
-						isfirst = false;
+//						isfirst = false;
 					}
 					JSONObject jsonObject1 = new JSONObject(data);
 					if (jsonObject1.getString("is").equals("1")) {
@@ -333,23 +330,14 @@ public class LiveActivity extends Moto_RootActivity{
 		carList = CacheModel.getPhotoCacheLiveDate("linkedlist",LiveActivity.this);
 		like_list = CacheModel.getLikeCacheLiveDate("linkedlist", LiveActivity.this);
 		myListView = (NoScrollListview)findViewById(R.id.live_listview);
-        live_height_text = (TextView)findViewById(R.id.live_height_text);
+
 		scrollView = (CustomScrollView)findViewById(R.id.live_myscrollview);
 		scrollView.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				ChangeScrollviewAlpha(scrollView, navigationBar);
-
-                if(scrollView.getScrollY() < 150)
-                {
-                    live_height_text.setVisibility(View.VISIBLE);
-                }
-                else {
-                    live_height_text.setVisibility(View.GONE);
-                }
-
-				return false;
+                return  false;
 			}
 		});
 		

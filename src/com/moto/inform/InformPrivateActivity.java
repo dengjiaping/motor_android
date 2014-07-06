@@ -35,7 +35,6 @@ public class InformPrivateActivity extends Moto_RootActivity {
         setContentView(R.layout.inform_private);
 
         init();
-        GetAsyData();
         privateAdapter = new PrivateAdapter(this, privateList);
         privateListView.setAdapter(privateAdapter);
 
@@ -103,6 +102,14 @@ public class InformPrivateActivity extends Moto_RootActivity {
                 pushToNextActivity(bundle,Chat_privateActivity.class,304);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        privateList.clear();
+        GetAsyData();
+
     }
 
     private void init()

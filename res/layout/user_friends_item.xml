@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:descendantFocusability="blocksDescendants"
     android:background="#E7E7E7"
     >
     <ImageView
@@ -38,9 +39,11 @@
 	   	    android:singleLine="true"
 	   	    />
 	</LinearLayout>
-	<ImageView 
+	<ImageView
+        android:id="@+id/user_friends_item_chat"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:clickable="true"
         android:layout_centerVertical="true"
        	android:layout_alignParentRight="true"
         android:background="@drawable/message"

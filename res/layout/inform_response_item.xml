@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/press_style"
+    android:background="@drawable/live_item_press"
     android:orientation="horizontal" 
     >
     <ImageView 
@@ -16,7 +16,7 @@
 	<LinearLayout 
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
+	    android:orientation="vertical"
 	    >
 	    <RelativeLayout
             android:layout_width="wrap_content"
@@ -41,7 +41,8 @@
                 />
 
             <TextView
-                android:layout_toRightOf="@id/inform_response_zai"
+                android:layout_below="@id/inform_response_username"
+                android:layout_alignLeft="@id/inform_response_username"
                 android:id="@+id/inform_response_theme"
                 android:textColor="#777777"
                 android:layout_width="wrap_content"
@@ -53,20 +54,11 @@
             <TextView
                 android:layout_toRightOf="@id/inform_response_theme"
                 android:textColor="#777777"
+                android:layout_below="@id/inform_response_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="17sp"
                 android:text="中回复了你"
-                android:singleLine="true"
-                />
-            <TextView
-                android:id="@+id/inform_response_time"
-                android:textColor="#f0938c"
-                android:layout_marginLeft="10dp"
-                android:layout_alignParentRight="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="17sp"
                 android:singleLine="true"
                 />
             </RelativeLayout>
@@ -76,6 +68,16 @@
             android:layout_marginTop="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:singleLine="true"
+            />
+        <TextView
+            android:id="@+id/inform_response_time"
+            android:textColor="#f0938c"
+            android:layout_margin="3dp"
+            android:gravity="right|center_vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:textSize="17sp"
             android:singleLine="true"
             />

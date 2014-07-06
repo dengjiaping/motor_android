@@ -197,7 +197,12 @@ public class Moto_MainActivity extends TabActivity implements View.OnClickListen
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         spring.setEndValue(0);
-                        toggleButton();
+                        Intent intent = new Intent();
+                        intent.setClass(Moto_MainActivity.this, Live_Kids_Own.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.bottom_in, R.anim.bottom_exit);
+//                        //弹球
+//                        toggleButton();
                         break;
                 }
                 return true;
@@ -371,7 +376,7 @@ public class Moto_MainActivity extends TabActivity implements View.OnClickListen
                 Intent intent = new Intent();
                 intent.setClass(Moto_MainActivity.this, Live_Kids_Own.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
+                overridePendingTransition(R.anim.bottom_in, R.anim.bottom_exit);
             }
         }
 
@@ -436,7 +441,7 @@ public class Moto_MainActivity extends TabActivity implements View.OnClickListen
                 Intent intent1 = new Intent();
                 intent1.setClass(Moto_MainActivity.this, User_Login.class);
                 startActivityForResult(intent1,304);
-                overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
+                overridePendingTransition(R.anim.bottom_in, R.anim.bottom_exit);
             }
             else
             {

@@ -16,12 +16,12 @@ import android.widget.TextView;
 
 import com.moto.constant.Constant;
 import com.moto.constant.ImageMethod;
+import com.moto.inform.Chat_privateActivity;
 import com.moto.live.User_OwnPage;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.MotorApplication;
 import com.moto.main.R;
 import com.moto.model.UserNetworkModel;
-import com.moto.square.Theme_Post_Kids;
 import com.moto.toast.ToastClass;
 import com.moto.utils.UrlUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -41,6 +41,7 @@ public class User_friends extends Moto_RootActivity implements OnClickListener{
 	private MyAdapter adapter;
     private Handler handler;
     private DisplayImageOptions options;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -89,6 +90,7 @@ public class User_friends extends Moto_RootActivity implements OnClickListener{
         options = ImageMethod.GetOptions();
 		mylistView = (ListView)findViewById(R.id.user_friends_listview);
 		friends_return = (ImageView)findViewById(R.id.user_friends_return);
+
 		friends_return.setOnClickListener(this);
 	}
 	
@@ -194,13 +196,25 @@ public class User_friends extends Moto_RootActivity implements OnClickListener{
 			holder.user_friends_username = (TextView)convertView.findViewById(R.id.user_friends_username);
 			holder.user_friends_write = (TextView)convertView.findViewById(R.id.user_friends_write);
 			holder.user_friends_userimg = (ImageView)convertView.findViewById(R.id.user_friends_userimg);
+            holder.user_friends_item_chat = (ImageView)convertView.findViewById(R.id.user_friends_item_chat);
 			convertView.setTag(holder);
 			holder = (ViewHolder) convertView.getTag();
 			
 			map = list.get(position);
+
 			holder.user_friends_username.setText((CharSequence)map.get("username"));
 	        holder.user_friends_write.setText((CharSequence)map.get("profile"));
             MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(map.get("avatar")+""),  holder.user_friends_userimg,options,null);
+
+            holder.user_friends_item_chat.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("otherUserName", (String)map.get("username"));
+                    pushToNextActivity(bundle,Chat_privateActivity.class);
+
+                }
+            });
 	        return convertView;
 		}
 		//此类为上面getview里面view的引用，方便快速滑动
@@ -208,6 +222,7 @@ public class User_friends extends Moto_RootActivity implements OnClickListener{
 			TextView user_friends_username;
 			TextView user_friends_write;
 			ImageView user_friends_userimg;
+            ImageView user_friends_item_chat;
 		}
 	}
 }

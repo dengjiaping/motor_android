@@ -15,17 +15,16 @@ import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.moto.constant.DialogMethod;
+import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
 import com.moto.model.NetWorkModelListener;
 import com.moto.model.UpdateNetworkModel;
-import com.moto.myactivity.MyActivity;
 import com.moto.mydialog.errorDialog;
 import com.moto.mymap.MyMapApplication;
 import com.moto.switchbutton.SwitchButton;
@@ -41,8 +40,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class User_SystemSetting extends MyActivity implements OnClickListener,NetWorkModelListener{
-	private ImageView setting_return;
+public class User_SystemSetting extends Moto_RootActivity implements OnClickListener,NetWorkModelListener{
 //	private RelativeLayout browse_setting;
 	private RelativeLayout feedback_setting;
     private RelativeLayout user_system_draftbox;
@@ -62,23 +60,24 @@ public class User_SystemSetting extends MyActivity implements OnClickListener,Ne
     private NotificationManager manager;  
     private Notification notif;
     private long time = 0;
+    private Intent intent;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.user_system_setting);
+        addContentView(R.layout.user_system_setting,R.string.system_setting,barButtonIconType.barButtonIconType_Back,barButtonIconType.barButtonIconType_None);
 		init();
 	}
 	private void init() {
 		// TODO Auto-generated method stub
-		setting_return = (ImageView)findViewById(R.id.user_system_setting_return);
+
 //		browse_setting = (RelativeLayout)findViewById(R.id.user_browse_setting);
 		feedback_setting = (RelativeLayout)findViewById(R.id.user_feedback_setting);
 		user_exit = (BootstrapButton )findViewById(R.id.user_setting_exit);
 		clear = (RelativeLayout)findViewById(R.id.user_system_setting_clear);
 		user_edit_ownmassage = (RelativeLayout)findViewById(R.id.user_own_setting_message);
 		feedback_setting.setOnClickListener(this);
-		setting_return.setOnClickListener(this);
+
 		checkVersion = (RelativeLayout)findViewById(R.id.user_system_setting_checkversion);
         user_system_draftbox = (RelativeLayout)findViewById(R.id.user_system_draftbox);
 //		browse_setting.setOnClickListener(this);
@@ -110,13 +109,9 @@ public class User_SystemSetting extends MyActivity implements OnClickListener,Ne
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		if(v == setting_return)
-		{
-			User_SystemSetting.this.finish();
-		}
         if(v == user_system_draftbox)
         {
-            ToastClass.SetToast(User_SystemSetting.this,"您还没有草稿");
+            pushToNextActivity(User_SystemSetting_Draftbox.class);
         }
 //		if(v == browse_setting)
 //		{

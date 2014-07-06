@@ -253,6 +253,7 @@ public class SquareActivity extends tabActivity{
 //                else
 //				    intent.putExtra("photoname", carList.get(arg2).get(0));
 //
+                intent.putExtra("fid",fid);
 				intent.putExtra("subject", list.get(arg2).get("subject").toString());
 				intent.setClass(SquareActivity.this, Theme_Post.class);
 				startActivityForResult(intent, 305);

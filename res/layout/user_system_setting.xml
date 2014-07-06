@@ -6,31 +6,9 @@
     android:orientation="vertical"
     android:background="#E7E7E7"
     >
-
-    <RelativeLayout
-        android:id="@+id/live_titlebg"
-        android:layout_width="fill_parent"
-        android:layout_height="50.0dip" >
-        
-    <include 
-        layout="@layout/title"
-        />
-	<include 
-        android:id="@+id/user_system_setting_return"
-        layout="@layout/back"
-        />
-    <TextView
-        android:id="@+id/user_edit_title"      
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#ffffff"
-        android:textSize="26sp"
-        android:layout_centerInParent="true"
-        android:text="@string/system_setting"
-        />
-	</RelativeLayout>
 	<ScrollView 
 	    android:layout_width="fill_parent"
+        android:layout_marginTop="60dp"
 	    android:layout_height="wrap_content"
 	    android:scrollbars="none"
 	    >

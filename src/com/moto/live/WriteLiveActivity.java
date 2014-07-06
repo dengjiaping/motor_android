@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,20 +27,24 @@ import com.moto.constant.Constant;
 import com.moto.constant.DialogMethod;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
+import com.moto.model.DataBaseModel;
 import com.moto.model.LiveNetworkModel;
 import com.moto.mydialog.errorDialog;
 import com.moto.qiniu.img.Image;
 import com.moto.select_morephoto.AlbumActivity;
 import com.moto.select_morephoto.GridImageAdapter;
+import com.moto.square.Theme_Post_Touchme;
 import com.moto.toast.ToastClass;
 import com.moto.tryimage.PhotoUtils;
 import com.moto.utils.CompressUtils;
+import com.moto.utils.DateUtils;
 import com.moto.utils.StringUtils;
 import com.rockerhieu.emojicon.EmojiconEditText;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
 import com.rockerhieu.emojicon.EmojiconsFragment;
 import com.rockerhieu.emojicon.emoji.Emojicon;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,7 +53,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class WriteLiveActivity extends Moto_RootActivity implements OnClickListener,EmojiconsFragment.OnEmojiconBackspaceClickedListener,EmojiconGridFragment.OnEmojiconClickedListener{
-	private ImageView mention;
 	private ImageView camera;
 	private ImageView photos;
 
@@ -59,12 +61,13 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 	private View view;
 	private TextView end_live;
 	private ImageView emotion;
+    private ImageView mention;
 	private LinearLayout position;
 	private ImageView return_live;
 	private TextView real_position;
 	private ImageView write_send;
-	private String subject =null;
-	private String location;
+	private String subject ="";
+	private String location="";
 	private EmojiconEditText et_sendmessage;
 	private SharedPreferences TokenShared;
 	private String tokenString;
@@ -81,6 +84,9 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 	private String filepath;
     private Intent intent;
     private RequestParams param;
+
+    private String mentionUsername = "";
+    private boolean IsHaveUserName = false;
 	
 	private ArrayList<String> dataList = new ArrayList<String>();
     private LinkedList<String> compressList = new LinkedList<String>();
@@ -169,6 +175,7 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
                         WriteLiveActivity.this.finish();
                         break;
                     case Constant.MSG_SUCCESS:
+                        DialogMethod.stopProgressDialog();
                         ToastClass.SetImageToast(WriteLiveActivity.this,"成功结束直播");
                         setResult(303);
                         WriteLiveActivity.this.finish();
@@ -216,6 +223,7 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 		end_live = (TextView)findViewById(R.id.end_live);
 		live_name = (TextView)findViewById(R.id.live_name);
 		live_user_name = (TextView)findViewById(R.id.live_user_name);
+
 		end_live.setOnClickListener(this);
 		mention.setOnClickListener(this);
 		camera.setOnClickListener(this);
@@ -237,9 +245,7 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 		// TODO Auto-generated method stub
 		if(v == mention)
 		{
-			intent = new Intent();
-			intent.setClass(WriteLiveActivity.this, ContactActivity.class);
-			startActivity(intent);
+            pushToNextActivity(Theme_Post_Touchme.class, 304);
 		}
 		
 		if(v == camera)
@@ -320,38 +326,11 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     // TODO Auto-generated method stub
+
                     dialog.dismiss();
-                    new AsyncTask<Integer, String, Integer>(){
-                        
-                        @Override
-                        protected Integer doInBackground(Integer... params) {
-                            // TODO Auto-generated method stub
-                            try {
-                                
-                                EndLiving();
-                                Thread.sleep(40 * 1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            return null;
-                        }
-                        @Override
-                        protected void onCancelled() {
-                            DialogMethod.stopProgressDialog();
-                            super.onCancelled();
-                        }
-                        @Override
-                        protected void onPreExecute() {
-                            DialogMethod.startProgressDialog(WriteLiveActivity.this,"正在结束");
-                        }
-                        
-                        @Override
-                        protected void onPostExecute(Integer result) {
-                            DialogMethod.stopProgressDialog();
-                            //								DialogMethod.dialogShow(User_EditUserMassage.this, "修改失败!");
-                        }
-                        
-                    }.execute();
+                    DialogMethod.startProgressDialog(WriteLiveActivity.this,"正在结束");
+                    EndLiving();
+
                 }
             });
             builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -432,6 +411,13 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
                 }
             }
         }
+
+        if(resultCode == 3)
+        {
+            mentionUsername = data.getExtras().getString("name");
+            IsHaveUserName = true;
+            et_sendmessage.setText(et_sendmessage.getText().toString()+"@"+mentionUsername);
+        }
 	}
 	private void GetAsyData() {
 		// TODO Auto-generated method stub
@@ -443,6 +429,11 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 		param.put("longitude", lon);
 		param.put("latitude", lat);
 		param.put("locationsign", locationsign);
+        if(IsHaveUserName)
+        {
+            param.put("atuser",mentionUsername);
+        }
+
 		LiveNetworkModel liveNetworkModel = new LiveNetworkModel(this, this);
 		ArrayList<String> tdataList = StringUtils.getIntentArrayList(dataList);
 		int num1 = tdataList.size();
@@ -452,11 +443,17 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
                 String compressPath = CompressUtils.GetCompressPath(tdataList.get(i), 480);
 				lovecarImage.add(new Image(compressPath,
                                            "file"));
+
                 compressList.add(compressPath);
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+
+        //存数据库
+        DataBaseModel dataBaseModel = new DataBaseModel(1,tokenString,"",subject,et_sendmessage.getText().toString(),location,
+                lon,lat,locationsign,mentionUsername,IsHaveUserName,new JSONArray(tdataList).toString(),isHavePhoto,"",true, DateUtils.getUTCCurrentTimestamp());
+        dataBaseModel.save();
 		if(isHavePhoto)
 		{
 			liveNetworkModel.writelive(param, lovecarImage,"photo","photoinfo");
@@ -500,7 +497,7 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 				}
 				if(is.equals("1"))
 				{
-					DialogMethod.stopProgressDialog();
+
 					handler.obtainMessage(Constant.MSG_SUCCESS)
 					.sendToTarget();
 				}
@@ -510,6 +507,11 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 			public void onFailure(String error, String message) {
 				// TODO Auto-generated method stub
 				super.onFailure(error, message);
+                Message msg = Message.obtain();
+                msg.obj = message;
+                msg.what = Constant.MSG_FALTH;
+                // 发送这个消息到消息队列中
+                handler.sendMessage(msg);
 			}
             
 			@Override
@@ -545,7 +547,7 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 		msg.what = Constant.MSG_FALTH;
 		// 发送这个消息到消息队列中
 		handler.sendMessage(msg);
-		DialogMethod.stopProgressDialog();
+
 	}
 
     @Override

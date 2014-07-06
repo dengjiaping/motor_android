@@ -45,6 +45,9 @@
             android:name="com.amap.api.v2.apikey"
             android:value="4bfbeec2ebb136b59d8e8f59bdfe9a1e" />
 
+        <meta-data android:name="AA_DB_NAME" android:value="Moto.db" />
+        <meta-data android:name="AA_DB_VERSION" android:value="5" />
+
         <!--
          在android4.0以上系统中的 Activity加上下面这句，可以支持地图横竖屏切换 
          android:configChanges="orientation|keyboardHidden|screenSize"
@@ -172,6 +175,11 @@
           
           <activity 
             android:name="com.moto.user.User_SystemSetting"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+
+        <activity
+            android:name="com.moto.user.User_SystemSetting_Draftbox"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
           

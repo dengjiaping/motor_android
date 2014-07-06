@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 
@@ -26,12 +26,17 @@ import info.hoang8f.android.segmented.SegmentedGroup;
 /**
  * Created by chen on 2014/5/5.
  */
-public class Inform_main extends TabActivity{
+public class Inform_main extends TabActivity implements View.OnClickListener{
     /** Called when the activity is first created. */
     private TabHost tabHost;
     public static SegmentedGroup radioGroup;
     //	private TextView main_tab_new_message;
     private ImageView inform_add_img;
+    private LinearLayout layout;
+
+    private RadioButton inform_button1;
+    private RadioButton inform_button2;
+    private RadioButton inform_button3;
     private RelativeLayout inform_add_layout;
     private static final SpringConfig ORIGAMI_SPRING_CONFIG = SpringConfig.fromOrigamiTensionAndFriction(40, 7);
     @Override
@@ -42,6 +47,13 @@ public class Inform_main extends TabActivity{
         tabHost=this.getTabHost();
         TabHost.TabSpec spec;
         Intent intent;
+
+        inform_button1 = (RadioButton)findViewById(R.id.inform_button1);
+        inform_button2 = (RadioButton)findViewById(R.id.inform_button2);
+        inform_button3 = (RadioButton)findViewById(R.id.inform_button3);
+        inform_button1.setOnClickListener(this);
+        inform_button2.setOnClickListener(this);
+        inform_button3.setOnClickListener(this);
 
         intent=new Intent().setClass(this, InformResponseActivity.class);
         spec=tabHost.newTabSpec("response").setIndicator("response").setContent(intent);
@@ -56,38 +68,38 @@ public class Inform_main extends TabActivity{
         tabHost.addTab(spec);
 
         tabHost.setCurrentTab(0);
-        final LinearLayout layout =(LinearLayout)findViewById(R.id.console_line_bottom);
+        layout =(LinearLayout)findViewById(R.id.console_line_bottom);
         radioGroup = (SegmentedGroup) this.findViewById(R.id.inform_segmented);
         radioGroup.setTintColor(Color.BLUE);
         radioGroup.setTintColor(Color.WHITE,getResources().getColor(R.color.turquoise_blue));
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // TODO Auto-generated method stub
-                switch (checkedId) {
-                    case R.id.inform_button1://response
-                        tabHost.setCurrentTabByTag("response");
-                        layout.bringToFront();
-                        break;
-                    case R.id.inform_button2://touch
-                        tabHost.setCurrentTabByTag("touch");
-                        layout.bringToFront();
-
-                        break;
-                    //				case R.id.main_tab_square:
-                    //					tabHost.setCurrentTabByTag("liveown");
-                    //					layout.bringToFront();
-                    //					break;
-                    case R.id.inform_button3://private
-                        tabHost.setCurrentTabByTag("private");
-                        layout.bringToFront();
-                        break;
-                    default:
-
-                        break;
-                }
-            }
-        });
+//        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                // TODO Auto-generated method stub
+//                switch (checkedId) {
+//                    case R.id.inform_button1://response
+//                        tabHost.setCurrentTabByTag("response");
+//                        layout.bringToFront();
+//                        break;
+//                    case R.id.inform_button2://touch
+//                        tabHost.setCurrentTabByTag("touch");
+//                        layout.bringToFront();
+//
+//                        break;
+//                    //				case R.id.main_tab_square:
+//                    //					tabHost.setCurrentTabByTag("liveown");
+//                    //					layout.bringToFront();
+//                    //					break;
+//                    case R.id.inform_button3://private
+//                        tabHost.setCurrentTabByTag("private");
+//                        layout.bringToFront();
+//                        break;
+//                    default:
+//
+//                        break;
+//                }
+//            }
+//        });
         BaseSpringSystem springSystem = SpringSystem.create();
         // Add a spring to the system.
         final Spring spring = springSystem.createSpring()
@@ -133,5 +145,24 @@ public class Inform_main extends TabActivity{
         });
 
         layout.bringToFront();
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.equals(inform_button1))
+        {
+            tabHost.setCurrentTabByTag("response");
+            layout.bringToFront();
+        }
+        else if(view.equals(inform_button2))
+        {
+            tabHost.setCurrentTabByTag("touch");
+            layout.bringToFront();
+        }
+        else if(view.equals(inform_button3))
+        {
+            tabHost.setCurrentTabByTag("private");
+            layout.bringToFront();
+        }
     }
 }

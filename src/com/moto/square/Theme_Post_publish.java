@@ -50,6 +50,9 @@ public class Theme_Post_publish extends Moto_RootActivity implements View.OnClic
     private ImageView send;
     private ImageView photos;
     private ImageView camera;
+    private ImageView mention;
+    private String mentionUsername;
+    private boolean IsHaveUserName = false;
     private View view;
     private String filepath="";
     private boolean isHavePhoto = false;
@@ -139,11 +142,13 @@ public class Theme_Post_publish extends Moto_RootActivity implements View.OnClic
         camera = (ImageView)findViewById(R.id.square_discuss_kids_publish_camera);
         send = (ImageView)findViewById(R.id.square_discuss_kids_publish_send);
         emotion = (ImageView)findViewById(R.id.square_discuss_kids_publish_emotion);
+        mention = (ImageView)findViewById(R.id.square_discuss_kids_publish_mention);
 
         emotion.setOnClickListener(this);
         send.setOnClickListener(this);
         photos.setOnClickListener(this);
         camera.setOnClickListener(this);
+        mention.setOnClickListener(this);
     }
 
 
@@ -186,6 +191,10 @@ public class Theme_Post_publish extends Moto_RootActivity implements View.OnClic
                 SetAsyResponse();
             }
         }
+        if(v == mention)
+        {
+            pushToNextActivity(Theme_Post_Touchme.class,304);
+        }
     }
 
     //调用相机返回
@@ -217,6 +226,13 @@ public class Theme_Post_publish extends Moto_RootActivity implements View.OnClic
             isHavePhoto = true;
         }
 
+        if(resultCode == 3)
+        {
+            mentionUsername = data.getExtras().getString("name");
+            IsHaveUserName = true;
+            et_sendmessage.setText(et_sendmessage.getText().toString()+"@"+mentionUsername);
+        }
+
     }
     private void SetAsyResponse() {
         // TODO Auto-generated method stub
@@ -225,6 +241,10 @@ public class Theme_Post_publish extends Moto_RootActivity implements View.OnClic
         param.put("token", token);
         param.put("subject", "");
         param.put("message", et_sendmessage.getText().toString());
+        if(IsHaveUserName)
+        {
+            param.put("atuser",mentionUsername);
+        }
         SquareNetworkModel squareNetworkModel = new SquareNetworkModel(this,this);
         if(isHavePhoto)
         {

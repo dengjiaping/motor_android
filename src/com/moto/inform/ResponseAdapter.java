@@ -1,13 +1,4 @@
 package com.moto.inform;
-import java.util.HashMap;
-import java.util.LinkedList;
-
-import com.moto.constant.Constant;
-import com.moto.constant.ImageMethod;
-import com.moto.main.R;
-import com.moto.mymap.MyMapApplication;
-import com.moto.utils.DateUtils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +6,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.moto.constant.ImageMethod;
+import com.moto.main.R;
+import com.moto.mymap.MyMapApplication;
+import com.moto.utils.DateUtils;
+import com.moto.utils.UrlUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class ResponseAdapter extends BaseAdapter{
     
@@ -75,7 +76,7 @@ public class ResponseAdapter extends BaseAdapter{
         holder.inform_response_details.setText(map.get("reply_message"));
         holder.inform_response_theme.setText( map.get("subject"));
         holder.inform_response_time.setText(DateUtils.timestampToDeatil(map.get("dateline")));
-        MyMapApplication.imageLoader.displayImage(Constant.imgPath+map.get("avatar")+"?imageView2/1/w/40/h/40",  holder.inform_response_userimg,options,null);
+        MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl(map.get("avatar")),  holder.inform_response_userimg,options,null);
         return convertView;
     }
     //此类为上面getview里面view的引用，方便快速滑动

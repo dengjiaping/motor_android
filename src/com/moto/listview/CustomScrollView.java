@@ -1,12 +1,7 @@
 package com.moto.listview;
 
-import java.util.Date;
-
-import com.moto.main.R;
-
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.moto.main.R;
+
+import java.util.Date;
 
 public class CustomScrollView extends ScrollView {
     
@@ -91,7 +90,7 @@ public class CustomScrollView extends ScrollView {
         
 		measureView(headView);
 		headContentHeight = headView.getMeasuredHeight();
-        
+//        headContentHeight = 0;
 		animation = new RotateAnimation(0, -180,
                                         RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                                         RotateAnimation.RELATIVE_TO_SELF, 0.5f);

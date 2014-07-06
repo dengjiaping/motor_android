@@ -95,7 +95,7 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
     public void leftBarButtonItemEvent() {
         // TODO Auto-generated method stub
         User_Login.this.finish();
-        overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
+        overridePendingTransition(0, R.anim.bottom_out);
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -103,7 +103,7 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
         {
             User_Login.this.finish();
-            overridePendingTransition(R.anim.bottom_in, R.anim.bottom_out);
+            overridePendingTransition(0, R.anim.bottom_out);
 
         }
         return super.onKeyDown(keyCode, event);

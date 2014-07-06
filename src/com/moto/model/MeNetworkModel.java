@@ -1,16 +1,17 @@
 package com.moto.model;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.content.Context;
+import android.os.AsyncTask;
 
 import com.loopj.android.http.RequestParams;
 import com.moto.qiniu.img.Image;
 import com.moto.qiniu.img.UploadImage;
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class MeNetworkModel extends MotoNetWorkModel{
 
@@ -24,6 +25,12 @@ public class MeNetworkModel extends MotoNetWorkModel{
 		// TODO Auto-generated constructor stub
 		this.route = "me";
 	}
+
+    public void GetMeKeeppost(RequestParams params)
+    {
+        this.avatarParam = params;
+        connectWithPostData(params, "readkeep");
+    }
 	
 	public void updateProfile(RequestParams params, Image avatar, ArrayList<Image> photo, String photoName, String act) 
 	{

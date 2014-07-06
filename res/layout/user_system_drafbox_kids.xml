@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/live_item_press"
+    android:orientation="vertical"
+    >
+    <com.rockerhieu.emojicon.EmojiconTextView
+        android:id="@+id/user_system_draftbox_kid_subject"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="28sp"
+        android:textColor="#000000"
+        android:layout_marginLeft="5dp"
+        />
+    <com.rockerhieu.emojicon.EmojiconTextView
+        android:id="@+id/user_system_draftbox_kid_error"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:layout_marginTop="4dp"
+        android:textSize="18sp"
+        android:textColor="#F0938D"
+        android:text="@string/errortext"
+        android:layout_marginLeft="5dp"
+        />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#747675"
+        android:textSize="15sp"
+        android:id="@+id/user_system_draftbox_kid_time"
+        android:gravity="right"
+        />
+</LinearLayout>

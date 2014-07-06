@@ -85,7 +85,7 @@ public class User_OwnPage extends Moto_RootActivity{
 
         author = bundle.getString("author");
         token = bundle.getString("token");
-        addContentView(R.layout.user, bundle.getString("author"), R.string.focus,barButtonIconType.barButtonIconType_None, barButtonIconType.barRightTextViewType );
+        addContentView(R.layout.user, bundle.getString("author"), R.string.focus,barButtonIconType.barButtonIconType_Back, barButtonIconType.barRightTextViewType );
         init();
 
         UserNetworkModel userNetworkModel = new UserNetworkModel(this,this);

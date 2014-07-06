@@ -95,6 +95,7 @@
 	<string name="friends">好友</string>
 	<string name="myfriends">我的好友</string>
 	<string name="collect">收藏</string>
+    <string name="mycollect">我的收藏</string>
 	<string name="numsetting">账号设置</string>
 	<string name="draftbox">草稿箱</string>
 	<string name="edit_ownmassage">编辑资料</string>
@@ -158,6 +159,7 @@
     <string name="last_video_captured">Last video captured</string>
     <string name="all_media">All media</string>
     <string name="camera_media">Camera media</string>
+    <string name="errortext">网络不给力，点击重新发送</string>
 
     <!-- Exceptions -->
     <string name="parsing_exception">Invalid response format.</string>

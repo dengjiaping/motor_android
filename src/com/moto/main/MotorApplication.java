@@ -1,5 +1,14 @@
 package com.moto.main;
 
+import android.content.Context;
+
+import com.activeandroid.ActiveAndroid;
+import com.baidu.frontia.FrontiaApplication;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
@@ -15,16 +24,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
-import android.content.Context;
-import android.util.TypedValue;
-
-import com.baidu.frontia.FrontiaApplication;
-import com.chute.sdk.v2.utils.PreferenceUtil;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-
 /*
  * 如果您的工程中实现了Application的继承类，那么，您需要将父类改为com.baidu.frontia.FrontiaApplication。
  * 如果您没有实现Application的继承类，那么，请在AndroidManifest.xml的Application标签中增加属性： 
@@ -38,7 +37,7 @@ public class MotorApplication extends FrontiaApplication {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
+        ActiveAndroid.initialize(this);
 		initImageLoader(getApplicationContext());
         httpClient = this.createHttpClient();
 	}
@@ -103,5 +102,6 @@ public class MotorApplication extends FrontiaApplication {
    	public void onTerminate() {
    		super.onTerminate();
    		this.shutdownHttpClient();
+        ActiveAndroid.dispose();
    	}
 }

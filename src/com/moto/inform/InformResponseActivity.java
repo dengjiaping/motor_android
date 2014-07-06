@@ -9,11 +9,11 @@ import android.widget.AdapterView;
 
 import com.moto.constant.Constant;
 import com.moto.listview.MyListView;
-import com.moto.live.LiveKidsResponse;
 import com.moto.live.Live_kidsAllResponse;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
 import com.moto.model.InformNetworkModel;
+import com.moto.square.Theme_Post;
 import com.moto.utils.StringUtils;
 
 import org.json.JSONArray;
@@ -41,7 +41,7 @@ public class InformResponseActivity extends Moto_RootActivity {
         setContentView(R.layout.inform_response);
 
         init();
-        GetAsyData();
+
 
         responseAdapter = new ResponseAdapter(this, list);
         responseListview.setAdapter(responseAdapter);// 先设置空对象，要么从数据库中读出
@@ -71,31 +71,51 @@ public class InformResponseActivity extends Moto_RootActivity {
                 String tid = list.get(position-1).get("tid");
                 String pid = list.get(position-1).get("pid");
                 String cid = list.get(position-1).get("cid");
-                if(fid.equals("1") && !tid.equals("null") && pid.equals("null") && !cid.equals("null"))
+                if(fid.equals("1"))
                 {
                     intent = new Intent();
                     intent.putExtra("tid", tid);
                     intent.setClass(InformResponseActivity.this, Live_kidsAllResponse.class);
                     startActivityForResult(intent, 304);
                 }
-                else if(fid.equals("1") && !tid.equals("null") && !pid.equals("null") && !cid.equals("null"))
+//                else if(fid.equals("1"))
+//                {
+//                    intent.putExtra("pid", list.get(position-1).get("pid").toString());
+//                    intent.putExtra("subject", list.get(position-1).get("subject").toString());
+//                    intent.putExtra("dateline",list.get(position-1).get("dateline").toString());
+//                    int num = carList.get(position-1).size();
+//                    if(num == 0)
+//                    {
+//                        intent.putExtra("photoname", "null");
+//                    }
+//                    else {
+//                        intent.putExtra("photoname", carList.get(position-1).get(num - 1));
+//                    }
+//                    intent.setClass(InformResponseActivity.this, LiveKidsResponse.class);
+//                    startActivityForResult(intent, 304);
+//                }
+
+                else if(fid.equals("37"))
                 {
-                    intent.putExtra("pid", list.get(position-1).get("pid").toString());
+                    intent = new Intent();
+                    intent.putExtra("tid", tid);
+                    intent.putExtra("fid","37");
                     intent.putExtra("subject", list.get(position-1).get("subject").toString());
-                    intent.putExtra("dateline",list.get(position-1).get("dateline").toString());
-                    int num = carList.get(position-1).size();
-                    if(num == 0)
-                    {
-                        intent.putExtra("photoname", "null");
-                    }
-                    else {
-                        intent.putExtra("photoname", carList.get(position-1).get(num - 1));
-                    }
-                    intent.setClass(InformResponseActivity.this, LiveKidsResponse.class);
-                    startActivityForResult(intent, 304);
+                    intent.setClass(InformResponseActivity.this, Theme_Post.class);
+                    startActivityForResult(intent, 305);
                 }
             }
         });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        list.clear();
+        carList.clear();
+        WidthHeightList.clear();
+        GetAsyData();
 
     }
 

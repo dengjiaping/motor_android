@@ -36,6 +36,7 @@ import com.moto.live.User_OwnPage;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.MotorApplication;
 import com.moto.main.R;
+import com.moto.model.SquareNetworkModel;
 import com.moto.mytextview.MarqueeText;
 import com.moto.mytextview.ShimmerTextView;
 import com.moto.toast.ToastClass;
@@ -67,6 +68,7 @@ public class Theme_Post extends Moto_RootActivity{
 	private int count = 0;
 	private int num_post = 1;
 	private String tid;
+    private String fid;
 	private MyAdapter adapter;
 	private boolean isrefresh = false;
 	private MarqueeText post_theme;
@@ -105,6 +107,12 @@ public class Theme_Post extends Moto_RootActivity{
 				
 				switch(msg.what)
 				{
+                    case Constant.MSG_FALTH:
+
+                        String str = (String) msg.obj;
+                        ToastClass.SetToast(Theme_Post.this, str);
+                        DialogMethod.stopProgressDialog();
+                        break;
                         //获取成功
                     case Constant.MSG_SUCCESS:
                         listview.setVisibility(View.VISIBLE);
@@ -138,6 +146,11 @@ public class Theme_Post extends Moto_RootActivity{
                     case Constant.MSG_HAVENOTHING:
 
                         waitText.setText("暂时还没有任何数据哟");
+                        break;
+                    case Constant.MSG_WAITSUCCESS:
+                        String string = (String) msg.obj;
+                        ToastClass.SetToast(Theme_Post.this, string);
+                        DialogMethod.stopProgressDialog();
                         break;
 				}
 				super.handleMessage(msg);
@@ -183,7 +196,8 @@ public class Theme_Post extends Moto_RootActivity{
         post_collect.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                ToastClass.SetToast(Theme_Post.this,"收藏成功");
+                DialogMethod.startProgressDialog(Theme_Post.this,"收藏中...");
+                SendKeepMessage();
             }
         });
 		scrollView.setOnRefreshListener(new OnRefreshListener() {
@@ -266,6 +280,7 @@ public class Theme_Post extends Moto_RootActivity{
 		intent = getIntent();
 		tid = intent.getStringExtra("tid");
         subject = intent.getStringExtra("subject");
+        fid = intent.getStringExtra("fid");
         waitText = (ShimmerTextView)findViewById(R.id.post_waittext);
 
         post_theme = (MarqueeText)findViewById(R.id.post_title);
@@ -280,6 +295,24 @@ public class Theme_Post extends Moto_RootActivity{
 		scrollView = (CustomScrollView)findViewById(R.id.post_scrollview);
 		leftpage = (ImageView)findViewById(R.id.return_post);
 
+    }
+
+    //点击收藏执行方法
+    private void SendKeepMessage(){
+        tokenString = ToastClass.GetTokenString(Theme_Post.this);
+        if(tokenString.equals(""))
+        {
+            ToastClass.SetToast(Theme_Post.this, "登录之后才能够收藏哟");
+        }
+        else {
+            RequestParams param;
+            param = new RequestParams();
+            param.put("token", tokenString);
+            param.put("tid", tid);
+            param.put("fid",fid);
+            SquareNetworkModel squareNetworkModel= new SquareNetworkModel(this, this);
+            squareNetworkModel.squareKeeppost(param);
+        }
     }
 
     private void GetAsyData() {
@@ -629,4 +662,61 @@ public class Theme_Post extends Moto_RootActivity{
 		
 		super.onActivityResult(requestCode, resultCode, data);
 	}
+
+
+    @Override
+    public void handleNetworkDataWithSuccess(JSONObject JSONObject)
+            throws JSONException {
+        // TODO Auto-generated method stub
+        super.handleNetworkDataWithSuccess(JSONObject);
+        String status = JSONObject.getString("status");
+        if(status.equals("keep it!"))
+        {
+            // 获取一个Message对象，设置what为1
+            Message msg = Message.obtain();
+            msg.obj = "收藏成功";
+            msg.what = Constant.MSG_WAITSUCCESS;
+            // 发送这个消息到消息队列中
+            handler.sendMessage(msg);
+        }
+        else if(status.equals("unkeep it!")){
+            // 获取一个Message对象，设置what为1
+            Message msg = Message.obtain();
+            msg.obj = "成功取消收藏";
+            msg.what = Constant.MSG_WAITSUCCESS;
+            // 发送这个消息到消息队列中
+            handler.sendMessage(msg);
+        }
+    }
+    @Override
+    public void handleNetworkDataWithFail(JSONObject jsonObject)
+            throws JSONException {
+        // TODO Auto-generated method stub
+        super.handleNetworkDataWithFail(jsonObject);
+        // 获取一个Message对象，设置what为1
+        Message msg = Message.obtain();
+        msg.obj = "收藏失败";
+        msg.what = Constant.MSG_FALTH;
+        // 发送这个消息到消息队列中
+        handler.sendMessage(msg);
+    }
+
+    @Override
+    public void handleNetworkDataGetFail(String message) throws JSONException {
+        // TODO Auto-generated method stub
+        super.handleNetworkDataGetFail(message);
+        // 获取一个Message对象，设置what为1
+        Message msg = Message.obtain();
+        msg.obj = message;
+        msg.what = Constant.MSG_FALTH;
+        // 发送这个消息到消息队列中
+        handler.sendMessage(msg);
+    }
+
+    @Override
+    public void handleNetworkDataStart() throws JSONException {
+        // TODO Auto-generated method stub
+        super.handleNetworkDataStart();
+
+    }
 }

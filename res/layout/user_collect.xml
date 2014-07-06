@@ -5,36 +5,18 @@
     android:background="#E7E7E7"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="50.0dip" >
-    <include 
-        layout="@layout/title"
-        />
-    <TextView    
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#ffffff"
-        android:textSize="26sp"
-        android:layout_centerInParent="true"
-        android:text="@string/myfriends"
-        />
-	<include 
-        android:id="@+id/user_collect_return"
-        layout="@layout/back"
-        />
-	</RelativeLayout>
-	<ListView 
+	<ListView
+        android:layout_marginTop="60dp"
 	    android:id="@+id/user_collect_listview"
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
-        android:divider="#AFAFAF"
+        android:divider="#E7E7E7"
         android:dividerHeight="1dp"
         android:scrollbars="none"
 	    />
 	<TextView 
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="#AFAFAF"
+        android:background="#E7E7E7"
         />
 </LinearLayout>

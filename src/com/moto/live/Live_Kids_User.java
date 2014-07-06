@@ -2,7 +2,6 @@ package com.moto.live;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -56,6 +55,7 @@ import com.moto.listview.CustomScrollView.OnRefreshListener;
 import com.moto.listview.NoScrollListview;
 import com.moto.listview.ProgressBarView;
 import com.moto.main.Moto_RootActivity;
+import com.moto.main.MotorApplication;
 import com.moto.main.R;
 import com.moto.model.CacheModel;
 import com.moto.model.LiveNetworkModel;
@@ -83,58 +83,54 @@ import java.util.LinkedList;
 public class Live_Kids_User extends Moto_RootActivity implements OnMarkerClickListener,
 OnInfoWindowClickListener, InfoWindowAdapter{
     
-	protected CustomScrollView scrollView;
-	protected LinearLayout live_kids_user_bottom;
-	protected Handler handler;
-	protected String tid;
-	protected String subject;
-	protected String avatar = "";
-	protected ImageView user_img;
-	protected TextView live_title;
-	protected RelativeLayout comment;
-	protected RelativeLayout live_kids_share;
-	protected RelativeLayout live_kids_collect;
-	protected LinkedList<HashMap<String, Object>> list = new LinkedList<HashMap<String,Object>>();
-	protected ArrayList<HashMap<String, Object>> LocationList = new ArrayList<HashMap<String,Object>>();
-	protected LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
-	protected LinkedList<LinkedList<HashMap<String,Integer>>> WidthHeightList = new LinkedList<LinkedList<HashMap<String,Integer>>>();
-	protected HashMap<String, Object> map;
-	protected NoScrollListview myListView;
-	protected MyAdapter adapter;
-	protected boolean isRefresh = false;
+	private CustomScrollView scrollView;
+    private LinearLayout live_kids_user_bottom;
+    private Handler handler;
+    private String tid;
+    private String subject;
+    private String avatar = "";
+    private ImageView user_img;
+    private TextView live_title;
+    private RelativeLayout comment;
+    private RelativeLayout live_kids_share;
+    private RelativeLayout live_kids_collect;
+    private LinkedList<HashMap<String, Object>> list = new LinkedList<HashMap<String,Object>>();
+    private ArrayList<HashMap<String, Object>> LocationList = new ArrayList<HashMap<String,Object>>();
+    private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
+    private LinkedList<LinkedList<HashMap<String,Integer>>> WidthHeightList = new LinkedList<LinkedList<HashMap<String,Integer>>>();
+    private HashMap<String, Object> map;
+    private NoScrollListview myListView;
+    private MyAdapter adapter;
+    private boolean isRefresh = false;
     private boolean isload = false;
-	protected int count = 0;
-	protected DisplayImageOptions options;
-	protected DisplayImageOptions Originaloptions;
-	
-	protected ProgressBar loadingProgressBar;
-	protected int screenWidth;
-	protected String uriString = path+"api/live/readdetaillive";
+    private int count = 0;
+    private DisplayImageOptions options;
+    private DisplayImageOptions Originaloptions;
+
+    private ProgressBar loadingProgressBar;
+    private int screenWidth;
+    private String uriString = path+"api/live/readdetaillive";
 	//定位所需变量
-	protected AMap aMap;
-	protected MapView mapView;
+    private AMap aMap;
+    private MapView mapView;
 	private MarkerOptions markerOption;   //添加位置图层
 	//添加到地图上面那一层
-	protected TextView text_map;
+    private TextView text_map;
     //划线
-	protected Polyline polyline;
-	protected PolylineOptions polylineOptions;
-	
-	protected Intent intent;
-	protected String imgPath = "http://motor.qiniudn.com/";
-	protected RequestParams param;
-	private SharedPreferences TokenShared;
-	private String tokenString;
-	protected LiveNetworkModel liveNetworkModel;
+    private Polyline polyline;
+    private PolylineOptions polylineOptions;
+
+    private Intent intent;
+    private String imgPath = "http://motor.qiniudn.com/";
+    private RequestParams param;
+    private String tokenString;
+    private LiveNetworkModel liveNetworkModel;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
-		intent = getIntent();
-		tid = intent.getStringExtra("tid");
-		subject = intent.getStringExtra("subject");
+
 		
 		addContentView(R.layout.live_kids, subject, barButtonIconType.barButtonIconType_Back, barButtonIconType.barButtonIconType_None);
 		mapView = (MapView) findViewById(R.id.live_kids_map);
@@ -149,13 +145,6 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 		SetCommentListener();
 		SetLeftListener();
 		SetHandler();
-		
-        //		scrollListener();
-        //		SetListAdapter();
-        //		GetAsyData();
-        //		SetCommentListener();
-        //		SetLeftListener();
-        //		SetHandler();
 	}
     
 	@Override
@@ -287,6 +276,8 @@ OnInfoWindowClickListener, InfoWindowAdapter{
                                 MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl(avatar),  user_img,options,null);
                             }
                         }
+                        scrollView.onRefreshComplete();
+                        scrollView.onLoadComplete();
 
                         break;
                         //获取成功
@@ -327,6 +318,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
                         String string = (String) msg.obj;
                         ToastClass.SetToast(Live_Kids_User.this, string);
                         DialogMethod.stopProgressDialog();
+                        break;
 				}
 				super.handleMessage(msg);
 			}
@@ -487,9 +479,14 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 				startActivityForResult(intent, 304);
 			}
 		});
+
 	}
 	protected void init() {
 		// TODO Auto-generated method stub
+        intent = getIntent();
+        tid = intent.getStringExtra("tid");
+        subject = intent.getStringExtra("subject");
+
 		options = ImageMethod.GetOptions();
 		Originaloptions = ImageMethod.GetOriginalOptions();
 		
@@ -530,7 +527,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
             avatar = list.get(0).get("avatar").toString();
             if(!avatar.equals("null"))
             {
-                MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl(avatar),  user_img,options,null);
+                MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(avatar),  user_img,options,null);
             }
 
         }

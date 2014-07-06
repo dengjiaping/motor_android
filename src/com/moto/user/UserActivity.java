@@ -167,12 +167,7 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 
 		adapter = new MyAdapter(this, list);
 		listView.setAdapter(adapter);
-        ownMessageMapNum.clear();
-        ownphotoMessage.clear();
-        ownMessageMap.clear();
-        carList.clear();
-		GetAsyMessageData();
-		GetAsyData();
+
 		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -192,6 +187,22 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 
 
 	}
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ownMessageMapNum.clear();
+        ownphotoMessage.clear();
+        ownMessageMap.clear();
+        carList.clear();
+        list.clear();
+        ImgList.clear();
+        WidthHeightList.clear();
+        token = mshared.getString("token", "");
+        setNavigationBarTitle(mshared.getString("username", ""));
+        GetAsyMessageData();
+        GetAsyData();
+    }
 
     private void init() {
 		// TODO Auto-generated method stub
@@ -667,16 +678,7 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
             Moto_MainActivity.getChecked();
 			break;
 		}
-        switch (requestCode)
-        {
-            case 0:
-                ownMessageMapNum.clear();
-                ownphotoMessage.clear();
-                ownMessageMap.clear();
-                carList.clear();
-                GetAsyMessageData();
-                break;
-        }
+
 		
 		super.onActivityResult(requestCode, resultCode, data);
 	}

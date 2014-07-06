@@ -73,6 +73,8 @@
     <orderEntry type="library" exported="" name="mail" level="project" />
     <orderEntry type="library" exported="" name="pushservice-3.2.0" level="project" />
     <orderEntry type="library" exported="" name="Android_Location_V1.1.0" level="project" />
+    <orderEntry type="library" exported="" name="ActiveAndroid" level="project" />
+    <orderEntry type="library" exported="" name="1_ActiveAndroid" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-19.1.0" level="project" />
     <orderEntry type="library" exported="" name="nineoldandroids-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.1.0" level="project" />

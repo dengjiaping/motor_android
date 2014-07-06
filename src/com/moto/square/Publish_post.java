@@ -62,7 +62,7 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
     private Image photofiles;
 	RequestParams param;
 	private Handler handler;
-    private String mentionUsername;
+    private String mentionUsername = "";
     private boolean IsHaveUserName = false;
 	Intent intent;
 	@Override
@@ -260,6 +260,7 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
 			try {
                 filepath = CompressUtils.GetCompressPath(filepath, 480);
                 photofiles = new Image(filepath, "file");
+
 				squareNetworkModel.CreateNewTheme(param,photofiles);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

@@ -21,6 +21,12 @@ public class SquareNetworkModel extends MotoNetWorkModel{
 		// TODO Auto-generated constructor stub
 		this.route = "square";
 	}
+
+    public void squareKeeppost(RequestParams params)
+    {
+        this.avatarParam = params;
+        connectWithPostData(params, "keepsquarethread");
+    }
 	
 	public void CreateNewTheme(RequestParams param) 
 	{
