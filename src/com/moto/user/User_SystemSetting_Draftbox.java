@@ -5,17 +5,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.activeandroid.query.Select;
-import com.moto.listview.MyListView;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
 import com.moto.model.DataBaseModel;
 import com.moto.utils.DateUtils;
 import com.rockerhieu.emojicon.EmojiconTextView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +23,7 @@ import java.util.List;
  * Created by chen on 14-7-5.
  */
 public class User_SystemSetting_Draftbox extends Moto_RootActivity{
-    private MyListView listView;
+    private ListView listView;
     private String subject = "";
     private DataBaseModel dataBaseModel;
     private List<DataBaseModel> list = new ArrayList<DataBaseModel>();
@@ -38,11 +38,28 @@ public class User_SystemSetting_Draftbox extends Moto_RootActivity{
 
         adapter = new MyAdapter(this,list);
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                if(list.get(i).type == 1)
+//                {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("data",list.get(i));
+                    pushToNextActivity(bundle, User_Draftbox_writeLive.class);
+//                }
+//                else{
+//                    Bundle bundle = new Bundle();
+//                    bundle.putSerializable("data",list.get(i));
+//                    pushToNextActivity(bundle,User_Draftbox_writepost.class);
+//                }
+            }
+        });
     }
 
     private void init(){
 
-        listView = (MyListView)findViewById(R.id.user_system_drafbox_listview);
+        listView = (ListView)findViewById(R.id.user_system_drafbox_listview);
     }
 
     private void getDataBaseData()
@@ -95,8 +112,8 @@ public class User_SystemSetting_Draftbox extends Moto_RootActivity{
             holder = new ViewHolder();
             holder.user_system_draftbox_kid_time = (TextView)convertView.findViewById(R.id.user_system_draftbox_kid_time);
             holder.subject = (EmojiconTextView)convertView.findViewById(R.id.user_system_draftbox_kid_subject);
-            holder.subject.setText(list.get(position).subject);
-            holder.user_system_draftbox_kid_time.setText(DateUtils.getUTCTimestamp(list.get(position).time));
+            holder.subject.setText(list.get(position).message);
+            holder.user_system_draftbox_kid_time.setText(DateUtils.timestampToDeatil(list.get(position).time));
             return convertView;
         }
 

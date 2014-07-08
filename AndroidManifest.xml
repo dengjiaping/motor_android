@@ -192,6 +192,16 @@
             android:name="com.moto.user.User_feedbackSetting"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
+
+        <activity
+            android:name="com.moto.user.User_Draftbox_writeLive"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+
+        <activity
+            android:name="com.moto.user.User_Draftbox_writepost"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
           
           <activity 
             android:name="com.moto.user.User_numPost"
@@ -352,6 +362,10 @@
      <service 
              android:name="com.moto.welcome.UpdateServise"
              android:enabled="true">
+        </service>
+        <service
+            android:name="com.moto.live.SendLiveService"
+            android:enabled="true">
         </service>
      <meta-data android:name="api_key" android:value="07Wwhw3vfVWn4SIM0xVi4I4T" />
     </application>

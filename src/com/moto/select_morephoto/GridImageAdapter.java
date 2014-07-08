@@ -56,7 +56,6 @@ public class GridImageAdapter extends BaseAdapter {
 //			imageView.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, dipToPx(65)));
 		} else
 			holder = (ViewHolder) convertView.getTag();
-			
 		String path;
 		if (dataList != null && position<dataList.size() )
 			path = dataList.get(position);

@@ -33,6 +33,7 @@ public class InformTouchmeActivity extends Moto_RootActivity {
     private LinkedList<HashMap<String,String>> list = new LinkedList<HashMap<String,String>>();
     private HashMap<String,String> map;
     private Handler handler;
+    private Intent intent;
     private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
     private LinkedList<LinkedList<HashMap<String,Integer>>> WidthHeightList = new LinkedList<LinkedList<HashMap<String,Integer>>>();
     @Override
@@ -65,17 +66,14 @@ public class InformTouchmeActivity extends Moto_RootActivity {
         touchmeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent();
                 String fid = list.get(position-1).get("fid");
                 String tid = list.get(position-1).get("tid");
-                String pid = list.get(position-1).get("pid");
-                String cid = list.get(position-1).get("cid");
                 if(fid.equals("1"))
                 {
                     intent = new Intent();
                     intent.putExtra("tid", tid);
                     intent.setClass(InformTouchmeActivity.this, Live_kidsAllResponse.class);
-                    startActivityForResult(intent, 304);
+                    startActivity(intent);
                 }
 //                else if(fid.equals("1"))
 //                {
@@ -101,7 +99,7 @@ public class InformTouchmeActivity extends Moto_RootActivity {
                     intent.putExtra("fid","37");
                     intent.putExtra("subject", list.get(position-1).get("subject").toString());
                     intent.setClass(InformTouchmeActivity.this, Theme_Post.class);
-                    startActivityForResult(intent, 305);
+                    startActivity(intent);
                 }
             }
         });
@@ -110,9 +108,7 @@ public class InformTouchmeActivity extends Moto_RootActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        list.clear();
-        carList.clear();
-        WidthHeightList.clear();
+
         GetAsyData();
 
     }
@@ -130,6 +126,9 @@ public class InformTouchmeActivity extends Moto_RootActivity {
     @Override
     public void handleNetworkDataWithSuccess(JSONObject jsonObject) throws JSONException {
         super.handleNetworkDataWithSuccess(jsonObject);
+        list.clear();
+        carList.clear();
+        WidthHeightList.clear();
         String touchme_details = jsonObject
                 .getString("at_list");
         JSONArray touchmearray = new JSONArray(touchme_details);

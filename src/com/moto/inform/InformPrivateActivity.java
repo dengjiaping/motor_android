@@ -107,7 +107,7 @@ public class InformPrivateActivity extends Moto_RootActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        privateList.clear();
+
         GetAsyData();
 
     }
@@ -125,6 +125,7 @@ public class InformPrivateActivity extends Moto_RootActivity {
     @Override
     public void handleNetworkDataWithSuccess(JSONObject jsonObject) throws JSONException {
         super.handleNetworkDataWithSuccess(jsonObject);
+        privateList.clear();
         String private_details = jsonObject
                 .getString("conversation_list");
         JSONArray privatearray = new JSONArray(private_details);

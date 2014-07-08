@@ -17,6 +17,10 @@ public class UserNetworkModel extends MotoNetWorkModel {
  		this.connectWithPostData(params, "searchuser");
 	}
 
+    public void isExpired( RequestParams params) {
+        this.connectWithPostData(params, "isexpired");
+    }
+
     public void readUserproFile(String name,String token) {
         RequestParams params = new RequestParams();
         params.put("username", name);

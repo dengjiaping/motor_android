@@ -1,11 +1,13 @@
 package com.moto.main;
 
 import android.app.TabActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -27,16 +29,25 @@ import com.facebook.rebound.SpringConfig;
 import com.facebook.rebound.SpringConfigRegistry;
 import com.facebook.rebound.SpringSystem;
 import com.facebook.rebound.SpringUtil;
+import com.loopj.android.http.RequestParams;
 import com.moto.inform.Inform_main;
 import com.moto.live.LiveActivity;
 import com.moto.live.Live_Kids_Own;
+import com.moto.live.WriteLiveActivity;
 import com.moto.main.AbstractInOutAnimationSet.Direction;
+import com.moto.model.NetWorkModelListener;
+import com.moto.model.UserNetworkModel;
+import com.moto.mydialog.CustomDialog;
 import com.moto.select_morephoto.AlbumActivity;
 import com.moto.square.SquareActivity;
 import com.moto.toast.ToastClass;
 import com.moto.user.UserActivity;
 import com.moto.user.User_Login;
 import com.moto.utils.StringUtils;
+import com.moto.welcome.Utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -62,6 +73,7 @@ public class Moto_MainActivity extends TabActivity implements View.OnClickListen
     private RotateAnimation rAnimation; //设置旋转
     private boolean IsRotate = true;
     private SharedPreferences mshared;
+    private SharedPreferences.Editor editor;
     // Create a spring configuration based on Origami values from the Photo Grid example.
     private static final SpringConfig ORIGAMI_SPRING_CONFIG = SpringConfig.fromOrigamiTensionAndFriction(40, 7);
     //	private TextView main_tab_new_message;
@@ -197,10 +209,54 @@ public class Moto_MainActivity extends TabActivity implements View.OnClickListen
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         spring.setEndValue(0);
-                        Intent intent = new Intent();
-                        intent.setClass(Moto_MainActivity.this, Live_Kids_Own.class);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.bottom_in, R.anim.bottom_exit);
+                        //在无网络状态、tid!=-1即续写直播
+                        if(!Utils.isNetworkAvailable(Moto_MainActivity.this) && !ToastClass.GetTid(Moto_MainActivity.this).equals("-1"))
+                        {
+                            Intent intent = new Intent();
+                            intent.setClass(Moto_MainActivity.this, WriteLiveActivity.class);
+                            startActivity(intent);
+                        }
+                        //在无网状态下、tid=-1即新建直播
+                        else if(!Utils.isNetworkAvailable(Moto_MainActivity.this) && ToastClass.GetTid(Moto_MainActivity.this).equals("-1"))
+                        {
+                            final CustomDialog.Builder builder = new CustomDialog.Builder(Moto_MainActivity.this);
+                            builder.setTitle
+                                    ("创建您的直播：");
+                            builder.setPositiveButton("创建", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    //设置你的操作事项
+                                    if(builder.subject.getText().toString().replaceAll(" ", "").equals(""))
+                                    {
+                                        ToastClass.SetToast(Moto_MainActivity.this, "请输入主题!");
+                                    }
+                                    else {
+                                        Intent intent = new Intent();
+                                        intent.putExtra("subject", builder.subject.getText().toString());
+                                        intent.setClass(Moto_MainActivity.this, WriteLiveActivity.class);
+                                        startActivityForResult(intent, 301);
+                                    }
+                                }
+                            });
+
+                            builder.setNegativeButton("取消",
+                                    new android.content.DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                            builder.create().show();
+                        }
+                        //有网状态，或者未登录
+                        else
+                        {
+                            Intent intent = new Intent();
+                            intent.setClass(Moto_MainActivity.this, Live_Kids_Own.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.bottom_in, R.anim.bottom_exit);
+                        }
+
 //                        //弹球
 //                        toggleButton();
                         break;
@@ -224,6 +280,9 @@ public class Moto_MainActivity extends TabActivity implements View.OnClickListen
             }
         });
         layout.bringToFront();
+
+        //获取tid，判断是否续写游记
+        GetAsyData();
 
 //        radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 //            @Override
@@ -501,6 +560,59 @@ public class Moto_MainActivity extends TabActivity implements View.OnClickListen
         live_check = main_tab_live.isChecked();
         inform_check = main_tab_inform.isChecked();
         user_check = main_tab_user.isChecked();
+    }
+
+
+    private void GetAsyData()
+    {
+        String token = ToastClass.GetTokenString(Moto_MainActivity.this);
+        if(!token.equals(""))
+        {
+            RequestParams param = new RequestParams();
+            param.add("token",token);
+            UserNetworkModel userNetworkModel = new UserNetworkModel(new NetWorkModelListener() {
+                @Override
+                public void handleNetworkDataWithSuccess(JSONObject JSONObject) throws JSONException {
+                    mshared = getSharedPreferences("usermessage", 0);
+                    editor = mshared.edit();
+                    String str = JSONObject.getString("expiredStatus");
+                    if(str.equals("expired"))
+                    {
+                        ToastClass.SetToast(Moto_MainActivity.this,"你的账号在其他地方使用，请重新登录！");
+                        editor.putString("email", "");
+                        editor.putString("username", "");
+                        editor.putString("token", "");
+                        editor.putString("tid","");
+                    }
+
+                    else
+                        editor.putString("tid",JSONObject.getString("tid"));
+                    editor.commit();
+                }
+
+                @Override
+                public void handleNetworkDataWithFail(JSONObject jsonObject) throws JSONException {
+
+                }
+
+                @Override
+                public void handleNetworkDataWithUpdate(float progress) throws JSONException {
+
+                }
+
+                @Override
+                public void handleNetworkDataGetFail(String message) throws JSONException {
+
+                }
+
+                @Override
+                public void handleNetworkDataStart() throws JSONException {
+
+                }
+            },Moto_MainActivity.this);
+
+            userNetworkModel.isExpired(param);
+        }
     }
 
 

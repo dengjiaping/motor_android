@@ -272,7 +272,6 @@ public class Live_kidsAllResponse extends MyActivity{
 					}
 					JSONObject jsonObject = new JSONObject(data);
 					if (jsonObject.getString("is").equals("1")) {
-                        Log.e("asds",data);
                         String data_details = jsonObject
                         .getString("comment_list");
 						JSONArray array = new JSONArray(data_details);

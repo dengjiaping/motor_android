@@ -24,17 +24,20 @@ import com.moto.constant.Constant;
 import com.moto.constant.DialogMethod;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
+import com.moto.model.DataBaseModel;
 import com.moto.model.NetWorkModelListener;
 import com.moto.model.SquareNetworkModel;
 import com.moto.qiniu.img.Image;
 import com.moto.select_morephoto.ImageManager2;
 import com.moto.toast.ToastClass;
 import com.moto.utils.CompressUtils;
+import com.moto.utils.DateUtils;
 import com.rockerhieu.emojicon.EmojiconEditText;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
 import com.rockerhieu.emojicon.EmojiconsFragment;
 import com.rockerhieu.emojicon.emoji.Emojicon;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,27 +46,27 @@ import java.io.IOException;
 
 public class Publish_post extends Moto_RootActivity implements OnClickListener,NetWorkModelListener,EmojiconsFragment.OnEmojiconBackspaceClickedListener,EmojiconGridFragment.OnEmojiconClickedListener{
     
-	private String filepath="";
-	private ImageView leftpage;
-	private EmojiconEditText et_sendmessage;
-	private String fid;
-	private View view;
-	private EditText write_theme;
-    private ImageView mention;
-	private ImageView emotion;
-	private ImageView send;
-	private ImageView own_photos;
-	private SharedPreferences TokenShared;
-	private String tokenString;
-	private RelativeLayout.LayoutParams layoutParams;
-	private ImageView photos;
-	private boolean isHavePhoto = false;
-	private ImageView camera;
-    private Image photofiles;
-	RequestParams param;
-	private Handler handler;
-    private String mentionUsername = "";
-    private boolean IsHaveUserName = false;
+	protected String filepath="";
+    protected ImageView leftpage;
+    protected EmojiconEditText et_sendmessage;
+    protected String fid;
+    protected View view;
+    protected EditText write_theme;
+    protected ImageView mention;
+    protected ImageView emotion;
+    protected ImageView send;
+    protected ImageView own_photos;
+    protected SharedPreferences TokenShared;
+    protected String tokenString;
+    protected RelativeLayout.LayoutParams layoutParams;
+    protected ImageView photos;
+    protected boolean isHavePhoto = false;
+    protected ImageView camera;
+    protected Image photofiles;
+    protected RequestParams param;
+    protected Handler handler;
+    protected String mentionUsername = "";
+    protected boolean IsHaveUserName = false;
 	Intent intent;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

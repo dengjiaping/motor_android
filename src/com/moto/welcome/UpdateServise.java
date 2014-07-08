@@ -27,7 +27,6 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.RemoteViews;
 public class UpdateServise extends Service implements NetWorkModelListener{
     private int len;  
     private NotificationManager manager;  

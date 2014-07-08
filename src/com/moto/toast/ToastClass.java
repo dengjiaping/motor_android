@@ -52,4 +52,16 @@ public class ToastClass {
         }
         return tokenString;
     }
+
+    public static String GetTid(Activity activity)
+    {
+        TokenShared = activity.getSharedPreferences("usermessage", 0);
+        tokenString = TokenShared.getString("tid", "");
+        if(tokenString.equals(""))
+        {
+            return "";
+
+        }
+        return tokenString;
+    }
 }

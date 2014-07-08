@@ -10,9 +10,11 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,6 +41,7 @@ import com.moto.tryimage.PhotoUtils;
 import com.moto.utils.CompressUtils;
 import com.moto.utils.DateUtils;
 import com.moto.utils.StringUtils;
+import com.moto.welcome.UpdateServise;
 import com.rockerhieu.emojicon.EmojiconEditText;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
 import com.rockerhieu.emojicon.EmojiconsFragment;
@@ -53,56 +56,58 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class WriteLiveActivity extends Moto_RootActivity implements OnClickListener,EmojiconsFragment.OnEmojiconBackspaceClickedListener,EmojiconGridFragment.OnEmojiconClickedListener{
-	private ImageView camera;
-	private ImageView photos;
+	protected ImageView camera;
+    protected ImageView photos;
 
-    private GridView image_grid;
-    private int picPosition = 0;//记录需要改变的图片位置
-	private View view;
-	private TextView end_live;
-	private ImageView emotion;
-    private ImageView mention;
-	private LinearLayout position;
-	private ImageView return_live;
-	private TextView real_position;
-	private ImageView write_send;
-	private String subject ="";
-	private String location="";
-	private EmojiconEditText et_sendmessage;
-	private SharedPreferences TokenShared;
-	private String tokenString;
-	private String is;
-	private JSONObject jsonObject;
-	private TextView live_name;
-	private TextView live_user_name;
-	private RelativeLayout.LayoutParams layoutParams;
-	private boolean isHavePhoto = false;
-	private Handler handler;
-	private String lat = "";
-	private String lon = "";
-	private String locationsign = "";
-	private String filepath;
-    private Intent intent;
-    private RequestParams param;
+    protected GridView image_grid;
+    protected int picPosition = 0;//记录需要改变的图片位置
+    protected View view;
+    protected TextView end_live;
+    protected ImageView emotion;
+    protected ImageView mention;
+    protected LinearLayout position;
+    protected ImageView return_live;
+    protected TextView real_position;
+    protected ImageView write_send;
+    protected String subject ="";
+    protected String location="";
+    protected EmojiconEditText et_sendmessage;
+    protected SharedPreferences TokenShared;
+    protected String tokenString;
+    protected String is;
+    protected JSONObject jsonObject;
+    protected TextView live_name;
+    protected TextView live_user_name;
+    protected FrameLayout.LayoutParams layoutParams;
+    protected boolean isHavePhoto = false;
+    protected Handler handler;
+    protected String lat = "";
+    protected String lon = "";
+    protected String locationsign = "";
+    protected String filepath;
+    protected Intent intent;
+    protected RequestParams param;
 
-    private String mentionUsername = "";
-    private boolean IsHaveUserName = false;
-	
-	private ArrayList<String> dataList = new ArrayList<String>();
-    private LinkedList<String> compressList = new LinkedList<String>();
-	private GridImageAdapter gridImageAdapter;
+    protected String mentionUsername = "";
+    protected boolean IsHaveUserName = false;
 
-	private String EndLiveUri = path+"api/live/endliving";
-	private ArrayList<Image> lovecarImage = new ArrayList<Image>();
+    private SharedPreferences mshared;
+    private SharedPreferences.Editor editor;
+
+    protected ArrayList<String> dataList = new ArrayList<String>();
+    protected LinkedList<String> compressList = new LinkedList<String>();
+    protected GridImageAdapter gridImageAdapter;
+
+    protected String EndLiveUri = path+"api/live/endliving";
+    protected ArrayList<Image> lovecarImage = new ArrayList<Image>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.writelive);
 		init();
-		
-		
-		gridImageAdapter = new GridImageAdapter(this, dataList);
+
+        gridImageAdapter = new GridImageAdapter(this, dataList);
 		image_grid.setAdapter(gridImageAdapter);
 		
 		image_grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -175,10 +180,15 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
                         WriteLiveActivity.this.finish();
                         break;
                     case Constant.MSG_SUCCESS:
+                        mshared = getSharedPreferences("usermessage", 0);
+                        editor = mshared.edit();
+                        editor.putString("tid","-1");
+                        editor.commit();
                         DialogMethod.stopProgressDialog();
                         ToastClass.SetImageToast(WriteLiveActivity.this,"成功结束直播");
                         setResult(303);
                         WriteLiveActivity.this.finish();
+
                         break;
                     case Constant.MSG_FALTH:
                         String messageString = (String) msg.obj;
@@ -208,7 +218,7 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 	
 	private void init() {
 		// TODO Auto-generated method stub
-		layoutParams =  new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.FILL_PARENT);
+		layoutParams =  new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.FILL_PARENT);
 		mention = (ImageView)findViewById(R.id.mention);
 		camera = (ImageView)findViewById(R.id.camera);
 		photos = (ImageView)findViewById(R.id.photos);
@@ -312,8 +322,9 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 				DialogMethod.dialogShow(WriteLiveActivity.this,"请编辑内容!");
 			}
 			else {
-                DialogMethod.startProgressDialog(WriteLiveActivity.this,"正在发送");
+
 				GetAsyData();
+
 			}
 		}
 		if(v == end_live)
@@ -421,46 +432,52 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 	}
 	private void GetAsyData() {
 		// TODO Auto-generated method stub
-		param = new RequestParams();
-		param.put("token", tokenString);
-		param.put("subject", subject);
-		param.put("message", et_sendmessage.getText().toString());
-		param.put("location", location);
-		param.put("longitude", lon);
-		param.put("latitude", lat);
-		param.put("locationsign", locationsign);
-        if(IsHaveUserName)
-        {
-            param.put("atuser",mentionUsername);
-        }
-
-		LiveNetworkModel liveNetworkModel = new LiveNetworkModel(this, this);
-		ArrayList<String> tdataList = StringUtils.getIntentArrayList(dataList);
-		int num1 = tdataList.size();
-		try {
-            compressList.clear();
-			for (int i = 0; i < num1; i++) {
-                String compressPath = CompressUtils.GetCompressPath(tdataList.get(i), 480);
-				lovecarImage.add(new Image(compressPath,
-                                           "file"));
-
-                compressList.add(compressPath);
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-
+        ArrayList<String> tdataList = StringUtils.getIntentArrayList(dataList);
         //存数据库
-        DataBaseModel dataBaseModel = new DataBaseModel(1,tokenString,"",subject,et_sendmessage.getText().toString(),location,
-                lon,lat,locationsign,mentionUsername,IsHaveUserName,new JSONArray(tdataList).toString(),isHavePhoto,"",true, DateUtils.getUTCCurrentTimestamp());
+        DataBaseModel dataBaseModel = new DataBaseModel(tokenString,"",subject,et_sendmessage.getText().toString(),location,
+                lon,lat,locationsign,mentionUsername,IsHaveUserName,new JSONArray(tdataList).toString(),isHavePhoto, DateUtils.getUTCCurrentTimestamp());
         dataBaseModel.save();
-		if(isHavePhoto)
-		{
-			liveNetworkModel.writelive(param, lovecarImage,"photo","photoinfo");
-		}
-		else {
-			liveNetworkModel.writelive(param);
-		}
+
+        intent = new Intent(WriteLiveActivity.this, SendLiveService.class);
+        startService(intent);
+
+//		param = new RequestParams();
+//		param.put("token", tokenString);
+//		param.put("subject", subject);
+//		param.put("message", et_sendmessage.getText().toString());
+//		param.put("location", location);
+//		param.put("longitude", lon);
+//		param.put("latitude", lat);
+//		param.put("locationsign", locationsign);
+//        if(IsHaveUserName)
+//        {
+//            param.put("atuser",mentionUsername);
+//        }
+//
+//		LiveNetworkModel liveNetworkModel = new LiveNetworkModel(this, this);
+//
+//		int num1 = tdataList.size();
+//		try {
+//            compressList.clear();
+//			for (int i = 0; i < num1; i++) {
+//                String compressPath = CompressUtils.GetCompressPath(tdataList.get(i), 480);
+//				lovecarImage.add(new Image(compressPath,
+//                                           "file"));
+//
+//                compressList.add(compressPath);
+//			}
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//
+//
+//		if(isHavePhoto)
+//		{
+//			liveNetworkModel.writelive(param, lovecarImage,"photo","photoinfo");
+//		}
+//		else {
+//			liveNetworkModel.writelive(param);
+//		}
 	}
 	
 	//结束直播

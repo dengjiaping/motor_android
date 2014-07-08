@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -151,15 +152,18 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
     @Override
     public void handleNetworkDataWithSuccess(JSONObject jsonObject) throws JSONException {
         // TODO Auto-generated method stub
+        String tid = jsonObject.getString("tid");
         JSONObject jsonObject2 = new JSONObject(jsonObject.getString("userinfo"));
         String uidString = jsonObject2.getString("email");
         String usernameString = jsonObject2.getString("username");
         String tokenString = jsonObject2.getString("token");
+
         mshared = getSharedPreferences("usermessage", 0);
         editor = mshared.edit();
         editor.putString("email", uidString);
         editor.putString("username", usernameString);
         editor.putString("token", tokenString);
+        editor.putString("tid",tid);
         editor.commit();
         handler.obtainMessage(Constant.MSG_SUCCESS)
                 .sendToTarget();

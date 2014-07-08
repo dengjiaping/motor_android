@@ -319,7 +319,6 @@ public class LiveKidsResponse extends MyActivity implements OnClickListener{
 					{
 						list.clear();
 					}
-                    Log.e("data",data);
                     JSONObject jsonObject = new JSONObject(data);
 					if (jsonObject.getString("is").equals("1")) {
 						String data_details = jsonObject
