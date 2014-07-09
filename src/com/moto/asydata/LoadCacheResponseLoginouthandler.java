@@ -29,7 +29,7 @@ public class LoadCacheResponseLoginouthandler extends AsyncHttpResponseHandler{
     @Override
     public void onFailure(Throwable error, String content) {
         super.onFailure(error, content);
-        mHandler.onFailure("", "网络连接超时 ");
+        mHandler.onFailure("error", error+"");
     }
     @Override
     public void onFinish() {

@@ -2,6 +2,7 @@ package com.moto.user;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ public class User_SystemSetting_Draftbox extends Moto_RootActivity{
 //                {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("data",list.get(i));
+                    bundle.putString("id",list.get(i).getId()+"");
                     pushToNextActivity(bundle, User_Draftbox_writeLive.class);
 //                }
 //                else{

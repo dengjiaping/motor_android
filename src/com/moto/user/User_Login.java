@@ -153,6 +153,7 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
     public void handleNetworkDataWithSuccess(JSONObject jsonObject) throws JSONException {
         // TODO Auto-generated method stub
         String tid = jsonObject.getString("tid");
+        String subject = jsonObject.getString("subject");
         JSONObject jsonObject2 = new JSONObject(jsonObject.getString("userinfo"));
         String uidString = jsonObject2.getString("email");
         String usernameString = jsonObject2.getString("username");
@@ -164,6 +165,7 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
         editor.putString("username", usernameString);
         editor.putString("token", tokenString);
         editor.putString("tid",tid);
+        editor.putString("subject",subject);
         editor.commit();
         handler.obtainMessage(Constant.MSG_SUCCESS)
                 .sendToTarget();

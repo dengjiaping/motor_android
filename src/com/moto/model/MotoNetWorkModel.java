@@ -108,7 +108,8 @@ public class MotoNetWorkModel {
 				// TODO Auto-generated method stub
 				super.onFailure(error, message);
 				try {
-					netWorkModelListener.handleNetworkDataGetFail(message);
+                    Log.e("sadsd",error);
+					netWorkModelListener.handleNetworkDataGetFail("网络连接超时");
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

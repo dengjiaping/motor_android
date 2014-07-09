@@ -132,6 +132,8 @@ public class User_SystemSetting extends Moto_RootActivity implements OnClickList
 			editor.putString("email", "");
 			editor.putString("username", "");
 			editor.putString("token", "");
+            editor.putString("tid","");
+            editor.putString("subject","");
 			editor.commit();  //设置一下   必须加上这一句
 			setResult(301);
 			User_SystemSetting.this.finish();

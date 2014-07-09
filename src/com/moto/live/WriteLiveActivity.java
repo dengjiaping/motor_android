@@ -183,6 +183,7 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
                         mshared = getSharedPreferences("usermessage", 0);
                         editor = mshared.edit();
                         editor.putString("tid","-1");
+                        editor.putString("subject","");
                         editor.commit();
                         DialogMethod.stopProgressDialog();
                         ToastClass.SetImageToast(WriteLiveActivity.this,"成功结束直播");
@@ -242,13 +243,21 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 		position.setOnClickListener(this);
 		return_live.setOnClickListener(this);
 		write_send.setOnClickListener(this);
-        
+
+        TokenShared = getSharedPreferences("usermessage", 0);
+        tokenString = TokenShared.getString("token", "");
+        live_user_name.setText(TokenShared.getString("username", ""));
+
+
 		intent = getIntent();
 		subject = intent.getStringExtra("subject");
 		live_name.setText(subject);
-		TokenShared = getSharedPreferences("usermessage", 0);
-		tokenString = TokenShared.getString("token", "");
-		live_user_name.setText(TokenShared.getString("username", ""));
+
+        if(!TokenShared.getString("tid", "").equals("-1"))
+        {
+            subject = TokenShared.getString("subject","");
+        }
+
 	}
 	@Override
 	public void onClick(View v) {
@@ -322,7 +331,11 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 				DialogMethod.dialogShow(WriteLiveActivity.this,"请编辑内容!");
 			}
 			else {
-
+                ArrayList<String> tdataList = StringUtils.getIntentArrayList(dataList);
+                //存数据库
+                DataBaseModel dataBaseModel = new DataBaseModel(tokenString,subject,et_sendmessage.getText().toString(),location,
+                        lon,lat,locationsign,mentionUsername,IsHaveUserName,new JSONArray(tdataList).toString(),isHavePhoto, DateUtils.getUTCCurrentTimestamp());
+                dataBaseModel.save();
 				GetAsyData();
 
 			}
@@ -430,16 +443,13 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
             et_sendmessage.setText(et_sendmessage.getText().toString()+"@"+mentionUsername);
         }
 	}
-	private void GetAsyData() {
+	protected void GetAsyData() {
 		// TODO Auto-generated method stub
-        ArrayList<String> tdataList = StringUtils.getIntentArrayList(dataList);
-        //存数据库
-        DataBaseModel dataBaseModel = new DataBaseModel(tokenString,"",subject,et_sendmessage.getText().toString(),location,
-                lon,lat,locationsign,mentionUsername,IsHaveUserName,new JSONArray(tdataList).toString(),isHavePhoto, DateUtils.getUTCCurrentTimestamp());
-        dataBaseModel.save();
+
 
         intent = new Intent(WriteLiveActivity.this, SendLiveService.class);
         startService(intent);
+
 
 //		param = new RequestParams();
 //		param.put("token", tokenString);

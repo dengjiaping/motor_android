@@ -1,5 +1,6 @@
 package com.moto.live;
 
+import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
@@ -31,7 +32,7 @@ import java.util.List;
 /**
  * Created by chen on 14-7-8.
  */
-public class SendLiveService extends Service implements NetWorkModelListener{
+public class SendLiveService extends IntentService implements NetWorkModelListener{
     private List<DataBaseModel> list = new ArrayList<DataBaseModel>();
     private ArrayList<String> dataList = new ArrayList<String>();
     protected LinkedList<String> compressList = new LinkedList<String>();
@@ -39,36 +40,42 @@ public class SendLiveService extends Service implements NetWorkModelListener{
     private SharedPreferences mshared;
     private SharedPreferences.Editor editor;
     private NotificationManager manager;
-    private int num = 0;
+    private DataBaseModel dataBaseModel;
+    NotificationCompat.Builder builder;
+
     @Override
-    public void onCreate() {
-        super.onCreate();
+    protected void onHandleIntent(Intent intent) {
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 //        notif = new Notification();
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder = new NotificationCompat.Builder(this);
         builder.setContentTitle("机车党")
                 .setSmallIcon(R.drawable.icon_main)
                 .setTicker("正在发送...");
-//        notif.icon = R.drawable.icon_main;
-//        notif.tickerText = "正在下载...";
-        //通知栏显示所用到的布局文件
-//        notif.contentView = new RemoteViews(getPackageName(), R.layout.update_notification_progress);
-        builder.setProgress(100, 0, false);
         manager.notify(0, builder.build());
+        list.clear();
         list = new Select().from(DataBaseModel.class).execute();
-        Log.e("sdsdsd",list.size()+"");
+        if(list.size() > 0)
+            dataBaseModel = list.get(0);
+
+        Log.e("aaaaa",dataBaseModel.getId()+"");
         if(Utils.isNetworkAvailable(this) && list.size() > 0)
         {
             sendAsyData();
         }
+    }
 
+    public SendLiveService(String name) {
+        super(name);
+    }
+    public SendLiveService() {
+        super(null);
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    public void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
     }
-
     @Override
     public void handleNetworkDataStart() throws JSONException {
 
@@ -81,40 +88,50 @@ public class SendLiveService extends Service implements NetWorkModelListener{
         compressList.clear();
         lovecarImage.clear();
         //删除数据库里面的数据
-        new Delete().from(DataBaseModel.class).where("id = ?", list.get(num).getId()).execute();
-        DataBaseModel a;
-        num++;
-        Log.e("hhhhh",num+"");
+        dataBaseModel.delete();
+
+
         mshared = getSharedPreferences("usermessage", 0);
         editor = mshared.edit();
         editor.putString("tid","1");
         editor.commit();
-        if(Utils.isNetworkAvailable(this) && num < list.size())
+        list.clear();
+        list = new Select().from(DataBaseModel.class).execute();
+        if(list.size() > 0)
+            dataBaseModel = list.get(0);
+        if(Utils.isNetworkAvailable(this) && list.size() > 0)
         {
             sendAsyData();
+        }
+        if(list.size() == 0)
+        {
+            builder.setContentTitle("机车党")
+                    .setSmallIcon(R.drawable.icon_main)
+                    .setTicker("发送成功");
+            manager.notify(0, builder.build());
+            manager.cancelAll();
         }
 
     }
 
     @Override
     public void handleNetworkDataWithFail(JSONObject jsonObject) throws JSONException {
-
+        Log.e("sdsfsfds","sdvsdfdsfdsfd");
     }
 
     @Override
     public void handleNetworkDataWithUpdate(float progress) throws JSONException {
-
+        Log.e("pro","sdvsdfdsfdsfd");
     }
 
     @Override
     public void handleNetworkDataGetFail(String message) throws JSONException {
-
+        Log.e("sdsfsfds",message);
     }
 
     private void sendAsyData(){
         LiveNetworkModel liveNetworkModel = new LiveNetworkModel(this, this);
-        DataBaseModel dataBaseModel = list.get(num);
-        Log.e("ghghghg",num+"");
+
         RequestParams param = new RequestParams();
         param.put("token", dataBaseModel.token);
         param.put("subject", dataBaseModel.subject);

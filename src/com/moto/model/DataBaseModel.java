@@ -84,7 +84,7 @@ public class DataBaseModel extends Model implements Serializable{
         this.IsHaveUserName = isHaveUserName;
     }
 
-    public DataBaseModel(String token,String fid,
+    public DataBaseModel(String token,
                          String subject, String message,
                          String location, String longitude,
                          String latitude,  String locationsign,

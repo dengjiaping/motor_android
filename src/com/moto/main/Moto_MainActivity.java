@@ -3,9 +3,13 @@ package com.moto.main;
 import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -22,6 +26,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 
+import com.activeandroid.query.Select;
 import com.facebook.rebound.BaseSpringSystem;
 import com.facebook.rebound.SimpleSpringListener;
 import com.facebook.rebound.Spring;
@@ -30,20 +35,28 @@ import com.facebook.rebound.SpringConfigRegistry;
 import com.facebook.rebound.SpringSystem;
 import com.facebook.rebound.SpringUtil;
 import com.loopj.android.http.RequestParams;
+import com.moto.constant.Constant;
+import com.moto.constant.DialogMethod;
 import com.moto.inform.Inform_main;
 import com.moto.live.LiveActivity;
 import com.moto.live.Live_Kids_Own;
+import com.moto.live.SendLiveService;
 import com.moto.live.WriteLiveActivity;
 import com.moto.main.AbstractInOutAnimationSet.Direction;
+import com.moto.model.CacheModel;
+import com.moto.model.DataBaseModel;
 import com.moto.model.NetWorkModelListener;
 import com.moto.model.UserNetworkModel;
 import com.moto.mydialog.CustomDialog;
+import com.moto.mymap.MyMapApplication;
 import com.moto.select_morephoto.AlbumActivity;
 import com.moto.square.SquareActivity;
 import com.moto.toast.ToastClass;
 import com.moto.user.UserActivity;
 import com.moto.user.User_Login;
 import com.moto.utils.StringUtils;
+import com.moto.utils.UrlUtils;
+import com.moto.welcome.NetworkBroadCast;
 import com.moto.welcome.Utils;
 
 import org.json.JSONException;
@@ -51,6 +64,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Moto_MainActivity extends TabActivity implements View.OnClickListener{
     /** Called when the activity is first created. */
@@ -89,6 +103,10 @@ public class Moto_MainActivity extends TabActivity implements View.OnClickListen
     private String filepath;
     private ArrayList<String> dataList = new ArrayList<String>();
 
+    //网络监听
+    private NetworkBroadCast networkBroadCast;
+    private Handler handler;
+
     //token
     private SharedPreferences TokenShared;
     private String tokenString;
@@ -109,6 +127,36 @@ public class Moto_MainActivity extends TabActivity implements View.OnClickListen
         tabHost=this.getTabHost();
         TabHost.TabSpec spec;
         Intent intent;
+
+
+
+        handler = new Handler(){
+
+            @Override
+            public void handleMessage(Message msg) {
+                // TODO Auto-generated method stub
+
+                switch(msg.what)
+                {
+                    //获取成功
+                    case Constant.MSG_HAVENETWORK:
+                        List<DataBaseModel> list = new Select().from(DataBaseModel.class).execute();
+                        if(list.size() > 0) {
+                            Intent intent = new Intent(Moto_MainActivity.this, SendLiveService.class);
+                            startService(intent);
+                        }
+                        break;
+                }
+                super.handleMessage(msg);
+            }
+
+        };
+
+        //注册网络变化监听
+        networkBroadCast = new NetworkBroadCast(handler);
+        IntentFilter mFilter = new IntentFilter();
+        mFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkBroadCast, mFilter);
 
         //初始化四个图标
         button_camera = (InOutImageButton)findViewById(R.id.button_camera);
@@ -210,7 +258,8 @@ public class Moto_MainActivity extends TabActivity implements View.OnClickListen
                     case MotionEvent.ACTION_CANCEL:
                         spring.setEndValue(0);
                         //在无网络状态、tid!=-1即续写直播
-                        if(!Utils.isNetworkAvailable(Moto_MainActivity.this) && !ToastClass.GetTid(Moto_MainActivity.this).equals("-1"))
+                        if(!Utils.isNetworkAvailable(Moto_MainActivity.this) && !ToastClass.GetTid(Moto_MainActivity.this).equals("-1")
+                                && !ToastClass.GetTid(Moto_MainActivity.this).equals(""))
                         {
                             Intent intent = new Intent();
                             intent.setClass(Moto_MainActivity.this, WriteLiveActivity.class);
@@ -573,20 +622,26 @@ public class Moto_MainActivity extends TabActivity implements View.OnClickListen
             UserNetworkModel userNetworkModel = new UserNetworkModel(new NetWorkModelListener() {
                 @Override
                 public void handleNetworkDataWithSuccess(JSONObject JSONObject) throws JSONException {
+
                     mshared = getSharedPreferences("usermessage", 0);
                     editor = mshared.edit();
                     String str = JSONObject.getString("expiredStatus");
                     if(str.equals("expired"))
                     {
-                        ToastClass.SetToast(Moto_MainActivity.this,"你的账号在其他地方使用，请重新登录！");
+                        ToastClass.SetToast(Moto_MainActivity.this,"你的账号已经过期,请重新登录");
                         editor.putString("email", "");
                         editor.putString("username", "");
                         editor.putString("token", "");
                         editor.putString("tid","");
+                        editor.putString("subject","");
                     }
 
                     else
+                    {
                         editor.putString("tid",JSONObject.getString("tid"));
+                        editor.putString("subject",JSONObject.getString("subject"));
+                    }
+
                     editor.commit();
                 }
 
@@ -615,6 +670,12 @@ public class Moto_MainActivity extends TabActivity implements View.OnClickListen
         }
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(networkBroadCast);
+    }
 
 
 }
