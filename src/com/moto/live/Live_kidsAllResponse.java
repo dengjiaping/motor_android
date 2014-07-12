@@ -16,6 +16,7 @@ import com.moto.asydata.LoadCacheResponseLoginouthandler;
 import com.moto.asydata.LoadDatahandler;
 import com.moto.asydata.RequstClient;
 import com.moto.constant.Constant;
+import com.moto.constant.DialogMethod;
 import com.moto.listview.CustomScrollView;
 import com.moto.listview.CustomScrollView.OnLoadListener;
 import com.moto.listview.CustomScrollView.OnRefreshListener;
@@ -122,6 +123,7 @@ public class Live_kidsAllResponse extends MyActivity{
 					ToastClass.SetToast(Live_kidsAllResponse.this, "信息不能够为空");
 				}
 				else {
+                    DialogMethod.startProgressDialog(Live_kidsAllResponse.this,"正在评论");
 					SendAsyData();
 				}
 			}
@@ -146,9 +148,11 @@ public class Live_kidsAllResponse extends MyActivity{
 				{
                         //获取成功
                     case Constant.MSG_WAITSUCCESS:
-                        manageInput(Live_kidsAllResponse.this);
+                        DialogMethod.stopProgressDialog();
                         ToastClass.SetImageToast(Live_kidsAllResponse.this,"成功发送评论");
                         Live_kidsAllResponse.this.finish();
+                        manageInput(Live_kidsAllResponse.this);
+
                         break;
                         //获取成功
                     case Constant.MSG_SUCCESS:
@@ -166,6 +170,10 @@ public class Live_kidsAllResponse extends MyActivity{
                         isRefresh = false;
                         scrollView.onRefreshComplete();
                         scrollView.onLoadComplete();
+                        break;
+                    case Constant.MSG_FALTH:
+                        DialogMethod.stopProgressDialog();
+                        ToastClass.SetToast(Live_kidsAllResponse.this,"评论失败");
                         break;
 				}
 				super.handleMessage(msg);
@@ -228,6 +236,8 @@ public class Live_kidsAllResponse extends MyActivity{
 			public void onFailure(String error, String message) {
 				// TODO Auto-generated method stub
 				super.onFailure(error, message);
+                handler.obtainMessage(Constant.MSG_FALTH)
+                        .sendToTarget();
 			}
             
 			@Override

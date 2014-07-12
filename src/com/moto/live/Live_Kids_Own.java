@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -160,6 +161,7 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
             if (!avatar.equals("null")) {
                 MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(avatar), user_img, options, null);
             }
+            live_title.setText(list.get(0).get("author").toString());
         }
 
         adapter = new MyAdapter(this, list);
@@ -220,9 +222,9 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                             {
                                 MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl(avatar),  user_img,options,null);
                             }
+                            live_title.setText(list.get(0).get("author").toString());
                         }
 
-                        live_title.setText(subject);
 
                         scrollView.onRefreshComplete();
                         scrollView.onLoadComplete();
@@ -250,10 +252,9 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                         break;
 
                     case Constant.MSG_SUCCESSAGAIN:
-
+                        setNavigationBarTitle(subject);
                         isContinueLive = true;
                         loadingProgressBar.setVisibility(View.GONE);
-                        live_title.setText(subject);
                         live_kids_check.setText("续写直播");
                         live_kids_check.setEnabled(true);
                         if(list.size() == 0)
@@ -272,6 +273,8 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                     case Constant.MSG_TESTFALTH:
                         String str = (String) msg.obj;
                         ToastClass.SetToast(Live_Kids_Own.this, str);
+                        scrollView.onRefreshComplete();
+                        scrollView.onLoadComplete();
                         break;
                 }
                 super.handleMessage(msg);
@@ -419,7 +422,7 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
 	{
 		TokenShared = getSharedPreferences("usermessage", 0);
 		tokenString = TokenShared.getString("token", "");
-
+        tid = TokenShared.getString("tid","");
         if(tokenString.equals(""))
 		{
 			ToastClass.SetToast(Live_Kids_Own.this, "需要先登录才能够查看自己直播");
@@ -1010,6 +1013,7 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                 Live_Kids_Own.this.finish();
                 overridePendingTransition(0, R.anim.bottom_out);
                 break;
+
 		}
 		
 		super.onActivityResult(requestCode, resultCode, data);

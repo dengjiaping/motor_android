@@ -14,4 +14,5 @@ public class Constant {
     public static final int MSG_GETIMGESUCCESS = 10;
 
     public static final int MSG_HAVENETWORK = 11;  //有网络
+    public static final int MSG_IMGFINISH = 12;    //选择图片
 }

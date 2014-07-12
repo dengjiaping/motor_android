@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,14 +25,14 @@ import com.moto.constant.Constant;
 import com.moto.constant.DialogMethod;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
-import com.moto.model.DataBaseModel;
 import com.moto.model.NetWorkModelListener;
 import com.moto.model.SquareNetworkModel;
+import com.moto.photopicker.Bimp;
+import com.moto.photopicker.FileUtils;
+import com.moto.photopicker.ImgPicActivity;
 import com.moto.qiniu.img.Image;
-import com.moto.select_morephoto.ImageManager2;
 import com.moto.toast.ToastClass;
 import com.moto.utils.CompressUtils;
-import com.moto.utils.DateUtils;
 import com.rockerhieu.emojicon.EmojiconEditText;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
 import com.rockerhieu.emojicon.EmojiconsFragment;
@@ -100,6 +101,16 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
 				own_photos.setLayoutParams(layoutParams);
 			}
 		});
+
+        own_photos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isHavePhoto)
+                {
+                    FileUtils.fliterPhoto(Publish_post.this, Publish_post.this, filepath);
+                }
+            }
+        });
 		handler = new Handler(){
             
 			@Override
@@ -191,8 +202,13 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
 		
 		if(v == photos)
 		{
-			intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-			startActivityForResult(intent, 2);
+            Bimp.drr.clear();
+            Bimp.MaxPictrueSize = 1;
+            Intent intent = new Intent(Publish_post.this,
+                    ImgPicActivity.class);
+            startActivityForResult(intent, 2);
+//			intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//			startActivityForResult(intent, 2);
 		}
 		if(v == emotion)
 		{
@@ -283,26 +299,47 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-                ImageManager2.from(Publish_post.this).displayImage(own_photos, filepath,R.drawable.default_add_img,100,100);
-                
-				isHavePhoto = true;
+                if(isHavePhoto)
+                {
+                    ToastClass.SetToast(Publish_post.this, "最多选择1张图片");
+                }
+                else
+                {
+                    try {
+                        Bitmap b = Bimp.revitionImageSize(filepath);
+                        own_photos.setImageBitmap(b);
+                    } catch (IOException e) {
+
+                        e.printStackTrace();
+                    }
+//                ImageManager2.from(Publish_post.this).displayImage(own_photos, filepath,R.drawable.default_add_img,100,100);
+
+                    isHavePhoto = true;
+                }
             }
         }
-        
-        if (requestCode == 2 && resultCode == RESULT_OK) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            
-            Cursor cursor = getContentResolver().query(selectedImage,
-                                                       filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            filepath = picturePath;
-            cursor.close();
-            ImageManager2.from(Publish_post.this).displayImage(own_photos, filepath,R.drawable.default_add_img,100,100);
-            isHavePhoto = true;
+
+        if (requestCode == 2) {
+            if(isHavePhoto)
+            {
+                ToastClass.SetToast(Publish_post.this, "最多选择1张图片");
+            }
+            else
+            {
+                if(Bimp.drr.size() > 0)
+                {
+                    filepath = Bimp.drr.get(0);
+                    try {
+                        Bitmap b = Bimp.revitionImageSize(filepath);
+                        own_photos.setImageBitmap(b);
+                    } catch (IOException e) {
+
+                        e.printStackTrace();
+                    }
+//            ImageManager2.from(Publish_post.this).displayImage(own_photos, filepath,R.drawable.default_add_img,100,100);
+                    isHavePhoto = true;
+                }
+            }
         }
         if(resultCode == 3)
         {
@@ -310,7 +347,33 @@ public class Publish_post extends Moto_RootActivity implements OnClickListener,N
             IsHaveUserName = true;
             et_sendmessage.setText(et_sendmessage.getText().toString()+"@"+mentionUsername);
         }
-        
+
+        if(requestCode == 6)
+        {
+            if(resultCode == RESULT_OK)
+            {
+
+                try {
+                    String path = data.getStringExtra("path");
+                    filepath = path;
+                    isHavePhoto = true;
+                    Bitmap b = Bimp.revitionImageSize(filepath);
+                    own_photos.setImageBitmap(b);
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+                }
+
+            }
+            if(resultCode == 202)
+            {
+                filepath = "";
+                isHavePhoto = false;
+                own_photos.setImageBitmap(null);
+            }
+        }
+
+
     }
     
     @Override

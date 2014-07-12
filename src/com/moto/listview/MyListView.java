@@ -98,7 +98,6 @@ public class MyListView extends ListView implements OnScrollListener {
 
 		Log.v("size", "width:" + headContentWidth + " height:"
               + headContentHeight);
-        
 		addHeaderView(headView, null, false);
 		setOnScrollListener(this);
         

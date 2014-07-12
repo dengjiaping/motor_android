@@ -85,6 +85,20 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
 
+        <activity
+            android:name="com.moto.photopicker.ImageGridActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+
+        <activity
+            android:name="com.moto.photopicker.ImgPicActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+
+        <activity
+            android:name="com.moto.photopicker.BitmapCache"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
         
         <activity 
             android:name="com.moto.inform.InformActivity"
@@ -263,6 +277,11 @@
             android:theme="@android:style/Theme.NoTitleBar" />
 
         <activity
+            android:name="com.moto.tryimage.ImageFactoryExtends"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+
+        <activity
             android:name="com.chute.sdk.v2.api.authentication.AuthenticationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/PhotoPickerTheme" >
@@ -279,11 +298,7 @@
             android:configChanges="keyboardHidden|orientation" 
             android:launchMode="singleTask" 
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
-        
-        <activity 
-            android:name="com.moto.select_morephoto.AlbumActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" />
+
         
         <!-- push service rich media display -->
      	<activity

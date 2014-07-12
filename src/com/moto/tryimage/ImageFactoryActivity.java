@@ -12,20 +12,23 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.moto.main.R;
+import com.moto.photopicker.Bimp;
 
 public class ImageFactoryActivity extends FragmentActivity {
-	private ViewFlipper mVfFlipper;
-	private Button mBtnLeft;
-	private Button mBtnRight;
-	private ImageView toprightView;
-	private TextView title;
+	protected ViewFlipper mVfFlipper;
+    protected Button mBtnLeft;
+    protected Button mBtnRight;
+    protected ImageView toprightView;
+    protected TextView title;
+    protected ImageView photo_delete;
 
-	private ImageFactoryCrop mImageFactoryCrop;
-	private ImageFactoryFliter mImageFactoryFliter;
-	private String mPath;
-	private String mNewPath;
-	private int mIndex = 0;
-	private String mType;
+    protected ImageFactoryCrop mImageFactoryCrop;
+    protected ImageFactoryFliter mImageFactoryFliter;
+    protected String mPath;
+    protected String mNewPath;
+    protected int mIndex = 0;
+    protected String mType;
+    protected int position = 0;
 
 	public static final String TYPE = "type";
 	public static final String CROP = "crop";
@@ -53,6 +56,7 @@ public class ImageFactoryActivity extends FragmentActivity {
 		init();
 	}
 	protected void initViews() {
+        photo_delete = (ImageView)findViewById(R.id.photo_delete);
 		mVfFlipper = (ViewFlipper) findViewById(R.id.imagefactory_vf_viewflipper);
 		mBtnLeft = (Button) findViewById(R.id.imagefactory_btn_left);
 		mBtnRight = (Button) findViewById(R.id.imagefactory_btn_right);
@@ -105,6 +109,17 @@ public class ImageFactoryActivity extends FragmentActivity {
 				}
 			}
 		});
+
+        photo_delete.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bimp.drr.remove(position);
+                Bimp.bmp.remove(position);
+
+                setResult(201);
+                ImageFactoryActivity.this.finish();
+            }
+        });
 	}
 
 	@Override
@@ -130,6 +145,7 @@ public class ImageFactoryActivity extends FragmentActivity {
 
 	private void init() {
 		mPath = getIntent().getStringExtra("path");
+        position = Integer.parseInt(getIntent().getStringExtra("position"));
 		mType = getIntent().getStringExtra(TYPE);
 		mNewPath = new String(mPath);
 		if (CROP.equals(mType)) {

@@ -132,6 +132,7 @@ public class LiveKidsResponse extends MyActivity implements OnClickListener{
 				{
                         //获取成功
                     case Constant.MSG_WAITSUCCESS:
+                        DialogMethod.stopProgressDialog();
                         ToastClass.SetImageToast(LiveKidsResponse.this,"成功发送评论");
                         manageInput(LiveKidsResponse.this);
                         LiveKidsResponse.this.finish();
@@ -164,6 +165,10 @@ public class LiveKidsResponse extends MyActivity implements OnClickListener{
                         isRefresh = false;
                         scrollView.onRefreshComplete();
                         scrollView.onLoadComplete();
+                        break;
+                    case Constant.MSG_FALTH:
+                        DialogMethod.stopProgressDialog();
+                        ToastClass.SetToast(LiveKidsResponse.this,"评论失败");
                         break;
 				}
 				super.handleMessage(msg);
@@ -230,6 +235,7 @@ public class LiveKidsResponse extends MyActivity implements OnClickListener{
 				DialogMethod.dialogShow(LiveKidsResponse.this,"请输入回复内容!");
 			}
 			else {
+                DialogMethod.startProgressDialog(LiveKidsResponse.this,"正在评论");
 				SendAsyData();
 			}
 		}
@@ -277,6 +283,8 @@ public class LiveKidsResponse extends MyActivity implements OnClickListener{
 			public void onFailure(String error, String message) {
 				// TODO Auto-generated method stub
 				super.onFailure(error, message);
+                handler.obtainMessage(Constant.MSG_FALTH)
+                        .sendToTarget();
 			}
             
 			@Override

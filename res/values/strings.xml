@@ -9,7 +9,7 @@
     <string name="live">游记</string>
     <string name="userlive">直播</string>
     <string name="write_live">写直播</string>
-    <string name="square">发现</string>
+    <string name="square">广场</string>
     <string name="inform">通知</string>
     <string name="app_name">机车党</string>
     <string name="desc">desc</string>
@@ -33,6 +33,7 @@
     <string name="focus">关注</string>
     <string name="nofocus">取消关注</string>
     <string name="endlive">结束直播</string>
+    <string name="updatelive">更新了游记</string>
     <string name="continuelive">续写直播</string>
     <string name="share">分享</string>
     <string name="del">删除</string>

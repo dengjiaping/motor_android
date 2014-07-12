@@ -145,6 +145,9 @@ public class LiveActivity extends Moto_RootActivity{
 			}
 			
 		};
+
+        //必须在这里面添加head或者foot
+        scrollView.addHeadFootView();
 		
 		scrollView.setOnRefreshListener(new OnRefreshListener() {
 			public void onRefresh() {

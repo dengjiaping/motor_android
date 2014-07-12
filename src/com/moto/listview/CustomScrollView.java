@@ -74,11 +74,11 @@ public class CustomScrollView extends ScrollView {
 		headView = (LinearLayout) inflater.inflate(R.layout.refresh_header1, null);
 		footView = (LinearLayout) inflater.inflate(R.layout.refresh_footer1,
                                                    null);
-        
+
 		arrowImageView = (ImageView) headView
         .findViewById(R.id.head_arrowImageView);
 		arrowImageView.setMinimumWidth(70);
-		arrowImageView.setMinimumHeight(50);
+		arrowImageView.setMinimumHeight(60);
 		progressBar = (ProgressBar) headView
         .findViewById(R.id.head_progressBar);
 		tipsTextview = (TextView) headView.findViewById(R.id.head_tipsTextView);
@@ -87,17 +87,17 @@ public class CustomScrollView extends ScrollView {
 		moreProgressBar = (ProgressBar) footView
         .findViewById(R.id.pull_to_refresh_progress);
 		loadMoreView = (TextView) footView.findViewById(R.id.load_more);
-        
 		measureView(headView);
-		headContentHeight = headView.getMeasuredHeight();
-//        headContentHeight = 0;
+
+//		headContentHeight = headView.getMeasuredHeight();
+        headContentHeight = 0;
 		animation = new RotateAnimation(0, -180,
                                         RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                                         RotateAnimation.RELATIVE_TO_SELF, 0.5f);
 		animation.setInterpolator(new LinearInterpolator());
 		animation.setDuration(250);
 		animation.setFillAfter(true);
-        
+
 		reverseAnimation = new RotateAnimation(-180, 0,
                                                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                                                RotateAnimation.RELATIVE_TO_SELF, 0.5f);
@@ -108,7 +108,19 @@ public class CustomScrollView extends ScrollView {
 		isRecored = false;
 		isSeeHead = false;
 		isScroll = false;
+
+
 	}
+
+    public void addHeadFootView(){
+        if (parentView == null) {
+            parentView = (ViewGroup)this.getChildAt(0);
+            headView.setPadding(0, 35, 0, 0);
+            headView.invalidate();
+            parentView.addView(headView, 0);
+            parentView.addView(footView);
+        }
+    }
     
 	private void measureView(View child) {
 		ViewGroup.LayoutParams p = child.getLayoutParams();
@@ -133,8 +145,7 @@ public class CustomScrollView extends ScrollView {
 	public boolean onTouchEvent(MotionEvent ev) {
 		// TODO Auto-generated method stub
 		if (parentView == null) {
-			parentView = (ViewGroup) this.getChildAt(0);
-			headView.setPadding(0, -1 * headContentHeight, 0, 0);
+			parentView = (ViewGroup)this.getChildAt(0);
 			headView.invalidate();
 			parentView.addView(headView, 0);
 			parentView.addView(footView);
@@ -258,7 +269,7 @@ public class CustomScrollView extends ScrollView {
                 break;
                 
             case REFRESHING:
-                headView.setPadding(0, 0, 0, 0);
+                headView.setPadding(0, 120, 0, 0);
                 progressBar.setVisibility(View.VISIBLE);
                 arrowImageView.clearAnimation();
                 arrowImageView.setVisibility(View.GONE);
@@ -266,7 +277,7 @@ public class CustomScrollView extends ScrollView {
                 lastUpdatedTextView. setVisibility(View.VISIBLE);
                 break;
             case DONE:
-                headView.setPadding(0, -1 * headContentHeight, 0, 0);
+                headView.setPadding(0, 35, 0, 0);
                 progressBar.setVisibility(View.GONE);
                 arrowImageView.clearAnimation();
                 arrowImageView.setImageResource(R.drawable.z_arrow_down);

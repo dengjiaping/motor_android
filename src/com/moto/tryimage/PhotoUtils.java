@@ -108,10 +108,11 @@ public class PhotoUtils {
 	 *            需要滤镜的图片路径
 	 */
 	public static void fliterPhoto(Context context, Activity activity,
-			String path) {
+			String path,int position) {
 		Intent intent = new Intent(context, ImageFactoryActivity.class);
 		if (path != null) {
 			intent.putExtra("path", path);
+            intent.putExtra("position",position+"");
 			intent.putExtra(ImageFactoryActivity.TYPE,
 					ImageFactoryActivity.FLITER);
 		}

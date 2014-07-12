@@ -1,8 +1,9 @@
 package com.moto.live;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,7 +11,6 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -18,7 +18,6 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loopj.android.http.RequestParams;
@@ -30,18 +29,17 @@ import com.moto.constant.DialogMethod;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
 import com.moto.model.DataBaseModel;
-import com.moto.model.LiveNetworkModel;
 import com.moto.mydialog.errorDialog;
+import com.moto.photopicker.Bimp;
+import com.moto.photopicker.FileUtils;
+import com.moto.photopicker.GridImageAdapter;
+import com.moto.photopicker.ImgPicActivity;
 import com.moto.qiniu.img.Image;
-import com.moto.select_morephoto.AlbumActivity;
-import com.moto.select_morephoto.GridImageAdapter;
 import com.moto.square.Theme_Post_Touchme;
 import com.moto.toast.ToastClass;
-import com.moto.tryimage.PhotoUtils;
 import com.moto.utils.CompressUtils;
 import com.moto.utils.DateUtils;
 import com.moto.utils.StringUtils;
-import com.moto.welcome.UpdateServise;
 import com.rockerhieu.emojicon.EmojiconEditText;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
 import com.rockerhieu.emojicon.EmojiconsFragment;
@@ -107,38 +105,7 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 		setContentView(R.layout.writelive);
 		init();
 
-        gridImageAdapter = new GridImageAdapter(this, dataList);
-		image_grid.setAdapter(gridImageAdapter);
-		
-		image_grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                
-                //				if (position == dataList.size() - 1) {
-                picPosition = position;
-                if((dataList.size()-1) == position && StringUtils.getIntentArrayList(dataList).size() != 5)
-                {
-                    Intent intent = new Intent(WriteLiveActivity.this,
-                            AlbumActivity.class);
-                    Bundle bundle = new Bundle();
-                    // intent.putArrayListExtra("dataList", dataList);
-                    bundle.putStringArrayList("dataList",
-                            StringUtils.getIntentArrayList(dataList));
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, 0);
-                }
-                else
-                {
-                    PhotoUtils.fliterPhoto(WriteLiveActivity.this, WriteLiveActivity.this, dataList.get(position));
-                }
-                
-                //				}
-                
-			}
-            
-		});
+
 		
 		et_sendmessage.addTextChangedListener(new TextWatcher() {
 			
@@ -205,11 +172,44 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
                         CompressUtils.deleteLinkFile(compressList);
                         ToastClass.SetToast(WriteLiveActivity.this,"获取失败");
                         break;
+                    case Constant.MSG_IMGFINISH:
+                        gridImageAdapter.notifyDataSetChanged();
+                        break;
 				}
 				super.handleMessage(msg);
 			}
 			
 		};
+
+
+        image_grid.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        gridImageAdapter = new GridImageAdapter(this, handler);
+        image_grid.setAdapter(gridImageAdapter);
+        gridImageAdapter.update(); //更新图片
+
+        image_grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                //				if (position == dataList.size() - 1) {
+                picPosition = position;
+                if (position == Bimp.bmp.size()) {
+                    Intent intent = new Intent(WriteLiveActivity.this,
+                            ImgPicActivity.class);
+                    startActivityForResult(intent, 0);
+                }
+                else
+                {
+                    FileUtils.fliterPhoto(WriteLiveActivity.this, WriteLiveActivity.this, Bimp.drr.get(position), position);
+                }
+
+                //				}
+
+            }
+
+        });
 	}
 
     @Override
@@ -219,6 +219,10 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 	
 	private void init() {
 		// TODO Auto-generated method stub
+        //清空图片
+        Bimp.drr.clear();
+        Bimp.bmp.clear();
+        Bimp.max = 0;
 		layoutParams =  new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.FILL_PARENT);
 		mention = (ImageView)findViewById(R.id.mention);
 		camera = (ImageView)findViewById(R.id.camera);
@@ -281,14 +285,9 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 		
 		if(v == photos)
 		{
-			
+			Bimp.MaxPictrueSize = 5;
 			Intent intent = new Intent(WriteLiveActivity.this,
-                                       AlbumActivity.class);
-			Bundle bundle = new Bundle();
-			// intent.putArrayListExtra("dataList", dataList);
-			bundle.putStringArrayList("dataList",
-                                      StringUtils.getIntentArrayList(dataList));
-			intent.putExtras(bundle);
+                                       ImgPicActivity.class);
 			startActivityForResult(intent, 0);
 		}
 		
@@ -334,8 +333,15 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
                 ArrayList<String> tdataList = StringUtils.getIntentArrayList(dataList);
                 //存数据库
                 DataBaseModel dataBaseModel = new DataBaseModel(tokenString,subject,et_sendmessage.getText().toString(),location,
-                        lon,lat,locationsign,mentionUsername,IsHaveUserName,new JSONArray(tdataList).toString(),isHavePhoto, DateUtils.getUTCCurrentTimestamp());
+                        lon,lat,locationsign,mentionUsername,IsHaveUserName,new JSONArray(Bimp.drr).toString(),isHavePhoto, DateUtils.getUTCCurrentTimestamp());
                 dataBaseModel.save();
+
+                mshared = getSharedPreferences("usermessage", 0);
+                editor = mshared.edit();
+                editor.putString("tid","1");
+                editor.putString("subject",subject);
+                editor.commit();
+
 				GetAsyData();
 
 			}
@@ -375,38 +381,22 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 0) {
-			if (resultCode == RESULT_OK) {
-				
-				Bundle bundle = data.getExtras();
-				ArrayList<String> tDataList = (ArrayList<String>)bundle.getSerializable("dataList");
-				if (tDataList != null) {
-					if (tDataList.size() < 5) {
-						tDataList.add("default_add_img");
-					}
-					isHavePhoto = true;
-					dataList.clear();
-					dataList.addAll(tDataList);
-					gridImageAdapter.notifyDataSetChanged();
-					
-				}
-			}
+            gridImageAdapter.update();
+            if(Bimp.drr.size() > 0)
+            {
+                isHavePhoto = true;
+            }
 		}
 		else if (requestCode == 1) {
 			if (resultCode == RESULT_OK) {
                 isHavePhoto = true;
-                if(StringUtils.getIntentArrayList(dataList).size() >= 5)
+                if(Bimp.drr.size() >= 5)
                 {
-                    ToastClass.SetToast(WriteLiveActivity.this, "只能选择5张图片");
+                    ToastClass.SetToast(WriteLiveActivity.this, "最多选择5张图片");
                 }
                 else {
-                    ArrayList<String> tDataList = StringUtils.getIntentArrayList(dataList);
-                    tDataList.add(filepath);
-                    if (tDataList.size() < 5) {
-                        tDataList.add("default_add_img");
-                    }
-                    dataList.clear();
-                    dataList.addAll(tDataList);
-                    gridImageAdapter.notifyDataSetChanged();
+                    Bimp.drr.add(filepath);
+                    gridImageAdapter.update();
                 }
             }
 		}
@@ -428,10 +418,16 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
             if(resultCode == RESULT_OK)
             {
                 String path = data.getStringExtra("path");
-                if(path != null)
+                Bimp.drr.set(picPosition,path);
+                gridImageAdapter.update();
+            }
+            if(resultCode == 201)
+            {
+                Bimp.max--;
+                gridImageAdapter.update();
+                if(Bimp.max == 0)
                 {
-                    dataList.set(picPosition,path);
-                    gridImageAdapter.notifyDataSetChanged();
+                    isHavePhoto = false;
                 }
             }
         }
@@ -449,6 +445,8 @@ public class WriteLiveActivity extends Moto_RootActivity implements OnClickListe
 
         intent = new Intent(WriteLiveActivity.this, SendLiveService.class);
         startService(intent);
+        setResult(304);
+        WriteLiveActivity.this.finish();
 
 
 //		param = new RequestParams();

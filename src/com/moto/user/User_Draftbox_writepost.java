@@ -1,11 +1,14 @@
 package com.moto.user;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import com.moto.main.R;
 import com.moto.model.DataBaseModel;
-import com.moto.select_morephoto.ImageManager2;
+import com.moto.photopicker.Bimp;
 import com.moto.square.Publish_post;
+
+import java.io.IOException;
 
 /**
  * Created by chen on 14-7-7.
@@ -34,8 +37,16 @@ public class User_Draftbox_writepost extends Publish_post{
         IsHaveUserName = dataBaseModel.IsHaveUserName;
 //        isHavePhoto = dataBaseModel.isHavePhoto;
 //        filepath = dataBaseModel.imagepath;
+        try {
+            Bitmap b = Bimp.revitionImageSize(filepath);
+            own_photos.setImageBitmap(b);
+        } catch (IOException e) {
 
-        ImageManager2.from(User_Draftbox_writepost.this).displayImage(own_photos, filepath, R.drawable.default_add_img,100,100);
+            e.printStackTrace();
+        }
+
+
+//        ImageManager2.from(User_Draftbox_writepost.this).displayImage(own_photos, filepath, R.drawable.default_add_img,100,100);
 
         write_theme.setText(dataBaseModel.subject);
     }

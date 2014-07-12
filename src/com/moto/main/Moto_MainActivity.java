@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -36,26 +35,21 @@ import com.facebook.rebound.SpringSystem;
 import com.facebook.rebound.SpringUtil;
 import com.loopj.android.http.RequestParams;
 import com.moto.constant.Constant;
-import com.moto.constant.DialogMethod;
 import com.moto.inform.Inform_main;
 import com.moto.live.LiveActivity;
 import com.moto.live.Live_Kids_Own;
 import com.moto.live.SendLiveService;
 import com.moto.live.WriteLiveActivity;
 import com.moto.main.AbstractInOutAnimationSet.Direction;
-import com.moto.model.CacheModel;
 import com.moto.model.DataBaseModel;
 import com.moto.model.NetWorkModelListener;
 import com.moto.model.UserNetworkModel;
 import com.moto.mydialog.CustomDialog;
-import com.moto.mymap.MyMapApplication;
-import com.moto.select_morephoto.AlbumActivity;
 import com.moto.square.SquareActivity;
 import com.moto.toast.ToastClass;
 import com.moto.user.UserActivity;
 import com.moto.user.User_Login;
 import com.moto.utils.StringUtils;
-import com.moto.utils.UrlUtils;
 import com.moto.welcome.NetworkBroadCast;
 import com.moto.welcome.Utils;
 
@@ -145,6 +139,7 @@ public class Moto_MainActivity extends TabActivity implements View.OnClickListen
                             Intent intent = new Intent(Moto_MainActivity.this, SendLiveService.class);
                             startService(intent);
                         }
+
                         break;
                 }
                 super.handleMessage(msg);
@@ -466,14 +461,14 @@ public class Moto_MainActivity extends TabActivity implements View.OnClickListen
             }
             else if(view == button_photo)
             {
-                Intent intent = new Intent(Moto_MainActivity.this,
-                        AlbumActivity.class);
-                Bundle bundle = new Bundle();
-                // intent.putArrayListExtra("dataList", dataList);
-                bundle.putStringArrayList("dataList",
-                        StringUtils.getIntentArrayList(dataList));
-                intent.putExtras(bundle);
-                startActivityForResult(intent, 0);
+//                Intent intent = new Intent(Moto_MainActivity.this,
+//                        AlbumActivity.class);
+//                Bundle bundle = new Bundle();
+//                // intent.putArrayListExtra("dataList", dataList);
+//                bundle.putStringArrayList("dataList",
+//                        StringUtils.getIntentArrayList(dataList));
+//                intent.putExtras(bundle);
+//                startActivityForResult(intent, 0);
             }
             else if(view == button_write)
             {

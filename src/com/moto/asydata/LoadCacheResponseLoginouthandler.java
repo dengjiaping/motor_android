@@ -3,6 +3,7 @@ package com.moto.asydata;
 import org.apache.http.Header;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -29,7 +30,8 @@ public class LoadCacheResponseLoginouthandler extends AsyncHttpResponseHandler{
     @Override
     public void onFailure(Throwable error, String content) {
         super.onFailure(error, content);
-        mHandler.onFailure("error", error+"");
+        Log.e("sfdsfds",error.toString());
+        mHandler.onFailure("error", "网络连接超时");
     }
     @Override
     public void onFinish() {

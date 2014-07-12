@@ -1,6 +1,5 @@
 package com.moto.live;
 
-import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
@@ -32,7 +31,7 @@ import java.util.List;
 /**
  * Created by chen on 14-7-8.
  */
-public class SendLiveService extends IntentService implements NetWorkModelListener{
+public class SendLiveService extends Service implements NetWorkModelListener{
     private List<DataBaseModel> list = new ArrayList<DataBaseModel>();
     private ArrayList<String> dataList = new ArrayList<String>();
     protected LinkedList<String> compressList = new LinkedList<String>();
@@ -40,11 +39,11 @@ public class SendLiveService extends IntentService implements NetWorkModelListen
     private SharedPreferences mshared;
     private SharedPreferences.Editor editor;
     private NotificationManager manager;
-    private DataBaseModel dataBaseModel;
+    private int num = 0;
     NotificationCompat.Builder builder;
-
     @Override
-    protected void onHandleIntent(Intent intent) {
+    public void onCreate() {
+        super.onCreate();
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 //        notif = new Notification();
         builder = new NotificationCompat.Builder(this);
@@ -52,30 +51,36 @@ public class SendLiveService extends IntentService implements NetWorkModelListen
                 .setSmallIcon(R.drawable.icon_main)
                 .setTicker("正在发送...");
         manager.notify(0, builder.build());
-        list.clear();
         list = new Select().from(DataBaseModel.class).execute();
-        if(list.size() > 0)
-            dataBaseModel = list.get(0);
 
-        Log.e("aaaaa",dataBaseModel.getId()+"");
         if(Utils.isNetworkAvailable(this) && list.size() > 0)
         {
             sendAsyData();
         }
-    }
+        else
+        {
+            manager.cancelAll();
+            builder.setContentTitle("机车党")
+                    .setSmallIcon(R.drawable.icon_main)
+                    .setTicker("发送失败");
+            manager.notify(0, builder.build());
+            manager.cancelAll();
+            this.stopSelf();
+        }
 
-    public SendLiveService(String name) {
-        super(name);
-    }
-    public SendLiveService() {
-        super(null);
     }
 
     @Override
     public void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
+        this.stopSelf();
     }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
     @Override
     public void handleNetworkDataStart() throws JSONException {
 
@@ -88,50 +93,70 @@ public class SendLiveService extends IntentService implements NetWorkModelListen
         compressList.clear();
         lovecarImage.clear();
         //删除数据库里面的数据
-        dataBaseModel.delete();
-
-
+        new Delete().from(DataBaseModel.class).where("id = ?", list.get(num).getId()).execute();
+        num++;
         mshared = getSharedPreferences("usermessage", 0);
         editor = mshared.edit();
         editor.putString("tid","1");
         editor.commit();
-        list.clear();
-        list = new Select().from(DataBaseModel.class).execute();
-        if(list.size() > 0)
-            dataBaseModel = list.get(0);
-        if(Utils.isNetworkAvailable(this) && list.size() > 0)
+        if(Utils.isNetworkAvailable(this) && num < list.size())
         {
             sendAsyData();
         }
-        if(list.size() == 0)
+        else
         {
+            manager.cancelAll();
+            builder.setContentTitle("机车党")
+                    .setSmallIcon(R.drawable.icon_main)
+                    .setTicker("发送失败");
+            manager.notify(0, builder.build());
+            manager.cancelAll();
+            this.stopSelf();
+        }
+        if(num == list.size())
+        {
+            manager.cancelAll();
             builder.setContentTitle("机车党")
                     .setSmallIcon(R.drawable.icon_main)
                     .setTicker("发送成功");
             manager.notify(0, builder.build());
             manager.cancelAll();
+            this.stopSelf();
         }
+
 
     }
 
     @Override
     public void handleNetworkDataWithFail(JSONObject jsonObject) throws JSONException {
-        Log.e("sdsfsfds","sdvsdfdsfdsfd");
+        manager.cancelAll();
+        builder.setContentTitle("机车党")
+                .setSmallIcon(R.drawable.icon_main)
+                .setTicker("发送成功");
+        manager.notify(0, builder.build());
+        manager.cancelAll();
+        this.stopSelf();
     }
 
     @Override
     public void handleNetworkDataWithUpdate(float progress) throws JSONException {
-        Log.e("pro","sdvsdfdsfdsfd");
+
     }
 
     @Override
     public void handleNetworkDataGetFail(String message) throws JSONException {
-        Log.e("sdsfsfds",message);
+        manager.cancelAll();
+        builder.setContentTitle("机车党")
+                .setSmallIcon(R.drawable.icon_main)
+                .setTicker("发送失败");
+        manager.notify(0, builder.build());
+        manager.cancelAll();
+        this.stopSelf();
     }
 
     private void sendAsyData(){
         LiveNetworkModel liveNetworkModel = new LiveNetworkModel(this, this);
-
+        DataBaseModel dataBaseModel = list.get(num);
         RequestParams param = new RequestParams();
         param.put("token", dataBaseModel.token);
         param.put("subject", dataBaseModel.subject);

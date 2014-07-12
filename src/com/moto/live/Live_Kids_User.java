@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -275,6 +276,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
                             {
                                 MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl(avatar),  user_img,options,null);
                             }
+                            live_title.setText(list.get(0).get("author").toString());
                         }
                         scrollView.onRefreshComplete();
                         scrollView.onLoadComplete();
@@ -486,6 +488,8 @@ OnInfoWindowClickListener, InfoWindowAdapter{
         intent = getIntent();
         tid = intent.getStringExtra("tid");
         subject = intent.getStringExtra("subject");
+        setNavigationBarTitle(subject);
+
 
 		options = ImageMethod.GetOptions();
 		Originaloptions = ImageMethod.GetOriginalOptions();
@@ -516,7 +520,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 		});
 		comment = (RelativeLayout)findViewById(R.id.live_kids_comment);
 		live_kids_collect = (RelativeLayout)findViewById(R.id.live_kids_record);
-		live_title.setText(subject);
+
 		
 		if(list.size() == 0)
 		{
@@ -529,6 +533,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
             {
                 MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(avatar),  user_img,options,null);
             }
+            live_title.setText(list.get(0).get("author").toString());
 
         }
 	}
@@ -595,14 +600,14 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 							list.add(GetMap(jsonObject2));
                             //							getNumDate(list);
 						}
-                        String location_data = jsonObject.getString("location_list");
-                        JSONArray array2 = new JSONArray(location_data);
-                        int a2 = array2.length();
-                        for (int i = 0; i < a2; i++) {
-                            JSONObject jsonObject2 = (JSONObject) array2.get(i);
-                            LocationList.add(GetLocationMap(jsonObject2));
-                            //								getNumDate(list);
-                        }
+//                        String location_data = jsonObject.getString("location_list");
+//                        JSONArray array2 = new JSONArray(location_data);
+//                        int a2 = array2.length();
+//                        for (int i = 0; i < a2; i++) {
+//                            JSONObject jsonObject2 = (JSONObject) array2.get(i);
+//                            LocationList.add(GetLocationMap(jsonObject2));
+//                            //								getNumDate(list);
+//                        }
 						if (!isload) {
 							if (isRefresh)
 								handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)

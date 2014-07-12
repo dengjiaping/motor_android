@@ -35,6 +35,8 @@ import com.moto.listview.CustomScrollView.OnLoadListener;
 import com.moto.listview.CustomScrollView.OnRefreshListener;
 import com.moto.listview.NoScrollListview;
 import com.moto.listview.ProgressBarView;
+import com.moto.main.Moto_MainActivity;
+import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
 import com.moto.myactivity.tabActivity;
 import com.moto.mymap.MyMapApplication;
@@ -58,11 +60,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SquareActivity extends tabActivity{
+public class SquareActivity extends Moto_RootActivity{
 	private NoScrollListview listview;
 	private CustomScrollView scrollView;
     private ShimmerTextView waitText;
-	private TextView edit_theme;
 	private LinkedList<HashMap<String, Object>> list = new LinkedList<HashMap<String,Object>>();
 	private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
     private LinkedList<String> countList = new LinkedList<String>();
@@ -72,7 +73,8 @@ public class SquareActivity extends tabActivity{
 	private MyAdapter adapter;
 	private String fid;
 	private Handler handler;
-	private TextView title;
+    private Intent intent;
+    private RequestParams param;
 	protected DisplayImageOptions options;
 	private DisplayImageOptions Originaloptions;
 	private String readUri = path+"api/square/readforumbriefpost";
@@ -101,23 +103,15 @@ public class SquareActivity extends tabActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.square);
+        addContentView(R.layout.square,R.string.square,R.string.write_post,barButtonIconType.barButtonIconType_None,barButtonIconType.barRightTextViewType);
 		init();
 		adapter = new MyAdapter(this, list);
 		listview.setAdapter(adapter);
 //		GetAsyData();
-		edit_theme.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				intent = new Intent();
-				intent.putExtra("fid", fid);
 
-				intent.setClass(SquareActivity.this, Publish_post.class);
-				startActivityForResult(intent, 304);
-			}
-		});
+        //必须在这里面添加head或者foot
+        scrollView.addHeadFootView();
 
 		scrollView.setOnRefreshListener(new OnRefreshListener() {
 			public void onRefresh() {
@@ -265,7 +259,17 @@ public class SquareActivity extends tabActivity{
 		
 	}
 
-	private void init() {
+    @Override
+    public void rightBarButtonItemEvent() {
+        super.rightBarButtonItemEvent();
+        intent = new Intent();
+        intent.putExtra("fid", fid);
+
+        intent.setClass(SquareActivity.this, Publish_post.class);
+        startActivityForResult(intent, 304);
+    }
+
+    private void init() {
 		// TODO Auto-generated method stub
 		fid = "37";
 		options = ImageMethod.GetOptions();
@@ -273,13 +277,17 @@ public class SquareActivity extends tabActivity{
 		String title_name = "广场";
 		listview = (NoScrollListview)findViewById(R.id.square_listview);
 		scrollView = (CustomScrollView)findViewById(R.id.discuss_kids_scrollview);
+        scrollView.setOnTouchListener(new OnTouchListener() {
 
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                ChangeScrollviewAlpha(scrollView, navigationBar);
+                return  false;
+            }
+        });
 		mViewPager = (JazzyViewPager) findViewById(R.id.square_images_container);
 		mIndicator = (LinearLayout) findViewById(R.id.square_images_indicator);
 
-		edit_theme = (TextView)findViewById(R.id.sqare_theme);
-		title = (TextView)findViewById(R.id.discuss_kids_title);
-		title.setText(title_name);
 
         waitText = (ShimmerTextView)findViewById(R.id.discuss_kids_waittext);
 	}

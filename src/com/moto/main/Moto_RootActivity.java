@@ -73,8 +73,7 @@ public class Moto_RootActivity extends FragmentActivity implements NetWorkModelL
 	
 	@SuppressLint("NewApi")
 	public void ChangeScrollviewAlpha(ScrollView scrollView, LinearLayout bar) {
-		if(scrollView.getScaleY() > 0)
-		{
+
 			if(scrollView.getScrollY() < 100)
 			{
 				bar.getBackground().setAlpha(255);
@@ -85,11 +84,6 @@ public class Moto_RootActivity extends FragmentActivity implements NetWorkModelL
 				alpha = (float) ((1 - alpha) < 0.0 ? 0.0 : 1 - alpha);
 				bar.getBackground().setAlpha((int) (alpha*250));
 			}
-		}
-		else {
-			bar.getBackground().setAlpha(255);
-			navigationBar.setBackgroundColor(Color.rgb(72, 193, 213));
-		}
 	}
 	
 

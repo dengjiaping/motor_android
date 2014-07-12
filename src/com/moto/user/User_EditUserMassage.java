@@ -1,6 +1,4 @@
 package com.moto.user;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -34,13 +32,11 @@ import com.moto.main.MotorApplication;
 import com.moto.main.R;
 import com.moto.model.MeNetworkModel;
 import com.moto.model.NetWorkModelListener;
+import com.moto.photopicker.Bimp;
+import com.moto.photopicker.FileUtils;
+import com.moto.photopicker.ImgPicActivity;
 import com.moto.qiniu.img.Image;
-import com.moto.select_morephoto.AlbumActivity;
-import com.moto.select_morephoto.ImageManager2;
 import com.moto.toast.ToastClass;
-import com.moto.tryimage.FileUtils;
-import com.moto.tryimage.PhotoUtils;
-import com.moto.utils.StringUtils;
 import com.moto.utils.UrlUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
@@ -48,6 +44,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class User_EditUserMassage extends Moto_RootActivity implements OnClickListener,NetWorkModelListener{
@@ -86,6 +83,7 @@ public class User_EditUserMassage extends Moto_RootActivity implements OnClickLi
 	private ArrayList<Image> lovecarImage = new ArrayList<Image>();
 	private String profile = "";
 	private Image photofiles;
+    private int picPosition;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -138,9 +136,24 @@ public class User_EditUserMassage extends Moto_RootActivity implements OnClickLi
 			}
 			
 		};
+
+        user_img.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(photoChange)
+                {
+                    FileUtils.fliterPhoto(User_EditUserMassage.this, User_EditUserMassage.this, photoString);
+                }
+            }
+        });
 	}
 	private void init() {
 		// TODO Auto-generated method stub
+
+        //清空图片
+        Bimp.drr.clear();
+        Bimp.bmp.clear();
+        Bimp.max = 0;
 		mshared = getSharedPreferences("usermessage", 0);
 		token = mshared.getString("token", "");
 		options = ImageMethod.GetOptions();
@@ -199,20 +212,18 @@ public class User_EditUserMassage extends Moto_RootActivity implements OnClickLi
 		}
 		if(v == edit_user_img)
 		{
-            //			intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            //			startActivityForResult(intent, 2);
-			PhotoUtils.selectPhoto(User_EditUserMassage.this);
+            Bimp.MaxPictrueSize = 1;
+            Bimp.drr.clear();
+            Intent intent = new Intent(User_EditUserMassage.this,
+                    ImgPicActivity.class);
+            startActivityForResult(intent, 0);
 		}
 		if(v == user_add_Love_car)
 		{
-			Intent intent = new Intent(User_EditUserMassage.this,
-                                       AlbumActivity.class);
-			Bundle bundle = new Bundle();
-			// intent.putArrayListExtra("dataList", dataList);
-			bundle.putStringArrayList("dataList",
-                                      StringUtils.getIntentArrayList(dataList));
-			intent.putExtras(bundle);
-			startActivityForResult(intent, 1);
+            Bimp.MaxPictrueSize = 5;
+            Intent intent = new Intent(User_EditUserMassage.this,
+                    ImgPicActivity.class);
+            startActivityForResult(intent, 1);
 		}
 	}
 	private void SetMessage(){
@@ -273,7 +284,24 @@ public class User_EditUserMassage extends Moto_RootActivity implements OnClickLi
                 .findViewById(R.id.user_moto_photo_img);
 				moto_photo.addView(mLayout);
 				moto_photo.invalidate();
-				ImageManager2.from(this).displayImage(mPhoto, dataList.get(i),R.drawable.default_add_img);
+                picPosition = i;
+                try {
+                    Bitmap bm = Bimp.revitionImageSize(dataList.get(i));
+                    Bimp.bmp.add(bm);
+                    mPhoto.setImageBitmap(Bimp.bmp.get(i));
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+                }
+                mPhoto.setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        com.moto.photopicker.FileUtils.fliterPhoto(User_EditUserMassage.this, User_EditUserMassage.this, Bimp.drr.get(picPosition), picPosition);
+                    }
+                });
+
 			}
 		}
 		else if (num1 > 0) {
@@ -347,50 +375,21 @@ public class User_EditUserMassage extends Moto_RootActivity implements OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         
         if (requestCode == 0) {
-            
-            if (data == null) {
-                return;
-            }
-            if (resultCode == RESULT_OK) {
-                if (data.getData() == null) {
-                    return;
-                }
-                if (!FileUtils.isSdcardExist()) {
-                    ToastClass.SetToast(User_EditUserMassage.this, "SD卡不可用");
-                    return;
-                }
-                Uri uri = data.getData();
-                String[] proj = { MediaStore.Images.Media.DATA };
-                Cursor cursor = managedQuery(uri, proj, null, null, null);
-                if (cursor != null) {
-                    int column_index = cursor
-                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    if (cursor.getCount() > 0 && cursor.moveToFirst()) {
-                        String path = cursor.getString(column_index);
-                        Bitmap bitmap = PhotoUtils.getBitmapFromFile(path);
-                        if (PhotoUtils.bitmapIsLarge(bitmap)) {
-                            PhotoUtils.cropPhoto(this, this, path);
-                        } else {
-                            if (path != null) {
-                                photoString = path;
-                                photoChange = true;
-                                Bitmap b = BitmapFactory.decodeFile(path);
-                                user_img.setImageDrawable(new BitmapDrawable(b));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        else if(requestCode == 2 && resultCode == RESULT_OK){
-            String path = data.getStringExtra("path");
-            if(path != null)
+            if(Bimp.drr.size() > 0)
             {
-                photoString = path;
-                photoChange = true;
-                Bitmap b = BitmapFactory.decodeFile(path);
-                user_img.setImageDrawable(new BitmapDrawable(b));
+
+                try {
+                    photoString = Bimp.drr.get(0);
+                    Bimp.drr.clear();
+                    photoChange = true;
+                    Bitmap b = Bimp.revitionImageSize(photoString);
+                    user_img.setImageBitmap(b);
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+                }
             }
+
         }
         else if(requestCode == 3 && resultCode == RESULT_OK)
         {
@@ -403,15 +402,66 @@ public class User_EditUserMassage extends Moto_RootActivity implements OnClickLi
             }
         }
         else if(requestCode == 1){
-            if (resultCode != Activity.RESULT_OK) {
-                return;
-            }
-            Bundle bundle = data.getExtras();
-            ArrayList<String> tDataList = (ArrayList<String>)bundle.getSerializable("dataList");
+//            Bundle bundle = data.getExtras();
+//            ArrayList<String> tDataList = (ArrayList<String>)bundle.getSerializable("dataList");
             dataList.clear();
-            dataList.addAll(tDataList);
+            dataList.addAll(Bimp.drr);
             lovecarChange = true;
             SetMotoPhoto();
+        }
+
+        else if(requestCode == 5)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                String path = data.getStringExtra("path");
+                Bimp.drr.set(picPosition,path);
+                Bimp.bmp.clear();
+                dataList.clear();
+
+                dataList.addAll(Bimp.drr);
+                lovecarChange = true;
+                SetMotoPhoto();
+
+            }
+            if(resultCode == 201)
+            {
+                Bimp.bmp.clear();
+                dataList.clear();
+
+                dataList.addAll(Bimp.drr);
+                lovecarChange = true;
+                if(dataList.size() == 0)
+                {
+                    lovecarChange = false;
+                }
+                SetMotoPhoto();
+            }
+        }
+
+        else if(requestCode == 6)
+        {
+            if(resultCode == RESULT_OK)
+            {
+
+                try {
+                    String path = data.getStringExtra("path");
+                    photoString = path;
+                    photoChange = true;
+                    Bitmap b = Bimp.revitionImageSize(photoString);
+                    user_img.setImageBitmap(b);
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+                }
+
+            }
+            if(resultCode == 202)
+            {
+                photoString = "";
+                photoChange = false;
+                user_img.setImageBitmap(null);
+            }
         }
     }
 	@Override

@@ -15,11 +15,6 @@
 	        android:background="#ffffff"
 	        android:orientation="vertical"
 	        >
-	        <TextView 
-	    		android:background="#E7E7E7"
-	    		android:layout_width="fill_parent"
-	    		android:layout_height="60dp"
-	    		/>
 	        <RelativeLayout 
 	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"

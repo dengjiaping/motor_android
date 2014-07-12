@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -85,7 +86,6 @@ public class Theme_Post_Kids extends Moto_RootActivity{
     private DisplayImageOptions options;
     private DisplayImageOptions Originaloptions;
     private Handler handler;
-    private ImageView leftpage;
     private ShimmerTextView waitText;
 
 
@@ -95,7 +95,7 @@ public class Theme_Post_Kids extends Moto_RootActivity{
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.square_discuss_kids_post_kids_response);
+        addContentView(R.layout.square_discuss_kids_post_kids_response,R.string.userresponse,barButtonIconType.barButtonIconType_Back,barButtonIconType.barButtonIconType_None);
         init();
         adapter = new KidsAdapter(this, Item_list);
         listview.setAdapter(adapter);
@@ -141,6 +141,9 @@ public class Theme_Post_Kids extends Moto_RootActivity{
             }
 
         };
+
+        //必须在这里面添加head或者foot
+        scrollView.addHeadFootView();
 
         scrollView.setOnRefreshListener(new OnRefreshListener() {
             public void onRefresh() {
@@ -211,14 +214,7 @@ public class Theme_Post_Kids extends Moto_RootActivity{
                 }
             }
         });
-        leftpage.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Theme_Post_Kids.this.finish();
-            }
-        });
     }
 
     private void init() {
@@ -235,12 +231,19 @@ public class Theme_Post_Kids extends Moto_RootActivity{
         options = ImageMethod.GetOptions();
         Originaloptions = ImageMethod.GetOriginalOptions();
         waitText = (ShimmerTextView)findViewById(R.id.kids_post_response_waittext);
-        leftpage = (ImageView)findViewById(R.id.kids_post_response_listview_return);
+
         send = (ImageView)findViewById(R.id.post_kids_send);
         editText = (EmojiconEditText)findViewById(R.id.post_kids_response_theme_edit);
         listview = (NoScrollListview)findViewById(R.id.kids_post_response_listview);
         scrollView = (CustomScrollView)findViewById(R.id.kids_post_response_scrollview);
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
 
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                ChangeScrollviewAlpha(scrollView, navigationBar);
+                return  false;
+            }
+        });
 
         kids_post_response_avatar = (ImageView)findViewById(R.id.kids_post_response_avatar);
         kids_post_response_username = (EmojiconTextView)findViewById(R.id.kids_post_response_username);

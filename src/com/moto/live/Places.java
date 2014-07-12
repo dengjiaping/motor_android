@@ -217,7 +217,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 				intent.putExtra("lat", list.get(position).get("lat"));
 				intent.putExtra("lon", list.get(position).get("lon"));
 				intent.putExtra("locationsign", locationsign+"");
-				Places.this.setResult(3, intent);
+				Places.this.setResult(4, intent);
 				Places.this.finish();
 			}
 		});

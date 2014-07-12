@@ -8,6 +8,7 @@ import com.activeandroid.query.Select;
 import com.activeandroid.query.Update;
 import com.moto.live.WriteLiveActivity;
 import com.moto.model.DataBaseModel;
+import com.moto.photopicker.Bimp;
 import com.moto.toast.ToastClass;
 import com.moto.utils.DateUtils;
 import com.moto.utils.StringUtils;
@@ -87,17 +88,13 @@ public class User_Draftbox_writeLive extends WriteLiveActivity{
             int num = array.length();
             for(int i = 0; i < num; i++)
             {
-                dataList.add(array.get(i).toString());
+                Bimp.drr.add(array.get(i).toString());
             }
         }catch (Exception e)
         {}
 
-        if (dataList != null && dataList.size()>0) {
-            if (dataList.size() < 5) {
-                dataList.add("default_add_img");
-            }
-        }
-        gridImageAdapter.notifyDataSetChanged();
+
+        gridImageAdapter.update();
 
         et_sendmessage.setText(dataBaseModel.message);
 

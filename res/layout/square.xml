@@ -2,40 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#E7E7E7"
+    android:background="#ffffff"
     android:orientation="vertical" >
-
-   <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="50.0dip" >
-    <include
-        layout="@layout/title"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#ffffff"
-        android:textSize="26sp"
-        android:id="@+id/discuss_kids_title"
-        android:layout_centerInParent="true"
-        />
-
-    <TextView
-        android:id="@+id/sqare_theme"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:text="@string/write_post"
-        android:layout_alignParentRight="true"
-        android:clickable="true"
-        android:textColor="@drawable/text_press_style"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="15dp"
-        />
-	</RelativeLayout>
-
 
 	<com.moto.listview.CustomScrollView
 	    android:id="@+id/discuss_kids_scrollview"
