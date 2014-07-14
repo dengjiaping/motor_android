@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
@@ -32,7 +33,7 @@ public class User_SystemSetting_Draftbox extends Moto_RootActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addContentView(R.layout.user_system_draftbox,R.string.draftbox,barButtonIconType.barButtonIconType_Back,barButtonIconType.barButtonIconType_None);
+        addContentView(R.layout.user_system_draftbox,R.string.draftbox,R.string.cleardraftbox,barButtonIconType.barButtonIconType_Back,barButtonIconType.barRightTextViewType);
         init();
 
         getDataBaseData();
@@ -57,6 +58,15 @@ public class User_SystemSetting_Draftbox extends Moto_RootActivity{
 //                }
             }
         });
+    }
+
+    @Override
+    public void rightBarButtonItemEvent() {
+        super.rightBarButtonItemEvent();
+        new Delete().from(DataBaseModel.class).execute();
+        list.clear();
+        adapter.notifyDataSetChanged();
+
     }
 
     private void init(){

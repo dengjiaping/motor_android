@@ -1,14 +1,19 @@
 package com.moto.user;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
 import com.moto.constant.Constant;
@@ -18,9 +23,21 @@ import com.moto.main.R;
 import com.moto.model.SignNetWorkModel;
 import com.moto.toast.ToastClass;
 import com.moto.validation.Validation;
+import com.umeng.socialize.bean.MultiStatus;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.controller.RequestType;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.controller.listener.SocializeListeners;
+import com.umeng.socialize.exception.SocializeException;
+import com.umeng.socialize.sso.SinaSsoHandler;
+import com.umeng.socialize.sso.UMSsoHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by chen on 14-7-1.
@@ -31,11 +48,14 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
     private BootstrapButton login_button;
     private String nameString;
     private String passwordString;
+    private TextView quicklogin;
     private RequestParams param;
     private String emailString = "";
     private SharedPreferences.Editor editor;
     private SharedPreferences mshared;
     private Handler handler;
+    //快速登录
+    UMSocialService mController ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +92,83 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
             }
 
         };
+
+
+        mController = UMServiceFactory.getUMSocialService("com.umeng.login",
+                RequestType.SOCIAL);
+//        //设置新浪SSO handler
+//        mController.getConfig().setSsoHandler(new SinaSsoHandler());
+//
+//        SocializeConfig config = mController.getConfig();
+//        //添加关注对象(平台，关注用户的uid)
+//        config.addFollow(SHARE_MEDIA.SINA, "1914100420");
+//        //添加follow 时的回调
+//        config.setOauthDialogFollowListener(new SocializeListeners.MulStatusListener() {
+//            @Override
+//            public void onStart() {
+//                Log.d("TestData", "Follow Start");
+//            }
+//
+//            @Override
+//            public void onComplete(MultiStatus multiStatus, int st, SocializeEntity entity) {
+//                if (st == 200) {//follow 成功
+//                    //TODO do something
+//                }
+//            }
+//        });
+
+
+        quicklogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mController.doOauthVerify(User_Login.this, SHARE_MEDIA.SINA,new SocializeListeners.UMAuthListener() {
+                    @Override
+                    public void onError(SocializeException e, SHARE_MEDIA platform) {
+                    }
+                    @Override
+                    public void onComplete(Bundle value, SHARE_MEDIA platform) {
+                        if (value != null && !TextUtils.isEmpty(value.getString("uid"))) {
+                            //获取返回值
+                            mController.getPlatformInfo(User_Login.this, SHARE_MEDIA.SINA, new SocializeListeners.UMDataListener() {
+                                @Override
+                                public void onStart() {
+                                    Toast.makeText(User_Login.this, "获取平台数据开始...", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onComplete(int status, Map<String, Object> info) {
+                                    if (status == 200 && info != null) {
+                                        StringBuilder sb = new StringBuilder();
+                                        Set<String> keys = info.keySet();
+                                        for (String key : keys) {
+                                            sb.append(key + "=" + info.get(key).toString() + "\r\n");
+                                        }
+                                        Log.e("TestData", sb.toString());
+                                    } else {
+                                        Log.e("TestData", "发生错误：" + status);
+                                    }
+                                }
+                            });
+                        } else {
+                            Toast.makeText(User_Login.this, "授权失败",                       Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onCancel(SHARE_MEDIA platform) {}
+                    @Override
+                    public void onStart(SHARE_MEDIA platform) {}
+                });
+
+            }
+        });
+
+
+
+
+
     }
     private void init(){
+        quicklogin = (TextView)findViewById(R.id.quicklogin);
         login_name = (BootstrapEditText)findViewById(R.id.user_login_name);
         login_password = (BootstrapEditText)findViewById(R.id.user_login_password);
         login_button = (BootstrapButton)findViewById(R.id.user_login_button);
@@ -197,4 +292,17 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
         super.handleNetworkDataStart();
 
     }
+
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        // TODO Auto-generated method stub
+//
+//        super.onActivityResult(requestCode, resultCode, data);
+//        /**使用SSO授权必须添加如下代码 */
+//        UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode);
+//        if(ssoHandler != null){
+//            ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+//        }
+//    }
 }

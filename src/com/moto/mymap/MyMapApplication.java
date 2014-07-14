@@ -16,14 +16,6 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
-
-import com.araneaapps.android.libs.logger.ALog;
-import com.araneaapps.android.libs.logger.ALog.DebugLevel;
-import com.chute.sdk.v2.api.Chute;
-import com.chute.sdk.v2.api.authentication.AuthConstants;
-import com.chute.sdk.v2.model.enums.AccountType;
-import com.chute.sdk.v2.utils.PreferenceUtil;
-import com.moto.main.R;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -31,7 +23,6 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.TypedValue;
 
 
 public class MyMapApplication extends Application {

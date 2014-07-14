@@ -14,6 +14,7 @@
     <string name="app_name">机车党</string>
     <string name="desc">desc</string>
     <string name="userlogin">登录</string>
+    <string name="quicklogin">快速登录</string>
     <string name="bit_register">注&#160;册</string>
     <string name="register">注册</string>
     <string name="exit">退出当前账号</string>
@@ -99,6 +100,7 @@
     <string name="mycollect">我的收藏</string>
 	<string name="numsetting">账号设置</string>
 	<string name="draftbox">草稿箱</string>
+    <string name="cleardraftbox">清空</string>
 	<string name="edit_ownmassage">编辑资料</string>
 	<string name="signin">每日签到</string>
 	<string name="now_car">现役车种</string>
