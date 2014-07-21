@@ -18,11 +18,14 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
 
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.moto.constant.DialogMethod;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
+import com.moto.model.DataBaseModel;
 import com.moto.model.NetWorkModelListener;
 import com.moto.model.UpdateNetworkModel;
 import com.moto.mydialog.errorDialog;
@@ -129,12 +132,19 @@ public class User_SystemSetting extends Moto_RootActivity implements OnClickList
 		{
 			mshared = getSharedPreferences("usermessage", 0);
 			editor = mshared.edit();
-			editor.putString("email", "");
-			editor.putString("username", "");
-			editor.putString("token", "");
-            editor.putString("tid","");
-            editor.putString("subject","");
+            //变相的删除个人信息
+			editor.clear();
 			editor.commit();  //设置一下   必须加上这一句
+
+            //变相的删除游记个人缓存信息
+            mshared = getSharedPreferences("kidslinkedlistown",0);
+            editor = mshared.edit();
+            editor.clear().commit();
+
+            //删除数据库的数据
+            new Delete().from(DataBaseModel.class).execute();
+
+
 			setResult(301);
 			User_SystemSetting.this.finish();
 		}

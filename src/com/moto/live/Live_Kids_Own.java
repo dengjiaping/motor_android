@@ -281,7 +281,8 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
             }
 
         };
-
+        //必须在这里面添加head或者foot
+        scrollView.addHeadFootView();
         scrollView.setOnRefreshListener(new CustomScrollView.OnRefreshListener() {
             public void onRefresh() {
                 new AsyncTask<Void, Void, Void>() {

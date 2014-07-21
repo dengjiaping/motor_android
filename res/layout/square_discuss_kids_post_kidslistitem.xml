@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/user_itemmiddle_press"
     android:id="@+id/square_discuss_kids_post_layout"
     android:orientation="horizontal">
     <LinearLayout 
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
     	android:orientation="vertical"
         >
@@ -42,15 +42,41 @@
 	        	android:textSize="16sp"
 	        	/>
         </LinearLayout>
-        <TextView
-            android:id="@+id/post_item_kidlist_time"
-	      	android:layout_width="wrap_content"
-	       	android:layout_height="wrap_content"
-	        android:gravity="center_vertical"
-	        android:layout_marginTop="2dp"
-	        android:textColor="#AFAFAF"
-            android:layout_marginLeft="4dp"
-	        android:textSize="12sp"
-	        />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/post_item_kidlist_time"
+                android:layout_width="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginTop="2dp"
+                android:textColor="#AFAFAF"
+                android:layout_marginLeft="4dp"
+                android:textSize="12sp"
+                />
+            <RelativeLayout
+                android:id="@+id/post_listitem_user_layout"
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:background="#F0938D"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="3dp"
+                >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/post_user"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:textColor="#ffffff"
+                    />
+            </RelativeLayout>
+            </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

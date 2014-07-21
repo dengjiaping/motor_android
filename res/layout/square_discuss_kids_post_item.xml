@@ -65,15 +65,43 @@
                 />
         </RelativeLayout>
 
-        <com.rockerhieu.emojicon.EmojiconTextView
-            android:id="@+id/post_item_details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:layout_marginLeft="43dp"
-            android:layout_marginTop="3dp"
-            android:textSize="18sp"
-            />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <com.rockerhieu.emojicon.EmojiconTextView
+                android:id="@+id/post_item_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="40dp"
+                android:layout_marginLeft="43dp"
+                android:layout_marginTop="3dp"
+                android:textSize="18sp"
+                />
+
+            <RelativeLayout
+                android:id="@+id/post_user_layout"
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:background="#F0938D"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="3dp"
+                >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/post_user"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:textColor="#ffffff"
+                    />
+                </RelativeLayout>
+        </RelativeLayout>
         <RelativeLayout
             android:background="#E6F3F8"
             android:layout_marginTop="5dp"

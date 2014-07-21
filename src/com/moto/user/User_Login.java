@@ -16,12 +16,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
+import com.moto.asydata.LoadCacheResponseLoginouthandler;
+import com.moto.asydata.LoadDatahandler;
+import com.moto.asydata.RequstClient;
 import com.moto.constant.Constant;
 import com.moto.constant.DialogMethod;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
 import com.moto.model.SignNetWorkModel;
+import com.moto.model.SquareNetworkModel;
+import com.moto.qiniu.img.Image;
 import com.moto.toast.ToastClass;
+import com.moto.utils.CompressUtils;
 import com.moto.validation.Validation;
 import com.umeng.socialize.bean.MultiStatus;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -33,9 +39,11 @@ import com.umeng.socialize.exception.SocializeException;
 import com.umeng.socialize.sso.SinaSsoHandler;
 import com.umeng.socialize.sso.UMSsoHandler;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -56,6 +64,11 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
     private Handler handler;
     //快速登录
     UMSocialService mController ;
+    private String usid = "";
+    private String avatar = "";
+    private String username = "";
+    private String oauth_type = "1";
+    private String gender = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,18 +145,43 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
                             mController.getPlatformInfo(User_Login.this, SHARE_MEDIA.SINA, new SocializeListeners.UMDataListener() {
                                 @Override
                                 public void onStart() {
-                                    Toast.makeText(User_Login.this, "获取平台数据开始...", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(User_Login.this, "拉取数据...", Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
                                 public void onComplete(int status, Map<String, Object> info) {
                                     if (status == 200 && info != null) {
-                                        StringBuilder sb = new StringBuilder();
+//                                        StringBuilder sb = new StringBuilder();
                                         Set<String> keys = info.keySet();
                                         for (String key : keys) {
-                                            sb.append(key + "=" + info.get(key).toString() + "\r\n");
+                                            if(key.equals("uid"))
+                                            {
+                                                usid = info.get(key).toString();
+                                            }
+                                            else if(key.equals("gender"))
+                                            {
+                                                String m = info.get(key).toString();
+                                                if(m.equals("1"))
+                                                {
+                                                    gender = m;
+                                                }
+                                                else
+                                                {
+                                                    gender = "2";
+                                                }
+                                            }
+                                            else if(key.equals("profile_image_url"))
+                                            {
+                                                avatar = info.get(key).toString();
+                                            }
+                                            else if(key.equals("screen_name"))
+                                            {
+                                                username = info.get(key).toString();
+                                            }
+//                                            sb.append(key + "=" + info.get(key).toString() + "\r\n");
                                         }
-                                        Log.e("TestData", sb.toString());
+                                           quickLogin();
+//                                        Log.e("TestData", sb.toString());
                                     } else {
                                         Log.e("TestData", "发生错误：" + status);
                                     }
@@ -166,6 +204,87 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
 
 
 
+    }
+
+    private void quickLogin() {
+        // TODO Auto-generated method stub
+        param = new RequestParams();
+        param.put("usid", usid);
+        param.put("oauth_type", oauth_type);
+        param.put("avatar", avatar);
+        param.put("username",username);
+        param.put("gender",gender);
+        String uriString = path+"api/user/signinoauth";
+        RequstClient.post(uriString, param, new LoadCacheResponseLoginouthandler(
+                User_Login.this,
+                new LoadDatahandler() {
+
+                    @Override
+                    public void onStart() {
+                        // TODO Auto-generated method stub
+                        super.onStart();
+                    }
+
+                    @Override
+                    public void onLoadCaches(String data) {
+                        // TODO Auto-generated method stub
+                        super.onLoadCaches(data);
+                    }
+
+                    @Override
+                    public void onSuccess(String data) {
+                        // TODO Auto-generated method stub
+                        super.onSuccess(data);
+                        Log.e("sss", data);
+                        try {
+                            JSONObject jsonObject1 = new JSONObject(data);
+                            if (jsonObject1.getString("is").equals("1")) {
+                                String tid = jsonObject1.getString("tid");
+                                String subject = jsonObject1.getString("subject");
+                                JSONObject jsonObject2 = new JSONObject(jsonObject1.getString("userinfo"));
+                                String uidString = jsonObject2.getString("email");
+                                String usernameString = jsonObject2.getString("username");
+                                String tokenString = jsonObject2.getString("token");
+
+                                mshared = getSharedPreferences("usermessage", 0);
+                                editor = mshared.edit();
+                                editor.putString("email", uidString);
+                                editor.putString("username", usernameString);
+                                editor.putString("token", tokenString);
+                                editor.putString("tid",tid);
+                                editor.putString("subject",subject);
+                                editor.commit();
+                                handler.obtainMessage(Constant.MSG_SUCCESS)
+                                        .sendToTarget();
+
+                            } else {
+                                handler.obtainMessage(Constant.MSG_NULL).sendToTarget();
+                            }
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String error, String message) {
+                        // TODO Auto-generated method stub
+                        super.onFailure(error, message);
+                        // 获取一个Message对象，设置what为1
+                        Message msg = Message.obtain();
+                        msg.obj = message;
+                        msg.what = Constant.MSG_FALTH;
+                        // 发送这个消息到消息队列中
+                        handler.sendMessage(msg);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        // TODO Auto-generated method stub
+                        super.onFinish();
+                    }
+
+                }
+        ));
     }
     private void init(){
         quicklogin = (TextView)findViewById(R.id.quicklogin);

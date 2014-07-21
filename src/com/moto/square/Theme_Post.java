@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loopj.android.http.RequestParams;
@@ -76,6 +77,7 @@ public class Theme_Post extends Moto_RootActivity{
 	private DisplayImageOptions options;
 	private Handler handler;
     private ShimmerTextView waitText;
+    private String author = ""; //楼主
 
 	private TextView post_share;
     private TextView post_publish;
@@ -360,6 +362,7 @@ public class Theme_Post extends Moto_RootActivity{
                         for (int i = 0; i < array_detail.length(); i++) {
                             JSONObject jsonObject2 = (JSONObject) array_detail.get(i);
                             GroupList.add(GetMap(jsonObject2));
+                            author = GroupList.get(0).get("author").toString();
                         }
                         String post_post_list = jsonObject.getString("post_in_post_list");
                         JSONArray array_post = new JSONArray(post_post_list);
@@ -466,14 +469,14 @@ public class Theme_Post extends Moto_RootActivity{
         return map;
         
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // TODO Auto-generated method stub
-        menu.add(0, 0, Menu.NONE,"QQ").setIcon(R.drawable.qqimage);
-        menu.add(0, 1, Menu.NONE,"微博").setIcon(R.drawable.sinaimage);
-        menu.add(0, 2, Menu.NONE,"微信").setIcon(R.drawable.wechat_image);
-        return super.onCreateOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // TODO Auto-generated method stub
+//        menu.add(0, 0, Menu.NONE,"QQ").setIcon(R.drawable.qqimage);
+//        menu.add(0, 1, Menu.NONE,"微博").setIcon(R.drawable.sinaimage);
+//        menu.add(0, 2, Menu.NONE,"微信").setIcon(R.drawable.wechat_image);
+//        return super.onCreateOptionsMenu(menu);
+//    }
 	//此类为上面getview里面view的引用，方便快速滑动
 	class ViewHolder{
         EmojiconTextView post_item_user_name;
@@ -484,12 +487,14 @@ public class Theme_Post extends Moto_RootActivity{
         ProgressBarView post_item_progress_View;
 		TextView original_item_poster_time;
 		LinearLayout square_discuss_kids_post_item_groups;
+        RelativeLayout post_user_layout;
 	}
 	//此类为上面getview里面view的引用，方便快速滑动
 	class ViewHolderKids{
         EmojiconTextView post_item_kidlist_details;
         EmojiconTextView post_item_kidlist_user_name;
         TextView post_item_kidlist_time;
+        RelativeLayout post_listitem_user_layout;
 	}
     //	内部类实现BaseAdapter  ，自定义适配器
 	class MyAdapter extends BaseAdapter{
@@ -537,6 +542,7 @@ public class Theme_Post extends Moto_RootActivity{
 			holder.post_item_user_name = (EmojiconTextView)convertView.findViewById(R.id.post_item_user_name);
 			holder.post_item_details = (EmojiconTextView)convertView.findViewById(R.id.post_item_details);
 			holder.post_item_num = (TextView)convertView.findViewById(R.id.post_item_num);
+            holder.post_user_layout = (RelativeLayout)convertView.findViewById(R.id.post_user_layout);
 
 			holder.post_item_user_img = (ImageView)convertView.findViewById(R.id.post_item_user_img);
 			holder.square_discuss_kids_post_item_groups = (LinearLayout)convertView.findViewById(R.id.square_discuss_kids_post_item_groups);
@@ -550,6 +556,12 @@ public class Theme_Post extends Moto_RootActivity{
 			holder.post_item_num.setText((CharSequence) map.get("num"));
 			holder.original_item_poster_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
             MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(map.get("avatar").toString()),  holder.post_item_user_img,options,null);
+
+            //判断楼主
+            if(author.equals(map.get("author")))
+            {
+                holder.post_user_layout.setVisibility(View.VISIBLE);
+            }
             holder.post_item_user_img.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -624,7 +636,7 @@ public class Theme_Post extends Moto_RootActivity{
 					LinearLayout layout = (LinearLayout) inflater.inflate(
                                                                           R.layout.square_discuss_kids_post_kidslistitem, null);
 					kidsholder.post_item_kidlist_details = (EmojiconTextView)layout.findViewById(R.id.post_item_kidlist_details);
-
+                    kidsholder.post_listitem_user_layout = (RelativeLayout)layout.findViewById(R.id.post_listitem_user_layout);
 					kidsholder.post_item_kidlist_user_name = (EmojiconTextView)layout.findViewById(R.id.post_item_kidlist_user_name);
                     kidsholder.post_item_kidlist_time = (TextView)layout.findViewById(R.id.post_item_kidlist_time);
 					layout.setTag(kidsholder);
@@ -633,8 +645,14 @@ public class Theme_Post extends Moto_RootActivity{
 					kidsholder.post_item_kidlist_details.setText((CharSequence) list.get(i).get("message"));
 					kidsholder.post_item_kidlist_user_name.setText((CharSequence) list.get(i).get("author"));
                     kidsholder.post_item_kidlist_time.setText(com.moto.utils.DateUtils.timestampToDeatil(list.get(i).get("dateline")+""));
-
+//判断楼主
+                    if(author.equals(list.get(i).get("author")))
+                    {
+                        kidsholder.post_listitem_user_layout.setVisibility(View.VISIBLE);
+                    }
 					holder.square_discuss_kids_post_item_groups.addView(layout);
+
+
 				}
                 LayoutInflater inflater = LayoutInflater.from(context);
                 LinearLayout line = (LinearLayout)inflater.inflate(R.layout.theme_post_textline, null);

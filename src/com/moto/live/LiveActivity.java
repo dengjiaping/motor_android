@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -260,7 +261,8 @@ public class LiveActivity extends Moto_RootActivity{
 			public void onSuccess(String data) {
 				// TODO Auto-generated method stub
 				super.onSuccess(data);
-				try {
+                Log.e("sss",data);
+                try {
 					if(isrefresh)
 					{
 						live_list.clear();
