@@ -25,6 +25,7 @@ import android.view.animation.Interpolator;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -91,6 +92,7 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
     private String avatar = "";
     private ImageView user_img;
     private TextView live_title;
+    private LinkedList<String> dateList = new LinkedList<String>();
     private LinkedList<HashMap<String, Object>> list = new LinkedList<HashMap<String,Object>>();
     private ArrayList<HashMap<String, Object>> LocationList = new ArrayList<HashMap<String,Object>>();
     private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
@@ -120,6 +122,9 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
     private String imgPath = "http://motor.qiniudn.com/";
     private RequestParams param;
     private String tokenString;
+
+    private String firstDate;   //最开始的时间
+    private String pageDate;    //阶段时间
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -429,6 +434,8 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
 			ToastClass.SetToast(Live_Kids_Own.this, "需要先登录才能够查看自己直播");
             //			Moto_MainActivity.radioGroup.check(R.id.main_tab_user);
 		}
+
+
 		
 
 		options = ImageMethod.GetOptions();
@@ -459,6 +466,9 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
         carList = CacheModel.getPhotoCacheLiveDate("kidslinkedlistown",Live_Kids_Own.this);
         LocationList = CacheModel.getLocationCacheLiveDate("kidslinkedlistown", Live_Kids_Own.this);
         WidthHeightList = CacheModel.getWidthHeightCacheLiveDate("kidslinkedlistown", Live_Kids_Own.this);
+
+        dateList.clear();
+        getNumDate();
 
 	}
     
@@ -600,6 +610,9 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                                     LocationList.add(GetLocationMap(jsonObject2));
                                     //								getNumDate(list);
                                 }
+
+                                dateList.clear();
+                                getNumDate();
                                 if (!isload) {
                                     if (isRefresh)
                                         handler.obtainMessage(Constant.MSG_WAITSUCCESS)
@@ -695,6 +708,33 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
         return map;
     }
 
+    //获取天数
+    private void getNumDate()
+    {
+        int num = list.size();
+        if(num > 0)
+        {
+            firstDate = list.get(0).get("dateline").toString();
+            pageDate = firstDate;
+        }
+        dateList.add("第1天");
+        for(int i = 1; i < num; i++)
+        {
+            long date = DateUtils.getLocalDistDatas(pageDate,list.get(i).get("dateline").toString());
+
+            if(date == 0)
+            {
+                dateList.add("");
+            }
+            else
+            {
+                long datenum = DateUtils.getLocalDistDatas(firstDate,list.get(i).get("dateline").toString());
+                dateList.add("第"+(datenum+1)+"天");
+                pageDate = list.get(i).get("dateline").toString();
+            }
+        }
+    }
+
     //	内部类实现BaseAdapter  ，自定义适配器
     class MyAdapter extends BaseAdapter {
 
@@ -744,13 +784,34 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
 //            holder.live_kids_item_position = (ImageView)convertView.findViewById(R.id.live_kids_item_position);
             holder.live_kids_item_user_img = (ImageView)convertView.findViewById(R.id.live_kids_item_user_img);
             holder.mUpvPhotos = (UserPhotosView)convertView.findViewById(R.id.otherprofile_upv_photos);
+
+            holder.live_kids_item_timelayout = (LinearLayout)convertView.findViewById(R.id.live_kids_item_timelayout);
+            holder.live_kids_item_userlayout = (LinearLayout)convertView.findViewById(R.id.live_kids_item_userlayout);
+            holder.live_kids_item_datenum = (TextView)convertView.findViewById(R.id.live_kids_item_datenum);
+            holder.live_kids_item_date = (TextView)convertView.findViewById(R.id.live_kids_item_date);
+            holder.live_kids_item_week = (TextView)convertView.findViewById(R.id.live_kids_item_week);
+            holder.live_kids_item_text_week = (TextView)convertView.findViewById(R.id.live_kids_item_text_week);
             //				convertView.setTag(holder);
             //				holder = (ViewHolder) convertView.getTag();
 
             map = list.get(position);
-            holder.live_kids_item_username.setText(map.get("username").toString());
+
+            if(dateList.get(position).equals(""))
+            {
+                holder.live_kids_item_userlayout.setVisibility(View.VISIBLE);
+                holder.live_kids_item_username.setText(map.get("username").toString());
+                holder.live_kids_item_time_text.setText(com.moto.utils.DateUtils.getYearMonthDay(map.get("dateline").toString()));
+                holder.live_kids_item_text_week.setText(DateUtils.getLocalweek(map.get("dateline").toString()));
+                MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(map.get("avatar").toString()),  holder.live_kids_item_user_img,options,null);
+            }
+            else{
+                holder.live_kids_item_timelayout.setVisibility(View.VISIBLE);
+                holder.live_kids_item_datenum.setText(dateList.get(position));
+                holder.live_kids_item_date.setText(DateUtils.getYearMonthDay(map.get("dateline").toString()));
+                holder.live_kids_item_week.setText(DateUtils.getLocalweek(map.get("dateline").toString()));
+            }
             holder.live_kids_item_details.setText((CharSequence) map.get("message"));
-            holder.live_kids_item_time_text.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
+
             if(!map.get("location").toString().equals("null"))
             {
 //            	holder.live_kids_item_position.setVisibility(View.VISIBLE);
@@ -853,7 +914,6 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                     }
                 });
             }
-            MyMapApplication.imageLoader.displayImage(imgPath+map.get("avatar").toString()+"?imageView2/1/w/40/h/40",  holder.live_kids_item_user_img,options,null);
             return convertView;
         }
 
@@ -871,6 +931,13 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
         ImageView live_kids_item_user_img;
         UserPhotosView mUpvPhotos;// 照片
         ProgressBarView progressBarView;
+
+        LinearLayout live_kids_item_timelayout;
+        LinearLayout live_kids_item_userlayout;
+        TextView live_kids_item_datenum;
+        TextView live_kids_item_date;
+        TextView live_kids_item_week;
+        TextView live_kids_item_text_week;
     }
 
     /**

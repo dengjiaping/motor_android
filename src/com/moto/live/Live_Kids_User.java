@@ -76,6 +76,7 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,6 +96,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
     private RelativeLayout comment;
     private RelativeLayout live_kids_share;
     private RelativeLayout live_kids_collect;
+    private LinkedList<String> dateList = new LinkedList<String>();
     private LinkedList<HashMap<String, Object>> list = new LinkedList<HashMap<String,Object>>();
     private ArrayList<HashMap<String, Object>> LocationList = new ArrayList<HashMap<String,Object>>();
     private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
@@ -126,6 +128,9 @@ OnInfoWindowClickListener, InfoWindowAdapter{
     private RequestParams param;
     private String tokenString;
     private LiveNetworkModel liveNetworkModel;
+
+    private String firstDate;   //最开始的时间
+    private String pageDate;    //阶段时间
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -501,6 +506,9 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 		carList = CacheModel.getPhotoCacheLiveDate("kidslinkedlist"+tid,Live_Kids_User.this);
 		LocationList = CacheModel.getLocationCacheLiveDate("kidslinkedlist"+tid, Live_Kids_User.this);
 		WidthHeightList = CacheModel.getWidthHeightCacheLiveDate("kidslinkedlist"+tid, Live_Kids_User.this);
+        dateList.clear();
+        getNumDate();
+
 		text_map = (TextView)findViewById(R.id.live_kids_text_map);
 		loadingProgressBar = (ProgressBar)findViewById(R.id.live_kids_loading_progressBar);
 		live_kids_share = (RelativeLayout)findViewById(R.id.live_kids_share);
@@ -537,7 +545,6 @@ OnInfoWindowClickListener, InfoWindowAdapter{
                 MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(avatar),  user_img,options,null);
             }
             live_title.setText(list.get(0).get("author").toString());
-
         }
 	}
 	
@@ -603,14 +610,17 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 							list.add(GetMap(jsonObject2));
                             //							getNumDate(list);
 						}
-//                        String location_data = jsonObject.getString("location_list");
-//                        JSONArray array2 = new JSONArray(location_data);
-//                        int a2 = array2.length();
-//                        for (int i = 0; i < a2; i++) {
-//                            JSONObject jsonObject2 = (JSONObject) array2.get(i);
-//                            LocationList.add(GetLocationMap(jsonObject2));
-//                            //								getNumDate(list);
-//                        }
+
+                        dateList.clear();
+                        getNumDate();
+                        String location_data = jsonObject.getString("location_list");
+                        JSONArray array2 = new JSONArray(location_data);
+                        int a2 = array2.length();
+                        for (int i = 0; i < a2; i++) {
+                            JSONObject jsonObject2 = (JSONObject) array2.get(i);
+                            LocationList.add(GetLocationMap(jsonObject2));
+                            //								getNumDate(list);
+                        }
 						if (!isload) {
 							if (isRefresh)
 								handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
@@ -692,6 +702,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 			WidthHeightList.add(StringUtils.hashToWidthHeightArray(jsonObject.getString("photoinfo")));
             //			map.put("date", DateUtils.getDate(DateUtils.GetData(dateline)));
             //			map.put("dateNum", "第1天");
+
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			
@@ -700,18 +711,33 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 		
 		return map;
 	}
-    //	private void getNumDate(ArrayList<HashMap<String, Object>> list)
-    //	{
-    //		ArrayList<HashMap<String, Object>> myList;
-    //		myList = list;
-    //		int num = myList.size();
-    //		myList.get(0).put("dateNum", "第1天");
-    //		long time = DateUtils.GetSimpleData(myList.get(0).get("dateline").toString()).getTime();
-    //		for(int i = 1; i < num; i++)
-    //		{
-    //			myList.get(i).put("dateNum", "第"+DateUtils.getNumDate(time+"",DateUtils.GetData(myList.get(i).get("dateline").toString()).getTime()+"")+"天");
-    //		}
-    //	}
+
+    //获取天数
+    	private void getNumDate()
+    	{
+            int num = list.size();
+            if(num > 0)
+            {
+                firstDate = list.get(0).get("dateline").toString();
+                pageDate = firstDate;
+            }
+            dateList.add("第1天");
+            for(int i = 1; i < num; i++)
+            {
+                long date = DateUtils.getLocalDistDatas(pageDate,list.get(i).get("dateline").toString());
+
+                if(date == 0)
+                {
+                    dateList.add("");
+                }
+                else
+                {
+                    long datenum = DateUtils.getLocalDistDatas(firstDate,list.get(i).get("dateline").toString());
+                    dateList.add("第"+(datenum+1)+"天");
+                    pageDate = list.get(i).get("dateline").toString();
+                }
+            }
+    	}
 	
     //	内部类实现BaseAdapter  ，自定义适配器
 	class MyAdapter extends BaseAdapter{
@@ -761,14 +787,38 @@ OnInfoWindowClickListener, InfoWindowAdapter{
             holder.live_kids_item_position_text = (TextView)convertView.findViewById(R.id.live_kids_item_position_text);
 //            holder.live_kids_item_position = (ImageView)convertView.findViewById(R.id.live_kids_item_position);
             holder.live_kids_item_user_img = (ImageView)convertView.findViewById(R.id.live_kids_item_user_img);
+
+
+            holder.live_kids_item_timelayout = (LinearLayout)convertView.findViewById(R.id.live_kids_item_timelayout);
+            holder.live_kids_item_userlayout = (LinearLayout)convertView.findViewById(R.id.live_kids_item_userlayout);
+            holder.live_kids_item_datenum = (TextView)convertView.findViewById(R.id.live_kids_item_datenum);
+            holder.live_kids_item_date = (TextView)convertView.findViewById(R.id.live_kids_item_date);
+            holder.live_kids_item_week = (TextView)convertView.findViewById(R.id.live_kids_item_week);
+            holder.live_kids_item_text_week = (TextView)convertView.findViewById(R.id.live_kids_item_text_week);
+
             holder.mUpvPhotos = (UserPhotosView)convertView.findViewById(R.id.otherprofile_upv_photos);
             //				convertView.setTag(holder);
             //				holder = (ViewHolder) convertView.getTag();
 			
 			map = list.get(position);
-			holder.live_kids_item_username.setText(map.get("username").toString());
+
+            if(dateList.get(position).equals(""))
+            {
+                holder.live_kids_item_userlayout.setVisibility(View.VISIBLE);
+                holder.live_kids_item_username.setText(map.get("username").toString());
+                holder.live_kids_item_time_text.setText(com.moto.utils.DateUtils.getYearMonthDay(map.get("dateline").toString()));
+                holder.live_kids_item_text_week.setText(DateUtils.getLocalweek(map.get("dateline").toString()));
+                MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(map.get("avatar").toString()),  holder.live_kids_item_user_img,options,null);
+            }
+            else{
+                holder.live_kids_item_timelayout.setVisibility(View.VISIBLE);
+                holder.live_kids_item_datenum.setText(dateList.get(position));
+                holder.live_kids_item_date.setText(DateUtils.getYearMonthDay(map.get("dateline").toString()));
+                holder.live_kids_item_week.setText(DateUtils.getLocalweek(map.get("dateline").toString()));
+            }
+
             holder.live_kids_item_details.setText((CharSequence) map.get("message"));
-            holder.live_kids_item_time_text.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
+
             if(!map.get("location").toString().equals("null"))
             {
 //            	holder.live_kids_item_position.setVisibility(View.VISIBLE);
@@ -871,7 +921,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 					}
 				});
 			}
-			MyMapApplication.imageLoader.displayImage(imgPath+map.get("avatar").toString()+"?imageView2/1/w/40/h/40",  holder.live_kids_item_user_img,options,null);
+
             return convertView;
 		}
         
@@ -889,6 +939,13 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 		ImageView live_kids_item_user_img;
 		UserPhotosView mUpvPhotos;// 照片
 		ProgressBarView progressBarView;
+
+        LinearLayout live_kids_item_timelayout;
+        LinearLayout live_kids_item_userlayout;
+        TextView live_kids_item_datenum;
+        TextView live_kids_item_date;
+        TextView live_kids_item_week;
+        TextView live_kids_item_text_week;
 	}
     
 	@Override
@@ -913,6 +970,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 	 */
 	private void addMarkersToMap() {
 		int a = LocationList.size();
+
 		polylineOptions = new PolylineOptions();
 		for(int i = 0; i < a; i++)
 		{

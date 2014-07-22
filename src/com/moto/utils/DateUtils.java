@@ -2,12 +2,62 @@ package com.moto.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
 public class DateUtils {
-	  
-	public static Date timestampToLocalDate(String timestamp) {
+
+    //获取年月日日期
+    public static String getYearMonthDay(String utctime)
+    {
+        return formatDate(timestampToLocalDate(utctime));
+    }
+
+    //根据传入的UTC时间获取天数,无毫秒
+    public static long getLocalDistDatas(String utcTimestart,String utcTimeend)
+    {
+        return getDistDates(timestampToLocalDate(utcTimestart),timestampToLocalDate(utcTimeend));
+    }
+
+    //根据传入的UTC时间获取星期几，无毫秒
+    public static String getLocalweek(String utcTime)
+    {
+        return getWeek(timestampToLocalDate(utcTime));
+    }
+    /**
+     * 返回两个日期相差的天数
+     * @param startDate
+     * @param endDate
+     * @return
+     * @throws ParseException
+     */
+    public static long getDistDates(Date startDate,Date endDate)
+    {
+        long totalDate = 0;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        long timestart = calendar.getTimeInMillis();
+        calendar.setTime(endDate);
+        long timeend = calendar.getTimeInMillis();
+        totalDate = Math.abs((timeend - timestart))/(1000*60*60*24);
+        return totalDate;
+    }
+
+    //根据日期取得星期几
+    public static String getWeek(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+        String week = sdf.format(date);
+        return week;
+    }
+
+    /**
+     * UTC转为本地时间
+     * @param timestamp
+     * @return Data
+     */
+
+    public static Date timestampToLocalDate(String timestamp) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
@@ -206,6 +256,11 @@ public class DateUtils {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm");
 		return sdf.format(date);
 	}
+
+    public static String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+        return sdf.format(date);
+    }
 
 
     /**
