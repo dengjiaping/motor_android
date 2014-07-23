@@ -21,14 +21,16 @@ public class CacheModel{
 		editor.commit();
 	}
 	
-	public static void cacheLiveData(String filename, LinkedList<HashMap<String, Object>> datalist,LinkedList<LinkedList<String>> photolist,LinkedList<String> likeList,Activity activity)
+	public static void cacheLiveData(String filename, LinkedList<HashMap<String, Object>> datalist,LinkedList<LinkedList<String>> photolist,LinkedList<String> likeList,LinkedList<String> comment_list, Activity activity)
 	{
 		List<HashMap<String, Object>> list = datalist.size() > 8 ? datalist.subList(0, 8):datalist;
 		List<LinkedList<String>> 	PhotoList = photolist.size() > 8 ? photolist.subList(0, 8):photolist;
 		List<String> 	likelist = likeList.size() > 8 ? likeList.subList(0, 8):likeList;
+        List<String> 	commentlist = comment_list.size() > 8 ? comment_list.subList(0, 8):likeList;
 		savedataBase64(filename, "data", StringUtils.LinkedlistToBase(list), activity);
 		savedataBase64(filename, "photodata", StringUtils.PhotoLinkedlistToBase(PhotoList), activity);
 		savedataBase64(filename, "like", StringUtils.LikeLinkedlistToBase(likelist), activity);
+        savedataBase64(filename,"comment",StringUtils.CommentLinkedlistToBase(commentlist),activity);
 	}
 	
 	public static void cacheLiveData(String filename, 
@@ -108,6 +110,16 @@ public class CacheModel{
 		}
 		return StringUtils.readLikeLinkedlistFromBase(dataString);
 	}
+
+    public static LinkedList<String> getCommentCacheLiveDate(String filename,Activity activity){
+        mshared = activity.getSharedPreferences(filename, 0);
+        String dataString = mshared.getString("comment", "");
+        if(StringUtils.readLikeLinkedlistFromBase(dataString) == null)
+        {
+            return new LinkedList<String>();
+        }
+        return StringUtils.readLikeLinkedlistFromBase(dataString);
+    }
 	
 //	public static LinkedList<HashMap<String, Object>> restoreLiveDataList() {
 //		string

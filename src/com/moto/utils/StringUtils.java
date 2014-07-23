@@ -124,6 +124,26 @@ public class StringUtils {
          String newWord = new String(Base64.encodeBase64(baos.toByteArray()));
          return newWord;
     }
+
+    /**
+     * 将对象保存到SharedPreferences
+     */
+    public static String CommentLinkedlistToBase(List<String> list){
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(3000);
+        ObjectOutputStream oos=null;
+        try {
+            oos = new ObjectOutputStream(baos);
+            oos.writeObject(list);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        // 将Product对象放到OutputStream中
+        // 将Product对象转换成byte数组，并将其进行base64编码
+        String newWord = new String(Base64.encodeBase64(baos.toByteArray()));
+        return newWord;
+    }
     /**
      * 将对象保存到SharedPreferences
      */

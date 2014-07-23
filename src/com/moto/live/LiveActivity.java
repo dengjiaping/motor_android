@@ -69,6 +69,7 @@ public class LiveActivity extends Moto_RootActivity{
 	private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
 	private HashMap<String, Object> map;
 	private LinkedList<String> like_list = new LinkedList<String>();
+    private LinkedList<String> comment_list = new LinkedList<String>();
 	private Handler handler;
 	private MyAdapter adapter;
 	private NoScrollListview myListView;
@@ -268,6 +269,7 @@ public class LiveActivity extends Moto_RootActivity{
 						live_list.clear();
 						carList.clear();
 						like_list.clear();
+                        comment_list.clear();
 //						isfirst = false;
 					}
 					JSONObject jsonObject1 = new JSONObject(data);
@@ -289,6 +291,16 @@ public class LiveActivity extends Moto_RootActivity{
 							JSONObject jsonObject = num_Array.getJSONObject(i);
 							like_list.add(jsonObject.getString("like_count"));
 						}
+
+                        String comment_details = jsonObject1.getString("comment_list");
+                        JSONArray comment_Array = new JSONArray(comment_details);
+                        int comment_num = comment_Array.length();
+                        for(int i = 0; i < comment_num; i++)
+                        {
+                            JSONObject jsonObject = comment_Array.getJSONObject(i);
+                            comment_list.add(jsonObject.getString("comment_count"));
+                        }
+
 						if (!isload) {
 							if (isrefresh)
 								handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
@@ -334,6 +346,7 @@ public class LiveActivity extends Moto_RootActivity{
 		live_list = CacheModel.getCacheLiveDate("linkedlist",LiveActivity.this);
 		carList = CacheModel.getPhotoCacheLiveDate("linkedlist",LiveActivity.this);
 		like_list = CacheModel.getLikeCacheLiveDate("linkedlist", LiveActivity.this);
+        comment_list = CacheModel.getCommentCacheLiveDate("linkedlist",LiveActivity.this);
 		myListView = (NoScrollListview)findViewById(R.id.live_listview);
 
 		scrollView = (CustomScrollView)findViewById(R.id.live_myscrollview);
@@ -366,10 +379,12 @@ public class LiveActivity extends Moto_RootActivity{
 			String tid = jsonObject.getString("tid");
 			String location = jsonObject.getString("location");
 			String avatar = jsonObject.getString("avatar");
+            String status = jsonObject.getString("status");
 			map.put("author", author);
 			map.put("subject", subject);
 			map.put("message", message);
 			map.put("dateline", dateline);
+            map.put("status",status);
 			map.put("tid", tid);
 			map.put("location", location);
 			map.put("avatar", avatar);
@@ -439,8 +454,11 @@ public class LiveActivity extends Moto_RootActivity{
             holder.live_item_time = (TextView)convertView.findViewById(R.id.live_item_time);
             holder.live_item_layout = (RelativeLayout)convertView.findViewById(R.id.live_item_layout);
             holder.progressBarView = (ProgressBarView)convertView.findViewById(R.id.live_item_progress_View);
-            holder.live_item_like_layout = (LinearLayout)convertView.findViewById(R.id.live_item_like_layout);
+            holder.live_item_like_layout = (RelativeLayout)convertView.findViewById(R.id.live_item_like_layout);
             holder.live_like_img = (ImageView)convertView.findViewById(R.id.live_like_img);
+
+            holder.live_comment_num = (TextView)convertView.findViewById(R.id.live_comment_num);
+            holder.live_item_status_img = (ImageView)convertView.findViewById(R.id.live_item_status_img);
             //					convertView.setTag(holder);
             //			}
             //			else {
@@ -448,12 +466,16 @@ public class LiveActivity extends Moto_RootActivity{
             //			}
 			map = list.get(position);
 			holder.live_item_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
-			if(like_list.size() > 0) {
-				holder.live_like_people_num.setText(like_list.get(position));
-			}
+            holder.live_like_people_num.setText(like_list.get(position));
+            holder.live_comment_num.setText(comment_list.get(position));
 			holder.user_name.setText((CharSequence)map.get("author"));
             holder.detail.setText((CharSequence) map.get("message"));
             holder.time.setText(map.get("subject").toString());
+            //判断结束或者正在直播
+            if(map.get("status").equals("0"))
+            {
+                holder.live_item_status_img.setBackgroundResource(R.drawable.over);
+            }
 			if(carList.get(position).size() > 0)
 			{
 				holder.live_item_layout.setVisibility(View.VISIBLE);
@@ -531,8 +553,11 @@ public class LiveActivity extends Moto_RootActivity{
         EmojiconTextView time;
 		TextView live_like_people_num;
 		TextView live_item_time;
-		LinearLayout live_item_like_layout;
+		RelativeLayout live_item_like_layout;
 		ImageView live_like_img;
+
+        TextView live_comment_num;
+        ImageView live_item_status_img;
 	}
 	
 	private void SendLikeMessage(int position, String tid, String numString){
@@ -634,7 +659,7 @@ public class LiveActivity extends Moto_RootActivity{
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		CacheModel.cacheLiveData("linkedlist",live_list,carList,like_list,LiveActivity.this);
+		CacheModel.cacheLiveData("linkedlist",live_list,carList,like_list,comment_list,LiveActivity.this);
 	}
 	
 	
