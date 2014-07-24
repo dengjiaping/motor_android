@@ -13,6 +13,7 @@ import android.util.Log;
 
 import com.baidu.frontia.api.FrontiaPushMessageReceiver;
 import com.moto.live.LiveActivity;
+import com.moto.main.Moto_MainActivity;
 import com.moto.model.NetWorkModelListener;
 import com.moto.model.SignNetWorkModel;
 
@@ -137,7 +138,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 				String description, String customContentString) {
 		String notifyString = "������������ title=\"" + title + "\" description=\""
 				+ description + "\" customContent=" + customContentString;
-		Log.d(TAG, notifyString);
+		Log.e(TAG, notifyString);
 		
 		// ������������������������������mykey���myvalue���������������������������������������������������������
 		if (customContentString != null & TextUtils.isEmpty(customContentString)) {
@@ -158,7 +159,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
 		updateContent(context, notifyString);
 		
 		Intent intent = new Intent();
-        intent.setClass(context.getApplicationContext(), LiveActivity.class);
+        intent.setClass(context.getApplicationContext(), Welcome.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.getApplicationContext().startActivity(intent);
 	}

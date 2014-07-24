@@ -467,7 +467,11 @@ public class LiveActivity extends Moto_RootActivity{
 			map = list.get(position);
 			holder.live_item_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
             holder.live_like_people_num.setText(like_list.get(position));
-            holder.live_comment_num.setText(comment_list.get(position));
+            if(comment_list.size()>0)
+            {
+                holder.live_comment_num.setText(comment_list.get(position));
+            }
+
 			holder.user_name.setText((CharSequence)map.get("author"));
             holder.detail.setText((CharSequence) map.get("message"));
             holder.time.setText(map.get("subject").toString());

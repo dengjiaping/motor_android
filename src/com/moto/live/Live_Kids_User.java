@@ -794,7 +794,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
             holder.live_kids_item_datenum = (TextView)convertView.findViewById(R.id.live_kids_item_datenum);
             holder.live_kids_item_date = (TextView)convertView.findViewById(R.id.live_kids_item_date);
             holder.live_kids_item_week = (TextView)convertView.findViewById(R.id.live_kids_item_week);
-            holder.live_kids_item_text_week = (TextView)convertView.findViewById(R.id.live_kids_item_text_week);
+//            holder.live_kids_item_text_week = (TextView)convertView.findViewById(R.id.live_kids_item_text_week);
 
             holder.mUpvPhotos = (UserPhotosView)convertView.findViewById(R.id.otherprofile_upv_photos);
             //				convertView.setTag(holder);
@@ -806,8 +806,8 @@ OnInfoWindowClickListener, InfoWindowAdapter{
             {
                 holder.live_kids_item_userlayout.setVisibility(View.VISIBLE);
                 holder.live_kids_item_username.setText(map.get("username").toString());
-                holder.live_kids_item_time_text.setText(com.moto.utils.DateUtils.getYearMonthDay(map.get("dateline").toString()));
-                holder.live_kids_item_text_week.setText(DateUtils.getLocalweek(map.get("dateline").toString()));
+                holder.live_kids_item_time_text.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
+//                holder.live_kids_item_text_week.setText(DateUtils.getLocalweek(map.get("dateline").toString()));
                 MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(map.get("avatar").toString()),  holder.live_kids_item_user_img,options,null);
             }
             else{
@@ -945,7 +945,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
         TextView live_kids_item_datenum;
         TextView live_kids_item_date;
         TextView live_kids_item_week;
-        TextView live_kids_item_text_week;
+//        TextView live_kids_item_text_week;
 	}
     
 	@Override
