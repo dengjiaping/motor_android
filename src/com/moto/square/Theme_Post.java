@@ -202,6 +202,8 @@ public class Theme_Post extends Moto_RootActivity{
                 SendKeepMessage();
             }
         });
+
+
 		scrollView.setOnRefreshListener(new OnRefreshListener() {
 			public void onRefresh() {
 				new AsyncTask<Void, Void, Void>() {
@@ -265,6 +267,7 @@ public class Theme_Post extends Moto_RootActivity{
                 bundle.putString("message",GroupList.get(i).get("message").toString());
                 bundle.putString("dateline",GroupList.get(i).get("dateline").toString());
                 bundle.putString("avatar",GroupList.get(i).get("avatar").toString());
+                bundle.putString("authorname",author);
                 if(carList.get(i).size() > 0)
                 bundle.putString("photoname",carList.get(i).get(0));
                 else

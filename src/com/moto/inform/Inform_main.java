@@ -4,6 +4,7 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -19,7 +20,9 @@ import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringConfig;
 import com.facebook.rebound.SpringSystem;
 import com.facebook.rebound.SpringUtil;
+import com.moto.main.Moto_MainActivity;
 import com.moto.main.R;
+import com.moto.toast.ToastClass;
 
 import info.hoang8f.android.segmented.SegmentedGroup;
 
@@ -28,11 +31,13 @@ import info.hoang8f.android.segmented.SegmentedGroup;
  */
 public class Inform_main extends TabActivity implements View.OnClickListener{
     /** Called when the activity is first created. */
-    private TabHost tabHost;
+    public static TabHost tabHost;
     public static SegmentedGroup radioGroup;
     //	private TextView main_tab_new_message;
     private ImageView inform_add_img;
-    private LinearLayout layout;
+    public static LinearLayout layout;
+
+    private String type;   //菜单栏跳转type
 
     private RadioButton inform_button1;
     private RadioButton inform_button2;
@@ -47,6 +52,8 @@ public class Inform_main extends TabActivity implements View.OnClickListener{
         tabHost=this.getTabHost();
         TabHost.TabSpec spec;
         Intent intent;
+
+        type = ToastClass.GetUserType(this);
 
         inform_button1 = (RadioButton)findViewById(R.id.inform_button1);
         inform_button2 = (RadioButton)findViewById(R.id.inform_button2);
@@ -67,7 +74,31 @@ public class Inform_main extends TabActivity implements View.OnClickListener{
         spec=tabHost.newTabSpec("private").setIndicator("private").setContent(intent);
         tabHost.addTab(spec);
 
-        tabHost.setCurrentTab(0);
+
+        if(type.equals("2") || type.equals("0"))
+        {
+            tabHost.setCurrentTab(0);
+            inform_button1.setChecked(true);
+            inform_button2.setChecked(false);
+            inform_button3.setChecked(false);
+        }
+        else if(type.equals("1"))
+        {
+            tabHost.setCurrentTab(1);
+            inform_button1.setChecked(false);
+            inform_button2.setChecked(true);
+            inform_button3.setChecked(false);
+        }
+        else if(type.equals("3"))
+        {
+            tabHost.setCurrentTab(2);
+            inform_button1.setChecked(false);
+            inform_button2.setChecked(false);
+            inform_button3.setChecked(true);
+        }
+        Moto_MainActivity.layout.bringToFront();
+        ToastClass.setUserType(this,"0");
+
         layout =(LinearLayout)findViewById(R.id.console_line_bottom);
         radioGroup = (SegmentedGroup) this.findViewById(R.id.inform_segmented);
         radioGroup.setTintColor(Color.BLUE);

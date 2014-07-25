@@ -23,14 +23,14 @@
 	        	android:layout_height="wrap_content"
 	        	android:gravity="center_vertical"
 	        	android:textColor="#41c1d7"
-	        	android:textSize="16sp"
+	        	android:textSize="12sp"
 	        	/>
 			<TextView 
 	        	android:layout_width="wrap_content"
 	        	android:layout_height="wrap_content"
 	        	android:gravity="center_vertical"
 	        	android:textColor="#41c1d7"
-	        	android:textSize="16sp"
+	        	android:textSize="12sp"
 	        	android:text=": "
 	        	/>
 			<com.rockerhieu.emojicon.EmojiconTextView
@@ -39,11 +39,12 @@
 	        	android:layout_height="wrap_content"
 	        	android:gravity="center_vertical"
 	        	android:textColor="#000000"
-	        	android:textSize="16sp"
+	        	android:textSize="12sp"
 	        	/>
         </LinearLayout>
         <RelativeLayout
             android:layout_width="fill_parent"
+            android:layout_marginBottom="3dp"
             android:layout_height="wrap_content">
 
             <TextView
@@ -59,8 +60,8 @@
                 />
             <RelativeLayout
                 android:id="@+id/post_listitem_user_layout"
-                android:layout_width="30dp"
-                android:layout_height="20dp"
+                android:layout_width="25dp"
+                android:layout_height="15dp"
                 android:layout_centerVertical="true"
                 android:visibility="gone"
                 android:background="#F0938D"
@@ -73,7 +74,7 @@
                     android:layout_height="fill_parent"
                     android:text="@string/post_user"
                     android:gravity="center"
-                    android:textSize="12sp"
+                    android:textSize="10sp"
                     android:textColor="#ffffff"
                     />
             </RelativeLayout>

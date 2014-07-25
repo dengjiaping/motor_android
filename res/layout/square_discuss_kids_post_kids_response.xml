@@ -28,8 +28,8 @@
                     android:layout_height="50dp">
                     <ImageView
                         android:contentDescription="@string/desc"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_centerVertical="true"
                         android:clickable="true"
                         android:layout_marginLeft="3dp"
@@ -45,7 +45,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:textSize="18sp"
+                        android:textSize="13sp"
                         />
                 </RelativeLayout>
                 <com.rockerhieu.emojicon.EmojiconTextView
@@ -56,7 +56,7 @@
                     android:textColor="#000000"
                     android:layout_marginLeft="45dp"
                     android:layout_marginTop="3dp"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     />
 
                 <RelativeLayout

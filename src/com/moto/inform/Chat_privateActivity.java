@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -101,6 +102,7 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
                         });
                         break;
                 }
+
                 super.handleMessage(msg);
             }
 
@@ -131,6 +133,24 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
 
 
         new InformNetworkModel(this,this).readPrivateMessage(otherUserName, DateUtils.getUTCCurrentTimestamp());
+    }
+
+    @Override
+    public void leftBarButtonItemEvent() {
+        super.leftBarButtonItemEvent();
+        //百度推送通知开启
+        MyPushMessageReceiver.isBackGround = true;
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
+        {
+            //百度推送通知开启
+            MyPushMessageReceiver.isBackGround = true;
+
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void init() {
@@ -173,7 +193,9 @@ public class Chat_privateActivity extends Moto_RootActivity implements EventHand
     @Override
     protected void onResume() {
         super.onResume();
+
         MyPushMessageReceiver.eventHandler = Chat_privateActivity.this;
+        MyPushMessageReceiver.isBackGround = false;
     }
 
 

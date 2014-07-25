@@ -1,17 +1,20 @@
 package com.moto.toast;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.activeandroid.query.Select;
 import com.moto.main.R;
 
 public class ToastClass {
     private static SharedPreferences TokenShared;
     private static String tokenString;
+    private static SharedPreferences.Editor editor;
 	public static void SetToast(Activity activity, String string)
 	{
 		Toast.makeText(activity, string, Toast.LENGTH_SHORT).show();
@@ -57,6 +60,39 @@ public class ToastClass {
     {
         TokenShared = activity.getSharedPreferences("usermessage", 0);
         tokenString = TokenShared.getString("tid", "");
+        if(tokenString.equals(""))
+        {
+            return "";
+
+        }
+        return tokenString;
+    }
+
+    public static String GetAuthorName(Activity activity)
+    {
+        TokenShared = activity.getSharedPreferences("usermessage", 0);
+        tokenString = TokenShared.getString("username", "");
+        if(tokenString.equals(""))
+        {
+            return "";
+
+        }
+        return tokenString;
+    }
+
+    public static void setUserType(Context context,String type)
+    {
+        TokenShared = context.getSharedPreferences("usermessage", 0);
+        editor = TokenShared.edit();
+        editor.putString("type", type);
+
+        editor.commit();
+    }
+
+    public static String GetUserType(Activity activity)
+    {
+        TokenShared = activity.getSharedPreferences("usermessage", 0);
+        tokenString = TokenShared.getString("type", "");
         if(tokenString.equals(""))
         {
             return "";

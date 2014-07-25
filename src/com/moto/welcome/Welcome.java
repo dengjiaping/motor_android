@@ -22,6 +22,7 @@ public class Welcome extends MyActivity{
 		PushManager.startWork(getApplicationContext(),
                               PushConstants.LOGIN_TYPE_API_KEY,
                               Utils.getMetaValue(this, "api_key"));
+//        MyPushMessageReceiver.isStartApp = true;
 		intent = new Intent();
 		intent.setClass(Welcome.this, Moto_MainActivity.class);
 		startActivity(intent);

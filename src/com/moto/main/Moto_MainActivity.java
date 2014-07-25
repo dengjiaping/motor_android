@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -50,6 +52,7 @@ import com.moto.toast.ToastClass;
 import com.moto.user.UserActivity;
 import com.moto.user.User_Login;
 import com.moto.utils.StringUtils;
+import com.moto.welcome.MyPushMessageReceiver;
 import com.moto.welcome.NetworkBroadCast;
 import com.moto.welcome.Utils;
 
@@ -672,5 +675,21 @@ public class Moto_MainActivity extends TabActivity implements View.OnClickListen
         unregisterReceiver(networkBroadCast);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        layout.bringToFront();
+    }
 
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        // TODO Auto-generated method stub
+//        if(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
+//        {
+//            Log.e("hhhh","break");
+//            MyPushMessageReceiver.isStartApp = false;
+//
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
 }

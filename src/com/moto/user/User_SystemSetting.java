@@ -20,6 +20,7 @@ import android.widget.RemoteViews;
 
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.baidu.android.pushservice.PushManager;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.moto.constant.DialogMethod;
@@ -144,7 +145,8 @@ public class User_SystemSetting extends Moto_RootActivity implements OnClickList
             //删除数据库的数据
             new Delete().from(DataBaseModel.class).execute();
 
-
+            //解绑百度推送
+            PushManager.unbind(this);
 			setResult(301);
 			User_SystemSetting.this.finish();
 		}

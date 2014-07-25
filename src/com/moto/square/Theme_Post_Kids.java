@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +72,7 @@ public class Theme_Post_Kids extends Moto_RootActivity{
     private long time = 0;
     private Intent intent;
     RequestParams param;
+    private String authorname = ""; //楼主
 
     private ImageView kids_post_response_avatar;
     private EmojiconTextView kids_post_response_username;
@@ -227,6 +229,7 @@ public class Theme_Post_Kids extends Moto_RootActivity{
         dateline = bundle.getString("dateline");
         avatar = bundle.getString("avatar");
         photoname = bundle.getString("photoname");
+        authorname = bundle.getString("authorname");
 
         options = ImageMethod.GetOptions();
         Originaloptions = ImageMethod.GetOriginalOptions();
@@ -530,10 +533,15 @@ public class Theme_Post_Kids extends Moto_RootActivity{
             holder.square_discuss_kids_post_kids_img = (ImageView)convertView.findViewById(R.id.square_discuss_kids_post_kids_img);
             holder.square_discuss_kids_post_kids_username = (EmojiconTextView)convertView.findViewById(R.id.square_discuss_kids_post_kids_username);
             holder.square_discuss_kids_post_kids_time = (TextView)convertView.findViewById(R.id.square_discuss_kids_post_kids_time);
+            holder.square_discuss_kids_post_kids_user_layout = (RelativeLayout)convertView.findViewById(R.id.square_discuss_kids_post_kids_user_layout);
             convertView.setTag(holder);
             holder = (ViewHolderKids) convertView.getTag();
 
             map = list.get(position);
+            if(authorname.equals(map.get("author")))
+            {
+                holder.square_discuss_kids_post_kids_user_layout.setVisibility(View.VISIBLE);
+            }
             holder.square_discuss_kids_post_kids_details.setText((CharSequence) map.get("message"));
             holder.square_discuss_kids_post_kids_username.setText((CharSequence) map.get("author"));
             holder.square_discuss_kids_post_kids_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
@@ -564,5 +572,6 @@ public class Theme_Post_Kids extends Moto_RootActivity{
         ImageView square_discuss_kids_post_kids_img;
         EmojiconTextView square_discuss_kids_post_kids_username;
         TextView square_discuss_kids_post_kids_time;
+        RelativeLayout square_discuss_kids_post_kids_user_layout;
     }
 }

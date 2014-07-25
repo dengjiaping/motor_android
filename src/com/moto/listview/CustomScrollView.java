@@ -115,7 +115,7 @@ public class CustomScrollView extends ScrollView {
     public void addHeadFootView(){
         if (parentView == null) {
             parentView = (ViewGroup)this.getChildAt(0);
-            headView.setPadding(0, 35, 0, 0);
+            headView.setPadding(0, 30, 0, 0);
             headView.invalidate();
             parentView.addView(headView, 0);
             parentView.addView(footView);
@@ -269,7 +269,7 @@ public class CustomScrollView extends ScrollView {
                 break;
                 
             case REFRESHING:
-                headView.setPadding(0, 120, 0, 0);
+                headView.setPadding(0, 115, 0, 0);
                 progressBar.setVisibility(View.VISIBLE);
                 arrowImageView.clearAnimation();
                 arrowImageView.setVisibility(View.GONE);
@@ -277,7 +277,7 @@ public class CustomScrollView extends ScrollView {
                 lastUpdatedTextView. setVisibility(View.VISIBLE);
                 break;
             case DONE:
-                headView.setPadding(0, 35, 0, 0);
+                headView.setPadding(0, 30, 0, 0);
                 progressBar.setVisibility(View.GONE);
                 arrowImageView.clearAnimation();
                 arrowImageView.setImageResource(R.drawable.z_arrow_down);
