@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -76,7 +75,6 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -852,7 +850,10 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 						overridePendingTransition(R.anim.zoom_enter, 0);
 					}
 				});
-				String imageUrl = UrlUtils.imageUrl(carList.get(position).get(carList.get(position).size()-1));
+                int width = WidthHeightList.get(position).get(WidthHeightList.get(position).size()-1).get("width");
+                int height = WidthHeightList.get(position).get(WidthHeightList.get(position).size()-1).get("height");
+                int Endheight = screenWidth * height / width;
+				String imageUrl = UrlUtils.imageUrl_avatar(carList.get(position).get(carList.get(position).size()-1),width,Endheight);
 				holder.live_kids_item_img.setVisibility(View.VISIBLE);
 				MyMapApplication.imageLoader.displayImage(imageUrl, holder.live_kids_item_img,Originaloptions,new SimpleImageLoadingListener(){
 					@Override
@@ -894,9 +895,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 						
 					}
 				});
-				int width = WidthHeightList.get(position).get(WidthHeightList.get(position).size()-1).get("width");
-				int height = WidthHeightList.get(position).get(WidthHeightList.get(position).size()-1).get("height");
-				int Endheight = screenWidth * height / width;
+
 				holder.live_kids_item_img.setImageHeight(Endheight);
 				holder.live_kids_item_img.setImageWidth(screenWidth);
 				

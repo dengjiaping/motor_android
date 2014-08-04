@@ -78,17 +78,71 @@
         android:background="#E2EBB4"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/quicklogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="#000099"
-            android:gravity="right|center_vertical"
-            android:layout_marginTop="17.5dp"
-            android:layout_marginRight="12dp"
-            android:text="@string/quicklogin"
-            />
+        <RelativeLayout
+            android:clickable="true"
+            android:layout_width="130dp"
+            android:id="@+id/sinaquicklogin"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="25dp"
+            android:background="@drawable/button_sina_style"
+            android:layout_height="38dp"
+            >
+            <ImageView
+                android:id="@+id/button_sina_img"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:focusable="false"
+                android:clickable="false"
+                android:layout_margin="3dp"
+                android:background="@drawable/button_sina_on"
+                />
+
+            <TextView
+                android:layout_toRightOf="@id/button_sina_img"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:layout_centerVertical="true"
+                android:textColor="#ffffff"
+                android:text="@string/sinaquicklogin"
+                />
+
+            </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/qqquicklogin"
+            android:clickable="true"
+            android:layout_width="130dp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="25dp"
+            android:background="@drawable/button_qq_style"
+            android:layout_height="38dp"
+            >
+            <ImageView
+                android:id="@+id/button_qq_img"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:focusable="false"
+                android:clickable="false"
+                android:layout_margin="3dp"
+                android:background="@drawable/button_qq_on"
+                />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textSize="18sp"
+                android:layout_toRightOf="@id/button_qq_img"
+                android:textColor="#ffffff"
+                android:text="@string/qqquicklogin"
+                />
+
+        </RelativeLayout>
+
+
         </RelativeLayout>
 
 	

@@ -14,4 +14,14 @@ public class UrlUtils {
 		String url =  stringBuilder.append(imagePath).append(imageHash).toString();
 		return url;
 	}
+
+    public static String imageUrl_avatar(String imageHash,int width,int height)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+//        String url =  stringBuilder.append(imagePath).append(imageHash).append("?imageMogr2/thumbnail/")
+//                .append(width).append("x").append(height).append("!").toString();
+        String url =  stringBuilder.append(imagePath).append(imageHash).append("?imageView2/1/w/")
+                .append(width).append("/h/").append(height).toString();
+        return url;
+    }
 }

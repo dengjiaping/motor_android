@@ -1,7 +1,5 @@
 package com.moto.user;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,7 +10,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
@@ -24,26 +22,19 @@ import com.moto.constant.DialogMethod;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.R;
 import com.moto.model.SignNetWorkModel;
-import com.moto.model.SquareNetworkModel;
-import com.moto.qiniu.img.Image;
 import com.moto.toast.ToastClass;
-import com.moto.utils.CompressUtils;
 import com.moto.validation.Validation;
-import com.umeng.socialize.bean.MultiStatus;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.RequestType;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners;
 import com.umeng.socialize.exception.SocializeException;
-import com.umeng.socialize.sso.SinaSsoHandler;
-import com.umeng.socialize.sso.UMSsoHandler;
+import com.umeng.socialize.sso.QZoneSsoHandler;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -56,7 +47,8 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
     private BootstrapButton login_button;
     private String nameString;
     private String passwordString;
-    private TextView quicklogin;
+    private RelativeLayout sinaquicklogin;
+    private RelativeLayout qqquicklogin;
     private RequestParams param;
     private String emailString = "";
     private SharedPreferences.Editor editor;
@@ -109,6 +101,9 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
 
         mController = UMServiceFactory.getUMSocialService("com.umeng.login",
                 RequestType.SOCIAL);
+
+        //为了避免每次都从服务器获取APP ID、APP KEY，请设置APP ID跟APP KEY
+        mController.getConfig().setSsoHandler( new QZoneSsoHandler(User_Login.this, "100424468", "53c0b8f456240b865200cc6b") );
 //        //设置新浪SSO handler
 //        mController.getConfig().setSsoHandler(new SinaSsoHandler());
 //
@@ -131,7 +126,8 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
 //        });
 
 
-        quicklogin.setOnClickListener(new View.OnClickListener() {
+        //新浪快速登录
+        sinaquicklogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mController.doOauthVerify(User_Login.this, SHARE_MEDIA.SINA,new SocializeListeners.UMAuthListener() {
@@ -150,10 +146,12 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
 
                                 @Override
                                 public void onComplete(int status, Map<String, Object> info) {
+
                                     if (status == 200 && info != null) {
 //                                        StringBuilder sb = new StringBuilder();
                                         Set<String> keys = info.keySet();
                                         for (String key : keys) {
+                                            Log.e("aaaa",info.get(key).toString());
                                             if(key.equals("uid"))
                                             {
                                                 usid = info.get(key).toString();
@@ -200,7 +198,75 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
             }
         });
 
+        //QQ快速登录
+        qqquicklogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mController.doOauthVerify(User_Login.this, SHARE_MEDIA.QZONE,new SocializeListeners.UMAuthListener() {
+                    @Override
+                    public void onError(SocializeException e, SHARE_MEDIA platform) {
+                    }
+                    @Override
+                    public void onComplete(Bundle value, SHARE_MEDIA platform) {
+                        if (value != null && !TextUtils.isEmpty(value.getString("uid"))) {
+                            //获取返回值
+                            mController.getPlatformInfo(User_Login.this, SHARE_MEDIA.QZONE, new SocializeListeners.UMDataListener() {
+                                @Override
+                                public void onStart() {
+                                    Toast.makeText(User_Login.this, "拉取数据...", Toast.LENGTH_SHORT).show();
+                                }
 
+                                @Override
+                                public void onComplete(int status, Map<String, Object> info) {
+                                    if (status == 200 && info != null) {
+//                                        StringBuilder sb = new StringBuilder();
+                                        Set<String> keys = info.keySet();
+                                        for (String key : keys) {
+                                            if(key.equals("uid"))
+                                            {
+                                                usid = info.get(key).toString();
+                                            }
+                                            else if(key.equals("gender"))
+                                            {
+                                                String m = info.get(key).toString();
+                                                if(m.equals("1"))
+                                                {
+                                                    gender = m;
+                                                }
+                                                else
+                                                {
+                                                    gender = "2";
+                                                }
+                                            }
+                                            else if(key.equals("profile_image_url"))
+                                            {
+                                                avatar = info.get(key).toString();
+                                            }
+                                            else if(key.equals("screen_name"))
+                                            {
+                                                username = info.get(key).toString();
+                                            }
+//                                            sb.append(key + "=" + info.get(key).toString() + "\r\n");
+                                        }
+                                        quickLogin();
+//                                        Log.e("TestData", sb.toString());
+                                    } else {
+                                        Log.e("TestData", "发生错误：" + status);
+                                    }
+                                }
+                            });
+                        } else {
+                            Toast.makeText(User_Login.this, "授权失败",                       Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onCancel(SHARE_MEDIA platform) {}
+                    @Override
+                    public void onStart(SHARE_MEDIA platform) {}
+                });
+
+            }
+        });
 
 
 
@@ -287,7 +353,8 @@ public class User_Login extends Moto_RootActivity implements View.OnClickListene
         ));
     }
     private void init(){
-        quicklogin = (TextView)findViewById(R.id.quicklogin);
+        sinaquicklogin = (RelativeLayout)findViewById(R.id.sinaquicklogin);
+        qqquicklogin = (RelativeLayout)findViewById(R.id.qqquicklogin);
         login_name = (BootstrapEditText)findViewById(R.id.user_login_name);
         login_password = (BootstrapEditText)findViewById(R.id.user_login_password);
         login_button = (BootstrapButton)findViewById(R.id.user_login_button);

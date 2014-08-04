@@ -14,7 +14,8 @@
     <string name="app_name">机车党</string>
     <string name="desc">desc</string>
     <string name="userlogin">登录</string>
-    <string name="quicklogin">快速登录</string>
+    <string name="sinaquicklogin">新浪登录</string>
+    <string name="qqquicklogin">QQ登录</string>
     <string name="bit_register">注&#160;册</string>
     <string name="register">注册</string>
     <string name="exit">退出当前账号</string>
