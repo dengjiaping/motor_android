@@ -41,6 +41,7 @@
                 style="?android:attr/progressBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:rotation="0"
                 android:layout_gravity="center"
                 android:indeterminateDrawable="@drawable/progressbar_bg"
                 android:visibility="gone" />

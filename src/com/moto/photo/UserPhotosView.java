@@ -1,19 +1,5 @@
 package com.moto.photo;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import com.moto.constant.ImageMethod;
-import com.moto.listview.ProgressBarView;
-import com.moto.main.R;
-import com.moto.mymap.MyMapApplication;
-import com.moto.utils.UrlUtils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -29,6 +15,20 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.moto.constant.ImageMethod;
+import com.moto.listview.ProgressBarView;
+import com.moto.main.R;
+import com.moto.mymap.MyMapApplication;
+import com.moto.utils.UrlUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class UserPhotosView extends LinearLayout implements OnClickListener {
 	private View mView;
@@ -170,7 +170,7 @@ public class UserPhotosView extends LinearLayout implements OnClickListener {
 			ImageView photo = (ImageView) root
 					.findViewById(R.id.userphoto_avatar_item_riv_avatar);
 			final ProgressBarView progressBarView = (ProgressBarView)root.findViewById(R.id.userphoto_avatar_item_progress_View);
-			MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl(mPhotos.get(i)),  photo,Originaloptions,new SimpleImageLoadingListener(){
+			MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl_avatar(mPhotos.get(i),320,0),  photo,Originaloptions,new SimpleImageLoadingListener(){
 				@Override
 				public void onLoadingStarted(String imageUri, View view) {
 					// TODO Auto-generated method stub

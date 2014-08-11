@@ -1,15 +1,5 @@
 package com.moto.photo;
 
-import java.util.ArrayList;
-import com.moto.constant.ImageMethod;
-import com.moto.listview.ProgressBarView;
-import com.moto.main.R;
-import com.moto.mymap.MyMapApplication;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
@@ -18,6 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.RelativeLayout;
+
+import com.moto.constant.ImageMethod;
+import com.moto.listview.ProgressBarView;
+import com.moto.main.R;
+import com.moto.mymap.MyMapApplication;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
+import java.util.ArrayList;
 public class ImageBrowserAdapter extends PagerAdapter {
 
 	private ArrayList<String> mPhotos = new ArrayList<String>();

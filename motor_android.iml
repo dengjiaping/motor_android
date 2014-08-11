@@ -74,6 +74,7 @@
     <orderEntry type="library" exported="" name="mail" level="project" />
     <orderEntry type="library" exported="" name="Android_Location_V1.1.0" level="project" />
     <orderEntry type="library" exported="" name="pushservice-3.2.0" level="project" />
+    <orderEntry type="library" exported="" name="universal-image-loader-1.9.3-20140714.122530-5" level="project" />
     <orderEntry type="library" exported="" name="ActiveAndroid" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-19.1.0" level="project" />
     <orderEntry type="library" exported="" name="nineoldandroids-2.4.0" level="project" />
@@ -87,7 +88,6 @@
     <orderEntry type="library" exported="" name="SocialSDK_tencentWB_2" level="project" />
     <orderEntry type="library" exported="" name="SocialSDK_tencentWB_1" level="project" />
     <orderEntry type="library" exported="" name="SocialSDK_WeiXin" level="project" />
-    <orderEntry type="library" exported="" name="universal-image-loader-1.9.1-SNAPSHOT-with-sources" level="project" />
     <orderEntry type="library" exported="" name="android-segmented-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="rebound-0.3.3" level="project" />
     <orderEntry type="library" exported="" name="Android_Services_V2.2.0" level="project" />

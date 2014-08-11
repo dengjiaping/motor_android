@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:background="#ffffff"
     >
-	<com.moto.listview.CustomScrollView 
+	<com.moto.listview.CustomScrollView
 	    android:id="@+id/live_kids_scrollview"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
 	   	    			/>
 	            </RelativeLayout>
 	        </RelativeLayout>
-   		<com.moto.listview.NoScrollListview 
+   		<com.moto.listview.NoScrollListview
 	        android:id="@+id/live_kids_listview"
 	       	android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"

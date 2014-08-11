@@ -14,13 +14,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,10 +30,7 @@ import com.moto.constant.Constant;
 import com.moto.constant.DialogMethod;
 import com.moto.constant.ImageMethod;
 import com.moto.img.ScaleImageView;
-import com.moto.listview.CustomScrollView;
-import com.moto.listview.CustomScrollView.OnLoadListener;
-import com.moto.listview.CustomScrollView.OnRefreshListener;
-import com.moto.listview.NoScrollListview;
+import com.moto.listview.CustomListView;
 import com.moto.listview.ProgressBarView;
 import com.moto.main.Moto_MainActivity;
 import com.moto.main.Moto_RootActivity;
@@ -50,8 +45,8 @@ import com.moto.utils.SystemSoundPlayer;
 import com.moto.utils.UrlUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.rockerhieu.emojicon.EmojiconTextView;
 
 import org.json.JSONArray;
@@ -72,8 +67,8 @@ public class LiveActivity extends Moto_RootActivity{
     private LinkedList<String> comment_list = new LinkedList<String>();
 	private Handler handler;
 	private MyAdapter adapter;
-	private NoScrollListview myListView;
-	private CustomScrollView scrollView;
+	private CustomListView myListView;
+//	private CustomScrollView scrollView;
 	private boolean isrefresh = false;
 	private boolean isfirst = true;
     private boolean isload = false;
@@ -119,16 +114,20 @@ public class LiveActivity extends Moto_RootActivity{
                         isload = false;
                         //					progressBar_loading.setVisibility(View.GONE);
                         adapter.notifyDataSetChanged();
-                        scrollView.onRefreshComplete();
-                        scrollView.onLoadComplete();
+                        myListView.onLoadComplete();
+                        myListView.onRefreshComplete();
+//                        scrollView.onRefreshComplete();
+//                        scrollView.onLoadComplete();
                         SystemSoundPlayer.getInstance(LiveActivity.this).playSendSound();
                         break;
                     case Constant.MSG_NULL:
                         isrefresh = false;
                         isload = false;
                         //					progressBar_loading.setVisibility(View.GONE);
-                        scrollView.onRefreshComplete();
-                        scrollView.onLoadComplete();
+                        myListView.onLoadComplete();
+                        myListView.onRefreshComplete();
+//                        scrollView.onRefreshComplete();
+//                        scrollView.onLoadComplete();
                         break;
                     case Constant.MSG_FALTH:
                         isrefresh = false;
@@ -148,62 +147,62 @@ public class LiveActivity extends Moto_RootActivity{
 			
 		};
 
-        //必须在这里面添加head或者foot
-        scrollView.addHeadFootView();
-		
-		scrollView.setOnRefreshListener(new OnRefreshListener() {
-			public void onRefresh() {
-				new AsyncTask<Void, Void, Void>() {
-					protected Void doInBackground(Void... params) {
-						try {
-							Thread.sleep(1500);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						isrefresh = true;
-						GetAsyData();
-						return null;
-					}
-                    
-					@Override
-					protected void onPostExecute(Void result) {
-                        //						refresh_scrollview.onRefreshComplete();
-					}
-                    
-				}.execute();
-			}
-		});
-		scrollView.setOnLoadListener(new OnLoadListener() {
-			public void onLoad() {
-				new AsyncTask<Void, Void, Void>() {
-					protected Void doInBackground(Void... params) {
-						try {
-							Thread.sleep(2000);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-                        isload = true;
-						GetAsyData();
+//        //必须在这里面添加head或者foot
+//        scrollView.addHeadFootView();
+//
+        myListView.setonRefreshListener(new CustomListView.OnRefreshListener() {
+            public void onRefresh() {
+                new AsyncTask<Void, Void, Void>() {
+                    protected Void doInBackground(Void... params) {
+                        try {
+                            Thread.sleep(1500);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        isrefresh = true;
+                        GetAsyData();
+                        return null;
+                    }
 
-						return null;
-					}
-                    
-					@Override
-					protected void onPostExecute(Void result) {
+                    @Override
+                    protected void onPostExecute(Void result) {
+                        //						refresh_scrollview.onRefreshComplete();
+                    }
+
+                }.execute();
+            }
+        });
+        myListView.setonLoadListener(new CustomListView.OnLoadListener() {
+            public void onLoad() {
+                new AsyncTask<Void, Void, Void>() {
+                    protected Void doInBackground(Void... params) {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        isload = true;
+                        GetAsyData();
+
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void result) {
                         //						refresh_scrollview.onLoadComplete();
-					}
-                    
-				}.execute();
-			}
-		});
+                    }
+
+                }.execute();
+            }
+        });
 		myListView.setOnItemClickListener(new OnItemClickListener() {
             
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                     long arg3) {
 				Bundle extras = new Bundle();
-				extras.putString("tid", live_list.get(arg2).get("tid").toString());
-				extras.putString("subject", live_list.get(arg2).get("subject").toString());
+				extras.putString("tid", live_list.get(arg2-1).get("tid").toString());
+				extras.putString("subject", live_list.get(arg2-1).get("subject").toString());
 				pushToNextActivity(extras, Live_Kids_User.class, 304);
 			}
 		});
@@ -213,11 +212,12 @@ public class LiveActivity extends Moto_RootActivity{
 	public void rightBarButtonItemEvent() {
 		// TODO Auto-generated method stub
 		super.rightBarButtonItemEvent();
-		scrollView.state = scrollView.REFRESHING;
-		scrollView.changeHeaderViewByState();
+//		scrollView.state = scrollView.REFRESHING;
+//		scrollView.changeHeaderViewByState();
 		isrefresh = true;
 		GetAsyData();
-		
+
+
 	}
     
 	private void GetAsyData() {
@@ -347,14 +347,17 @@ public class LiveActivity extends Moto_RootActivity{
 		carList = CacheModel.getPhotoCacheLiveDate("linkedlist",LiveActivity.this);
 		like_list = CacheModel.getLikeCacheLiveDate("linkedlist", LiveActivity.this);
         comment_list = CacheModel.getCommentCacheLiveDate("linkedlist",LiveActivity.this);
-		myListView = (NoScrollListview)findViewById(R.id.live_listview);
+		myListView = (CustomListView)findViewById(R.id.live_listview);
 
-		scrollView = (CustomScrollView)findViewById(R.id.live_myscrollview);
-		scrollView.setOnTouchListener(new OnTouchListener() {
-			
+
+
+//		scrollView = (CustomScrollView)findViewById(R.id.live_myscrollview);
+        myListView.setOnTouchListener(new View.OnTouchListener() {
+
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				ChangeScrollviewAlpha(scrollView, navigationBar);
+                Log.e("aaa","ddd");
+				ChangeScrollviewAlpha(myListView, navigationBar);
                 return  false;
 			}
 		});
@@ -407,9 +410,15 @@ public class LiveActivity extends Moto_RootActivity{
         //		private ImageLoader imageLoader;
 		private Activity activity;
 		long time = 0;
-		
-		
-		public MyAdapter(Activity activity, Context context, LinkedList<HashMap<String, Object>> list)
+
+        //定义两个int常量标记不同的Item视图
+        public static final int HAVE_PHOTO_ITEM = 0;
+
+        public static final int NO_PHOTO_ITEM = 1;
+
+
+
+        public MyAdapter(Activity activity, Context context, LinkedList<HashMap<String, Object>> list)
 		{
 			this.context = context;
 			this.list = list;
@@ -417,8 +426,26 @@ public class LiveActivity extends Moto_RootActivity{
             //			imageLoader = new ImageLoader(context);
 			
 		}
-        
-		@Override
+
+        @Override
+        public int getItemViewType(int position) {
+            if(carList.get(position).size() > 0)
+            {
+                return HAVE_PHOTO_ITEM;
+            }
+            else
+            {
+                return NO_PHOTO_ITEM;
+            }
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            //包含有两个视图，所以返回值为2
+            return 2;
+        }
+
+        @Override
 		public int getCount() {
 			// TODO Auto-generated method stub
 			return list.size();
@@ -440,107 +467,170 @@ public class LiveActivity extends Moto_RootActivity{
 		public View getView(final int position, View convertView, ViewGroup parent)
 		{
 			final ViewHolder holder;
+            int type = getItemViewType(position);
 			// TODO Auto-generated method stub
-            //			if(convertView == null)
-            //			{
-            convertView = LayoutInflater.from(context).inflate(R.layout.live_item, null);
-            holder = new ViewHolder();
-            holder.user_img = (ImageView)convertView.findViewById(R.id.user_img);
-            holder.user_name = (EmojiconTextView)convertView.findViewById(R.id.live_username);
-            holder.img = (ScaleImageView)convertView.findViewById(R.id.live_thing_img);
-            holder.detail = (EmojiconTextView)convertView.findViewById(R.id.live_detail_thing);
-            holder.time = (EmojiconTextView)convertView.findViewById(R.id.live_time_text);
-            holder.live_like_people_num = (TextView)convertView.findViewById(R.id.live_like_people_num);
-            holder.live_item_time = (TextView)convertView.findViewById(R.id.live_item_time);
-            holder.live_item_layout = (RelativeLayout)convertView.findViewById(R.id.live_item_layout);
-            holder.progressBarView = (ProgressBarView)convertView.findViewById(R.id.live_item_progress_View);
-            holder.live_item_like_layout = (RelativeLayout)convertView.findViewById(R.id.live_item_like_layout);
-            holder.live_like_img = (ImageView)convertView.findViewById(R.id.live_like_img);
-
-            holder.live_comment_num = (TextView)convertView.findViewById(R.id.live_comment_num);
-            holder.live_item_status_img = (ImageView)convertView.findViewById(R.id.live_item_status_img);
-            //					convertView.setTag(holder);
-            //			}
-            //			else {
-            //				holder = (ViewHolder) convertView.getTag();
-            //			}
-			map = list.get(position);
-			holder.live_item_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
-            holder.live_like_people_num.setText(like_list.get(position));
-            if(comment_list.size()>0)
+            if(convertView == null)
             {
-                holder.live_comment_num.setText(comment_list.get(position));
+                if(type == NO_PHOTO_ITEM) {
+
+                    convertView = LayoutInflater.from(context).inflate(R.layout.live_item_nophoto, null);
+                    holder = new ViewHolder();
+                    holder.user_img = (ImageView) convertView.findViewById(R.id.user_img);
+                    holder.user_name = (EmojiconTextView) convertView.findViewById(R.id.live_username);
+//                    holder.img = (ScaleImageView) convertView.findViewById(R.id.live_thing_img);
+                    holder.detail = (EmojiconTextView) convertView.findViewById(R.id.live_detail_thing);
+                    holder.time = (EmojiconTextView) convertView.findViewById(R.id.live_time_text);
+                    holder.live_like_people_num = (TextView) convertView.findViewById(R.id.live_like_people_num);
+                    holder.live_item_time = (TextView) convertView.findViewById(R.id.live_item_time);
+//                    holder.live_item_layout = (RelativeLayout) convertView.findViewById(R.id.live_item_layout);
+//                    holder.progressBarView = (ProgressBarView) convertView.findViewById(R.id.live_item_progress_View);
+                    holder.live_item_like_layout = (RelativeLayout) convertView.findViewById(R.id.live_item_like_layout);
+                    holder.live_like_img = (ImageView) convertView.findViewById(R.id.live_like_img);
+
+                    holder.live_comment_num = (TextView) convertView.findViewById(R.id.live_comment_num);
+                    holder.live_item_status_img = (ImageView) convertView.findViewById(R.id.live_item_status_img);
+                }
+                else
+                {
+                    convertView = LayoutInflater.from(context).inflate(R.layout.live_item_havephoto, null);
+                    holder = new ViewHolder();
+                    holder.user_img = (ImageView) convertView.findViewById(R.id.user_img);
+                    holder.user_name = (EmojiconTextView) convertView.findViewById(R.id.live_username);
+                    holder.img = (ScaleImageView) convertView.findViewById(R.id.live_thing_img);
+                    holder.detail = (EmojiconTextView) convertView.findViewById(R.id.live_detail_thing);
+                    holder.time = (EmojiconTextView) convertView.findViewById(R.id.live_time_text);
+                    holder.live_like_people_num = (TextView) convertView.findViewById(R.id.live_like_people_num);
+                    holder.live_item_time = (TextView) convertView.findViewById(R.id.live_item_time);
+                    holder.live_item_layout = (RelativeLayout) convertView.findViewById(R.id.live_item_layout);
+                    holder.progressBarView = (ProgressBarView) convertView.findViewById(R.id.live_item_progress_View);
+                    holder.live_item_like_layout = (RelativeLayout) convertView.findViewById(R.id.live_item_like_layout);
+                    holder.live_like_img = (ImageView) convertView.findViewById(R.id.live_like_img);
+
+                    holder.live_comment_num = (TextView) convertView.findViewById(R.id.live_comment_num);
+                    holder.live_item_status_img = (ImageView) convertView.findViewById(R.id.live_item_status_img);
+                }
+            	convertView.setTag(holder);
+            }
+            else {
+            	holder = (ViewHolder) convertView.getTag();
             }
 
-			holder.user_name.setText((CharSequence)map.get("author"));
-            holder.detail.setText((CharSequence) map.get("message"));
-            holder.time.setText(map.get("subject").toString());
-            //判断结束或者正在直播
-            if(map.get("status").equals("0"))
+            switch (type)
             {
-                holder.live_item_status_img.setBackgroundResource(R.drawable.over);
+                case NO_PHOTO_ITEM:
+                    map = list.get(position);
+                    holder.live_item_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
+                    holder.live_like_people_num.setText(like_list.get(position));
+                    if(comment_list.size()>0)
+                    {
+                        holder.live_comment_num.setText(comment_list.get(position));
+                    }
+
+                    holder.user_name.setText((CharSequence)map.get("author"));
+                    holder.detail.setText((CharSequence) map.get("message"));
+                    holder.time.setText(map.get("subject").toString());
+                    //判断结束或者正在直播
+                    if(map.get("status").equals("0"))
+                    {
+                        holder.live_item_status_img.setBackgroundResource(R.drawable.over);
+                    }
+                    if(!map.get("avatar").toString().equals("null"))
+                    {
+                        MotorApplication.imageLoader.displayImage(UrlUtils.avatarUrl(map.get("avatar").toString()),  holder.user_img,options,null);
+                    }
+
+                    holder.live_item_like_layout.setOnClickListener(new OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            SendLikeMessage(position, map.get("tid").toString(), holder.live_like_people_num.getText().toString());
+                        }
+                    });
+                    break;
+                case HAVE_PHOTO_ITEM:
+                    map = list.get(position);
+                    holder.live_item_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
+                    holder.live_like_people_num.setText(like_list.get(position));
+                    if(comment_list.size()>0)
+                    {
+                        holder.live_comment_num.setText(comment_list.get(position));
+                    }
+
+                    holder.user_name.setText((CharSequence)map.get("author"));
+                    holder.detail.setText((CharSequence) map.get("message"));
+                    holder.time.setText(map.get("subject").toString());
+                    //判断结束或者正在直播
+                    if(map.get("status").equals("0"))
+                    {
+                        holder.live_item_status_img.setBackgroundResource(R.drawable.over);
+                    }
+//                    if(carList.get(position).size() > 0)
+//                    {
+//                        holder.live_item_layout.setVisibility(View.VISIBLE);
+                        MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl_avatar(carList.get(position).get(carList.get(position).size() - 1), 640),  holder.img,Originaloptions,new SimpleImageLoadingListener(){
+
+                            @Override
+                            public void onLoadingStarted(String imageUri, View view) {
+                                // TODO Auto-generated method stub
+                                super.onLoadingStarted(imageUri, view);
+                                holder.progressBarView.setVisibility(View.VISIBLE);
+                                holder.progressBarView.setProgressNotInUiThread(0);
+
+                            }
+
+                            @Override
+                            public void onLoadingFailed(String imageUri, View view,
+                                                        FailReason failReason) {
+                                // TODO Auto-generated method stub
+                                super.onLoadingFailed(imageUri, view, failReason);
+                                holder.progressBarView.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onLoadingComplete(String imageUri, View view,
+                                                          Bitmap loadedImage) {
+                                // TODO Auto-generated method stub
+                                super.onLoadingComplete(imageUri, view, loadedImage);
+                                holder.progressBarView.setProgressNotInUiThread(100);
+                                holder.progressBarView.setVisibility(View.GONE);
+
+                            }
+
+                        },new ImageLoadingProgressListener() {
+
+                            @Override
+                            public void onProgressUpdate(String imageUri, View view, int current,
+                                                         int total) {
+                                // TODO Auto-generated method stub
+                                if((System.currentTimeMillis() - time)>1000)
+                                {
+                                    time = System.currentTimeMillis();
+                                    holder.progressBarView.setProgressNotInUiThread(Math.round(100.0f * current / total));
+                                }
+
+                            }
+                        });
+
+                        holder.img.setImageHeight(80);
+                        holder.img.setImageWidth(100);
+//                    }
+                    if(!map.get("avatar").toString().equals("null"))
+                    {
+                        MotorApplication.imageLoader.displayImage(UrlUtils.avatarUrl(map.get("avatar").toString()),  holder.user_img,options,null);
+                    }
+
+                    holder.live_item_like_layout.setOnClickListener(new OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            SendLikeMessage(position, map.get("tid").toString(), holder.live_like_people_num.getText().toString());
+                        }
+                    });
+                    break;
             }
-			if(carList.get(position).size() > 0)
-			{
-				holder.live_item_layout.setVisibility(View.VISIBLE);
-				MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(carList.get(position).get(carList.get(position).size()-1)),  holder.img,Originaloptions,new SimpleImageLoadingListener(){
-                    
-					@Override
-					public void onLoadingStarted(String imageUri, View view) {
-						// TODO Auto-generated method stub
-						super.onLoadingStarted(imageUri, view);
-						holder.progressBarView.setProgressNotInUiThread(0);
-						holder.progressBarView.setVisibility(View.VISIBLE);
-					}
-                    
-					@Override
-					public void onLoadingFailed(String imageUri, View view,
-                                                FailReason failReason) {
-						// TODO Auto-generated method stub
-						super.onLoadingFailed(imageUri, view, failReason);
-						holder.progressBarView.setVisibility(View.GONE);
-					}
-                    
-					@Override
-					public void onLoadingComplete(String imageUri, View view,
-                                                  Bitmap loadedImage) {
-						// TODO Auto-generated method stub
-						super.onLoadingComplete(imageUri, view, loadedImage);
-						holder.progressBarView.setVisibility(View.GONE);
-						holder.progressBarView.setProgressNotInUiThread(100);
-					}
-					
-				},new ImageLoadingProgressListener() {
-					
-					@Override
-					public void onProgressUpdate(String imageUri, View view, int current,
-                                                 int total) {
-						// TODO Auto-generated method stub
-						if((System.currentTimeMillis() - time)>1000)
-						{
-							time = System.currentTimeMillis();
-							holder.progressBarView.setProgressNotInUiThread(Math.round(100.0f * current / total));
-						}
-						
-					}
-				});
-				
-				holder.img.setImageHeight(80);
-				holder.img.setImageWidth(100);
-			}
-			if(!map.get("avatar").toString().equals("null"))
-			{
-                MotorApplication.imageLoader.displayImage(UrlUtils.avatarUrl(map.get("avatar").toString()),  holder.user_img,options,null);
-			}
-			
-			holder.live_item_like_layout.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					SendLikeMessage(position, map.get("tid").toString(), holder.live_like_people_num.getText().toString());
-				}
-			});
+
             return convertView;
 		}
         

@@ -49,6 +49,9 @@ public class MotorApplication extends FrontiaApplication {
         // method.
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
             .threadPriority(Thread.NORM_PRIORITY - 2)//加载图片的线程数
+            .memoryCacheSize(2 * 1024 * 1024)
+                .diskCacheSize(50 * 1024 * 1024)
+            .memoryCacheSizePercentage(15) // default
             .denyCacheImageMultipleSizesInMemory() //解码图像的大尺寸将在内存中缓存先前解码图像的小尺寸。
             .discCacheFileNameGenerator(new Md5FileNameGenerator())//设置磁盘缓存文件名称
             .tasksProcessingOrder(QueueProcessingType.LIFO)//设置加载显示图片队列进程

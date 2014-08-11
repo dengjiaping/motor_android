@@ -24,6 +24,7 @@ public class ImageMethod {
 		.showImageOnLoading(R.drawable.male)
 		.showImageForEmptyUri(R.drawable.male)
 		.showImageOnFail(R.drawable.male)
+        .delayBeforeLoading(10000)
 		.cacheInMemory(true)
 		.displayer(new RoundedBitmapDisplayer(360))
 		.cacheOnDisc(true)
@@ -41,7 +42,10 @@ public class ImageMethod {
         //		.showImageForEmptyUri(R.drawable.default_icon)
         //		.showImageOnFail(R.drawable.default_icon)
 		.cacheInMemory(true)
-		.cacheOnDisc(true)
+        .delayBeforeLoading(1000)
+        .resetViewBeforeLoading(false)  // default
+        .cacheInMemory(true) // default
+        .cacheOnDisc(true)
 		.imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
 		.considerExifParams(true)
 		.bitmapConfig(Bitmap.Config.RGB_565)

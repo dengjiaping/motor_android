@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -69,8 +70,8 @@ import com.moto.utils.StringUtils;
 import com.moto.utils.UrlUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -194,12 +195,12 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 						GetAsyData();
 						return null;
 					}
-                    
+
 					@Override
 					protected void onPostExecute(Void result) {
                         //						refresh_scrollview.onRefreshComplete();
 					}
-                    
+
 				}.execute();
 			}
 		});
@@ -216,12 +217,12 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 						GetAsyData();
 						return null;
 					}
-                    
+
 					@Override
 					protected void onPostExecute(Void result) {
                         //						refresh_scrollview.onLoadComplete();
 					}
-                    
+
 				}.execute();
 			}
 		});
@@ -280,7 +281,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
                             avatar = list.get(0).get("avatar").toString();
                             if(!avatar.equals("null"))
                             {
-                                MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl(avatar),  user_img,options,null);
+                                MyMapApplication.imageLoader.displayImage(UrlUtils.avatarUrl(avatar),  user_img,options,null);
                             }
                             live_title.setText(list.get(0).get("author").toString());
                         }
@@ -298,6 +299,15 @@ OnInfoWindowClickListener, InfoWindowAdapter{
                         addMarkersToMap();// 往地图上添加marker
                         adapter.notifyDataSetChanged();
                         loadingProgressBar.setVisibility(View.GONE);
+                        if(list.size() > 0)
+                        {
+                            avatar = list.get(0).get("avatar").toString();
+                            if(!avatar.equals("null"))
+                            {
+                                MyMapApplication.imageLoader.displayImage(UrlUtils.avatarUrl(avatar),  user_img,options,null);
+                            }
+                            live_title.setText(list.get(0).get("author").toString());
+                        }
                         scrollView.onRefreshComplete();
                         scrollView.onLoadComplete();
                         break;
@@ -520,7 +530,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 		
 		scrollView = (CustomScrollView)findViewById(R.id.live_kids_scrollview);
 		scrollView.setOnTouchListener(new OnTouchListener() {
-			
+
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				ChangeScrollviewAlpha(scrollView, navigationBar);
@@ -533,6 +543,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 		
 		if(list.size() == 0)
 		{
+            Log.e("aaa","ass");
             loadingProgressBar.setVisibility(View.VISIBLE);
 			GetAsyData();
 		}
@@ -540,7 +551,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
             avatar = list.get(0).get("avatar").toString();
             if(!avatar.equals("null"))
             {
-                MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(avatar),  user_img,options,null);
+                MotorApplication.imageLoader.displayImage(UrlUtils.avatarUrl(avatar),  user_img,options,null);
             }
             live_title.setText(list.get(0).get("author").toString());
         }
@@ -744,7 +755,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 		private LinkedList<HashMap<String, Object>> list;
 		private HashMap<String, Object> map;
 		private long time = 0;
-		
+
 		public MyAdapter(Context context, LinkedList<HashMap<String, Object>> list)
 		{
 			this.context = context;
@@ -772,31 +783,37 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
-			final ViewHolder holder;
+            final ViewHolder holder;
 			// TODO Auto-generated method stub
-            convertView = LayoutInflater.from(context).inflate(R.layout.live_kids_item, null);
-            holder = new ViewHolder();
-            holder.progressBarView = (ProgressBarView)convertView.findViewById(R.id.live_kids_item_progress_View);
-            holder.live_kids_item_img = (ScaleImageView)convertView.findViewById(R.id.live_kids_item_img);
-            holder.live_kids_item_img_cover = (ScaleImageView)convertView.findViewById(R.id.live_kids_item_img_cover);
-            holder.live_kids_item_username = (TextView)convertView.findViewById(R.id.live_kids_item_username);
-            holder.live_kids_item_details = (TextView)convertView.findViewById(R.id.live_kids_item_details);
-            holder.live_kids_item_time_text = (TextView)convertView.findViewById(R.id.live_kids_item_time_text);
-            holder.live_kids_item_position_text = (TextView)convertView.findViewById(R.id.live_kids_item_position_text);
+//            if(convertView == null) {
+                convertView = LayoutInflater.from(context).inflate(R.layout.live_kids_item, null);
+                holder = new ViewHolder();
+                holder.progressBarView = (ProgressBarView) convertView.findViewById(R.id.live_kids_item_progress_View);
+                holder.live_kids_item_img = (ScaleImageView) convertView.findViewById(R.id.live_kids_item_img);
+                holder.live_kids_item_img_cover = (ScaleImageView) convertView.findViewById(R.id.live_kids_item_img_cover);
+                holder.live_kids_item_username = (TextView) convertView.findViewById(R.id.live_kids_item_username);
+                holder.live_kids_item_details = (TextView) convertView.findViewById(R.id.live_kids_item_details);
+                holder.live_kids_item_time_text = (TextView) convertView.findViewById(R.id.live_kids_item_time_text);
+                holder.live_kids_item_position_text = (TextView) convertView.findViewById(R.id.live_kids_item_position_text);
 //            holder.live_kids_item_position = (ImageView)convertView.findViewById(R.id.live_kids_item_position);
-            holder.live_kids_item_user_img = (ImageView)convertView.findViewById(R.id.live_kids_item_user_img);
+                holder.live_kids_item_user_img = (ImageView) convertView.findViewById(R.id.live_kids_item_user_img);
 
 
-            holder.live_kids_item_timelayout = (LinearLayout)convertView.findViewById(R.id.live_kids_item_timelayout);
-            holder.live_kids_item_userlayout = (LinearLayout)convertView.findViewById(R.id.live_kids_item_userlayout);
-            holder.live_kids_item_datenum = (TextView)convertView.findViewById(R.id.live_kids_item_datenum);
-            holder.live_kids_item_date = (TextView)convertView.findViewById(R.id.live_kids_item_date);
-            holder.live_kids_item_week = (TextView)convertView.findViewById(R.id.live_kids_item_week);
+                holder.live_kids_item_timelayout = (LinearLayout) convertView.findViewById(R.id.live_kids_item_timelayout);
+                holder.live_kids_item_userlayout = (LinearLayout) convertView.findViewById(R.id.live_kids_item_userlayout);
+                holder.live_kids_item_datenum = (TextView) convertView.findViewById(R.id.live_kids_item_datenum);
+                holder.live_kids_item_date = (TextView) convertView.findViewById(R.id.live_kids_item_date);
+                holder.live_kids_item_week = (TextView) convertView.findViewById(R.id.live_kids_item_week);
 //            holder.live_kids_item_text_week = (TextView)convertView.findViewById(R.id.live_kids_item_text_week);
 
-            holder.mUpvPhotos = (UserPhotosView)convertView.findViewById(R.id.otherprofile_upv_photos);
-            //				convertView.setTag(holder);
-            //				holder = (ViewHolder) convertView.getTag();
+                holder.mUpvPhotos = (UserPhotosView) convertView.findViewById(R.id.otherprofile_upv_photos);
+//                convertView.setTag(holder);
+//            }
+//            else
+//            {
+//                holder = (ViewHolder) convertView.getTag();
+//            }
+
 			
 			map = list.get(position);
 
@@ -806,7 +823,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
                 holder.live_kids_item_username.setText(map.get("username").toString());
                 holder.live_kids_item_time_text.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
 //                holder.live_kids_item_text_week.setText(DateUtils.getLocalweek(map.get("dateline").toString()));
-                MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(map.get("avatar").toString()),  holder.live_kids_item_user_img,options,null);
+                MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl_avatar(map.get("avatar").toString(), 5),  holder.live_kids_item_user_img,options,null);
             }
             else{
                 holder.live_kids_item_timelayout.setVisibility(View.VISIBLE);
@@ -834,7 +851,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 				holder.mUpvPhotos.setPhotos(carList.get(position).subList(0, num-1));
 				//浏览监听
 				holder.mUpvPhotos.setOnPagerPhotoItemClickListener(new onPagerPhotoItemClickListener() {
-					
+
 					@Override
 					public void onItemClick(View view, int position) {
 						// TODO Auto-generated method stub
@@ -853,7 +870,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
                 int width = WidthHeightList.get(position).get(WidthHeightList.get(position).size()-1).get("width");
                 int height = WidthHeightList.get(position).get(WidthHeightList.get(position).size()-1).get("height");
                 int Endheight = screenWidth * height / width;
-				String imageUrl = UrlUtils.imageUrl_avatar(carList.get(position).get(carList.get(position).size()-1),width,Endheight);
+				String imageUrl = UrlUtils.imageUrl_avatar(carList.get(position).get(carList.get(position).size()-1),30);
 				holder.live_kids_item_img.setVisibility(View.VISIBLE);
 				MyMapApplication.imageLoader.displayImage(imageUrl, holder.live_kids_item_img,Originaloptions,new SimpleImageLoadingListener(){
 					@Override
@@ -863,7 +880,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 						holder.progressBarView.setProgressNotInUiThread(0);
 						holder.progressBarView.setVisibility(View.VISIBLE);
 					}
-                    
+
 					@Override
 					public void onLoadingFailed(String imageUri, View view,
                                                 FailReason failReason) {
@@ -871,7 +888,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 						super.onLoadingFailed(imageUri, view, failReason);
 						holder.progressBarView.setVisibility(View.GONE);
 					}
-                    
+
 					@Override
 					public void onLoadingComplete(String imageUri, View view,
                                                   Bitmap loadedImage) {
@@ -880,9 +897,9 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 						holder.progressBarView.setVisibility(View.GONE);
 						holder.progressBarView.setProgressNotInUiThread(100);
 					}
-					
+
 				},new ImageLoadingProgressListener() {
-					
+
 					@Override
 					public void onProgressUpdate(String imageUri, View view, int current,
                                                  int total) {
@@ -892,18 +909,18 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 							time = System.currentTimeMillis();
 							holder.progressBarView.setProgressNotInUiThread(Math.round(100.0f * current / total));
 						}
-						
+
 					}
 				});
 
 				holder.live_kids_item_img.setImageHeight(Endheight);
 				holder.live_kids_item_img.setImageWidth(screenWidth);
-				
-				
+
+
 				holder.live_kids_item_img_cover.setImageHeight(Endheight);
 				holder.live_kids_item_img_cover.setImageWidth(screenWidth);
 				holder.live_kids_item_img_cover.setOnClickListener(new OnClickListener() {
-					
+
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub

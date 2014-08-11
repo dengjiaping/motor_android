@@ -6,19 +6,19 @@
     android:background="#ffffff"
     >
     
-	<com.moto.listview.CustomScrollView
-	    android:id="@+id/live_myscrollview"
-	    android:layout_width="fill_parent"
-	    android:fillViewport="true"
-	    android:layout_height="fill_parent"
-	    >
-    <LinearLayout 
-        android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:orientation="vertical"
-        >
+	<!--<com.moto.listview.CustomScrollView-->
+	    <!--android:id="@+id/live_myscrollview"-->
+	    <!--android:layout_width="fill_parent"-->
+	    <!--android:fillViewport="true"-->
+	    <!--android:layout_height="fill_parent"-->
+	    <!-->-->
+    <!--<LinearLayout -->
+        <!--android:layout_width="fill_parent"-->
+	    <!--android:layout_height="fill_parent"-->
+	    <!--android:orientation="vertical"-->
+        <!-->-->
 
-        <com.moto.listview.NoScrollListview
+        <com.moto.listview.CustomListView
     	android:id="@+id/live_listview"
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
@@ -27,6 +27,6 @@
         android:divider="#E7E7E7"
         android:scrollbars="none"
     	android:background="#ffffff"/>
-    </LinearLayout>
-	</com.moto.listview.CustomScrollView>
+    <!--</LinearLayout>-->
+	<!--</com.moto.listview.CustomScrollView>-->
 </LinearLayout>

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,6 +15,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -68,7 +70,7 @@ public class Moto_RootActivity extends FragmentActivity implements NetWorkModelL
      * 从res的layout中加载一个界面附在当前视图表面上 
      *
      *
-     * @param resource 	R.layout.id
+     * @param scrollView 	R.layout.id
      */
 	
 	@SuppressLint("NewApi")
@@ -85,6 +87,21 @@ public class Moto_RootActivity extends FragmentActivity implements NetWorkModelL
 				bar.getBackground().setAlpha((int) (alpha*250));
 			}
 	}
+
+    @SuppressLint("NewApi")
+    public void ChangeScrollviewAlpha(ListView listview, LinearLayout bar) {
+        Log.e("sssss",listview.getScrollY()+"");
+        if(listview.getScrollY() < 100)
+        {
+            bar.getBackground().setAlpha(255);
+            navigationBar.setBackgroundColor(Color.rgb(72, 193, 213));
+        }
+        else {
+            float alpha = (float) (listview.getScrollY() / 700.0);
+            alpha = (float) ((1 - alpha) < 0.0 ? 0.0 : 1 - alpha);
+            bar.getBackground().setAlpha((int) (alpha*250));
+        }
+    }
 	
 
     /**
