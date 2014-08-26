@@ -14,9 +14,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.BounceInterpolator;
@@ -46,8 +44,7 @@ import com.moto.asydata.RequstClient;
 import com.moto.constant.Constant;
 import com.moto.constant.ImageMethod;
 import com.moto.img.ScaleImageView;
-import com.moto.listview.CustomScrollView;
-import com.moto.listview.NoScrollListview;
+import com.moto.listview.CustomListView;
 import com.moto.listview.ProgressBarView;
 import com.moto.main.Moto_RootActivity;
 import com.moto.main.MotorApplication;
@@ -76,15 +73,13 @@ import java.util.LinkedList;
 
 public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerClickListener,
         AMap.OnInfoWindowClickListener, AMap.InfoWindowAdapter {
-    
+
 	private RelativeLayout live_kids_bottom;
 	private TextView live_kids_check;
 	private String checkUri = path+"api/live/checkliving";
 	private boolean isContinueLive = false;
-	
-	private SharedPreferences TokenShared;
 
-    private CustomScrollView scrollView;
+	private SharedPreferences TokenShared;
     private Handler handler;
     private String tid;
     private String subject;
@@ -97,12 +92,13 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
     private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
     private LinkedList<LinkedList<HashMap<String,Integer>>> WidthHeightList = new LinkedList<LinkedList<HashMap<String,Integer>>>();
     private HashMap<String, Object> map;
-    private NoScrollListview myListView;
+    private CustomListView myListView;
     private MyAdapter adapter;
     private boolean isRefresh = false;
     private boolean isload = false;
     private DisplayImageOptions options;
-    private DisplayImageOptions Originaloptions;
+    private DisplayImageOptions Originaloptions2;
+    private DisplayImageOptions Originaloptions3;
 
     private ProgressBar loadingProgressBar;
     private int screenWidth;
@@ -121,7 +117,7 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
     private String imgPath = "http://motor.qiniudn.com/";
     private RequestParams param;
     private String tokenString;
-
+    private View headview;
     private String firstDate;   //最开始的时间
     private String pageDate;    //阶段时间
 	@Override
@@ -130,6 +126,18 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
 		super.onCreate(savedInstanceState);
         //		addContentView(R.layout.live_kids, "我的游记", barButtonIconType.barButtonIconType_Back, barButtonIconType.barButtonIconType_None);
         addContentView(R.layout.live_kids, subject, barButtonIconType.barButtonIconType_Back, barButtonIconType.barButtonIconType_None);
+
+        //为listview添加头部
+
+        headview = LayoutInflater.from(this).inflate(R.layout.live_kids_head, null);
+        mapView = (MapView)headview.findViewById(R.id.live_kids_map);
+        user_img = (ImageView)headview.findViewById(R.id.live_kids_user_img);
+        live_title = (TextView)headview.findViewById(R.id.live_kids_title);
+        loadingProgressBar = (ProgressBar)headview.findViewById(R.id.live_kids_loading_progressBar);
+        text_map = (TextView)headview.findViewById(R.id.live_kids_text_map);
+        myListView = (CustomListView)findViewById(R.id.live_kids_listview);
+        myListView.addHeaderView(headview,null,false);
+
         mapView = (MapView) findViewById(R.id.live_kids_map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         init();
@@ -212,13 +220,13 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                         //					SetGaoDeMap();
                         aMap.clear();
                         addMarkersToMap();// 往地图上添加marker
-                        scrollView.post(new Runnable() {
-                            //让scrollview跳转到顶部，必须放在runnable()方法中
-                            @Override
-                            public void run() {
-                                scrollView.scrollTo(0, CacheModel.getHeight("scrollviewheightown", Live_Kids_Own.this));
-                            }
-                        });
+//                        scrollView.post(new Runnable() {
+//                            //让scrollview跳转到顶部，必须放在runnable()方法中
+//                            @Override
+//                            public void run() {
+//                                scrollView.scrollTo(0, CacheModel.getHeight("scrollviewheightown", Live_Kids_Own.this));
+//                            }
+//                        });
                         if(list.size() > 0)
                         {
                             avatar = list.get(0).get("avatar").toString();
@@ -230,8 +238,8 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                         }
 
 
-                        scrollView.onRefreshComplete();
-                        scrollView.onLoadComplete();
+                        myListView.onRefreshComplete();
+                        myListView.onLoadComplete();
 
                         break;
                     //获取成功
@@ -244,15 +252,15 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                         addMarkersToMap();// 往地图上添加marker
                         adapter.notifyDataSetChanged();
                         loadingProgressBar.setVisibility(View.GONE);
-                        scrollView.onRefreshComplete();
-                        scrollView.onLoadComplete();
+                        myListView.onRefreshComplete();
+                        myListView.onLoadComplete();
                         break;
                     case Constant.MSG_NULL:
                         isRefresh = false;
                         isload = false;
                         loadingProgressBar.setVisibility(View.GONE);
-                        scrollView.onRefreshComplete();
-                        scrollView.onLoadComplete();
+                        myListView.onRefreshComplete();
+                        myListView.onLoadComplete();
                         break;
 
                     case Constant.MSG_SUCCESSAGAIN:
@@ -277,17 +285,15 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                     case Constant.MSG_TESTFALTH:
                         String str = (String) msg.obj;
                         ToastClass.SetToast(Live_Kids_Own.this, str);
-                        scrollView.onRefreshComplete();
-                        scrollView.onLoadComplete();
+                        myListView.onRefreshComplete();
+                        myListView.onLoadComplete();
                         break;
                 }
                 super.handleMessage(msg);
             }
 
         };
-        //必须在这里面添加head或者foot
-        scrollView.addHeadFootView();
-        scrollView.setOnRefreshListener(new CustomScrollView.OnRefreshListener() {
+        myListView.setonRefreshListener(new CustomListView.OnRefreshListener() {
             public void onRefresh() {
                 new AsyncTask<Void, Void, Void>() {
                     protected Void doInBackground(Void... params) {
@@ -295,9 +301,7 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                             Thread.sleep(1500);
                         } catch (Exception e) {
                             e.printStackTrace();
-
                         }
-
                         isRefresh = true;
                         GetAsyData();
                         return null;
@@ -311,7 +315,7 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                 }.execute();
             }
         });
-        scrollView.setOnLoadListener(new CustomScrollView.OnLoadListener() {
+        myListView.setonLoadListener(new CustomListView.OnLoadListener() {
             public void onLoad() {
                 new AsyncTask<Void, Void, Void>() {
                     protected Void doInBackground(Void... params) {
@@ -322,6 +326,7 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                         }
                         isload = true;
                         GetAsyData();
+
                         return null;
                     }
 
@@ -392,7 +397,7 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
 			}
 		});
 	}
-	
+
 	@Override
 	public void leftBarButtonItemEvent() {
 		// TODO Auto-generated method stub
@@ -435,25 +440,26 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
 		}
 
 
-		
+
 
 		options = ImageMethod.GetOptions();
-		Originaloptions = ImageMethod.GetOriginalOptions();
+		Originaloptions2 = ImageMethod.GetOriginalOptions();
+        Originaloptions3 = ImageMethod.GetOriginalOptions();
 		text_map = (TextView)findViewById(R.id.live_kids_text_map);
 		loadingProgressBar = (ProgressBar)findViewById(R.id.live_kids_loading_progressBar);
 		live_title = (TextView)findViewById(R.id.live_kids_title);
 		user_img = (ImageView)findViewById(R.id.live_kids_user_img);
-		myListView = (NoScrollListview)findViewById(R.id.live_kids_listview);
-		scrollView = (CustomScrollView)findViewById(R.id.live_kids_scrollview);
-
-		scrollView.setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				ChangeScrollviewAlpha(scrollView, navigationBar);
-				return false;
-			}
-		});
+		myListView = (CustomListView)findViewById(R.id.live_kids_listview);
+//		scrollView = (CustomScrollView)findViewById(R.id.live_kids_scrollview);
+//
+//		scrollView.setOnTouchListener(new OnTouchListener() {
+//
+//			@Override
+//			public boolean onTouch(View v, MotionEvent event) {
+//				ChangeScrollviewAlpha(scrollView, navigationBar);
+//				return false;
+//			}
+//		});
 
         live_kids_bottom = (RelativeLayout)findViewById(R.id.live_kids_bottom);
         live_kids_bottom.setVisibility(View.VISIBLE);
@@ -470,73 +476,72 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
         getNumDate();
 
 	}
-    
+
 	//通过连接网络检查是否在继续直播
 	private void CheckAsyData() {
 		// TODO Auto-generated method stub
         param = new RequestParams();
 		param.put("token", tokenString);
 		RequstClient.post(checkUri, param, new LoadCacheResponseLoginouthandler(
-                                                                                Live_Kids_Own.this,
-                                                                                new LoadDatahandler(){
-            
-			@Override
-			public void onStart() {
-				// TODO Auto-generated method stub
-				super.onStart();
-			}
-            
-			@Override
-			public void onLoadCaches(String data) {
-				// TODO Auto-generated method stub
-				super.onLoadCaches(data);
-			}
-            
-			@Override
-			public void onSuccess(String data) {
-				// TODO Auto-generated method stub
-				super.onSuccess(data);
-				try {
-					JSONObject jsonObject = new JSONObject(data);
-					if (jsonObject.getString("is").equals("1") && jsonObject.getString("status").equals("1")) {
-						
-						tid = jsonObject.getString("tid");
-						subject = jsonObject.getString("subject");
-						handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
-						.sendToTarget();
+                Live_Kids_Own.this,
+                new LoadDatahandler() {
 
-					}
-					else
-					{
-						handler.obtainMessage(Constant.MSG_FALTH)
-						.sendToTarget();
-					}
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-				
-			}
-            
-			@Override
-			public void onFailure(String error, String message) {
-				// TODO Auto-generated method stub
-				super.onFailure(error, message);
-                // 获取一个Message对象，设置what为1
-                Message msg = Message.obtain();
-                msg.obj = message;
-                msg.what = Constant.MSG_TESTFALTH;
-                // 发送这个消息到消息队列中
-                handler.sendMessage(msg);
+                    @Override
+                    public void onStart() {
+                        // TODO Auto-generated method stub
+                        super.onStart();
+                    }
 
-			}
-            
-			@Override
-			public void onFinish() {
-				// TODO Auto-generated method stub
-				super.onFinish();
-			}
-			
-		}));
+                    @Override
+                    public void onLoadCaches(String data) {
+                        // TODO Auto-generated method stub
+                        super.onLoadCaches(data);
+                    }
+
+                    @Override
+                    public void onSuccess(String data) {
+                        // TODO Auto-generated method stub
+                        super.onSuccess(data);
+                        try {
+                            JSONObject jsonObject = new JSONObject(data);
+                            if (jsonObject.getString("is").equals("1") && jsonObject.getString("status").equals("1")) {
+
+                                tid = jsonObject.getString("tid");
+                                subject = jsonObject.getString("subject");
+                                handler.obtainMessage(Constant.MSG_SUCCESSAGAIN)
+                                        .sendToTarget();
+
+                            } else {
+                                handler.obtainMessage(Constant.MSG_FALTH)
+                                        .sendToTarget();
+                            }
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(String error, String message) {
+                        // TODO Auto-generated method stub
+                        super.onFailure(error, message);
+                        // 获取一个Message对象，设置what为1
+                        Message msg = Message.obtain();
+                        msg.obj = message;
+                        msg.what = Constant.MSG_TESTFALTH;
+                        // 发送这个消息到消息队列中
+                        handler.sendMessage(msg);
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        // TODO Auto-generated method stub
+                        super.onFinish();
+                    }
+
+                }
+        ));
 	}
 
     private void GetAsyData() {
@@ -735,13 +740,18 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
     }
 
     //	内部类实现BaseAdapter  ，自定义适配器
-    class MyAdapter extends BaseAdapter {
+    class MyAdapter extends BaseAdapter{
 
         private Context context;
         private LinkedList<HashMap<String, Object>> list;
         private HashMap<String, Object> map;
         private long time = 0;
+        //定义三个int常量标记不同的Item视图
+        public static final int HAVE_PHOTO_ITEM = 0;
 
+        public static final int NO_PHOTO_ITEM = 1;
+
+        public static final int HAVE_SAMLLPHOTO_ITEM = 2;
         public MyAdapter(Context context, LinkedList<HashMap<String, Object>> list)
         {
             this.context = context;
@@ -752,6 +762,29 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
         public int getCount() {
             // TODO Auto-generated method stub
             return list.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            int num = carList.get(position).size();
+            if(num == 1)
+            {
+                return HAVE_PHOTO_ITEM;
+            }
+            else if(num > 1)
+            {
+                return HAVE_SAMLLPHOTO_ITEM;
+            }
+            else
+            {
+                return NO_PHOTO_ITEM;
+            }
+
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 3;
         }
 
         @Override
@@ -769,149 +802,346 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
         @Override
         public View getView(int position, View convertView, ViewGroup parent)
         {
-            final ViewHolder holder;
+            final NoViewHolder holder1;
+            final PhotoViewHolder holder2;
+            final SmallViewHolder holder3;
             // TODO Auto-generated method stub
-            convertView = LayoutInflater.from(context).inflate(R.layout.live_kids_item, null);
-            holder = new ViewHolder();
-            holder.progressBarView = (ProgressBarView)convertView.findViewById(R.id.live_kids_item_progress_View);
-            holder.live_kids_item_img = (ScaleImageView)convertView.findViewById(R.id.live_kids_item_img);
-            holder.live_kids_item_img_cover = (ScaleImageView)convertView.findViewById(R.id.live_kids_item_img_cover);
-            holder.live_kids_item_username = (TextView)convertView.findViewById(R.id.live_kids_item_username);
-            holder.live_kids_item_details = (TextView)convertView.findViewById(R.id.live_kids_item_details);
-            holder.live_kids_item_time_text = (TextView)convertView.findViewById(R.id.live_kids_item_time_text);
-            holder.live_kids_item_position_text = (TextView)convertView.findViewById(R.id.live_kids_item_position_text);
-//            holder.live_kids_item_position = (ImageView)convertView.findViewById(R.id.live_kids_item_position);
-            holder.live_kids_item_user_img = (ImageView)convertView.findViewById(R.id.live_kids_item_user_img);
-            holder.mUpvPhotos = (UserPhotosView)convertView.findViewById(R.id.otherprofile_upv_photos);
-
-            holder.live_kids_item_timelayout = (LinearLayout)convertView.findViewById(R.id.live_kids_item_timelayout);
-            holder.live_kids_item_userlayout = (LinearLayout)convertView.findViewById(R.id.live_kids_item_userlayout);
-            holder.live_kids_item_datenum = (TextView)convertView.findViewById(R.id.live_kids_item_datenum);
-            holder.live_kids_item_date = (TextView)convertView.findViewById(R.id.live_kids_item_date);
-            holder.live_kids_item_week = (TextView)convertView.findViewById(R.id.live_kids_item_week);
-//            holder.live_kids_item_text_week = (TextView)convertView.findViewById(R.id.live_kids_item_text_week);
-            //				convertView.setTag(holder);
-            //				holder = (ViewHolder) convertView.getTag();
-
-            map = list.get(position);
-
-            if(dateList.get(position).equals(""))
+            int type = getItemViewType(position);
+            // TODO Auto-generated method stub
+            switch (type)
             {
-                holder.live_kids_item_userlayout.setVisibility(View.VISIBLE);
-                holder.live_kids_item_username.setText(map.get("username").toString());
-                holder.live_kids_item_time_text.setText(com.moto.utils.DateUtils.getYearMonthDay(map.get("dateline").toString()));
+                case NO_PHOTO_ITEM:
+                    if(convertView == null)
+                    {
+                        convertView = LayoutInflater.from(context).inflate(R.layout.live_kids_item_nophoto, null);
+                        holder1 = new NoViewHolder();
+                        holder1.live_kids_item_username = (TextView) convertView.findViewById(R.id.live_kids_item_username);
+                        holder1.live_kids_item_details = (TextView) convertView.findViewById(R.id.live_kids_item_details);
+                        holder1.live_kids_item_time_text = (TextView) convertView.findViewById(R.id.live_kids_item_time_text);
+                        holder1.live_kids_item_position_text = (TextView) convertView.findViewById(R.id.live_kids_item_position_text);
+                        holder1.live_kids_item_user_img = (ImageView) convertView.findViewById(R.id.live_kids_item_user_img);
+                        holder1.live_kids_item_timelayout = (LinearLayout) convertView.findViewById(R.id.live_kids_item_timelayout);
+                        holder1.live_kids_item_userlayout = (LinearLayout) convertView.findViewById(R.id.live_kids_item_userlayout);
+                        holder1.live_kids_item_datenum = (TextView) convertView.findViewById(R.id.live_kids_item_datenum);
+                        holder1.live_kids_item_date = (TextView) convertView.findViewById(R.id.live_kids_item_date);
+                        holder1.live_kids_item_week = (TextView) convertView.findViewById(R.id.live_kids_item_week);
+
+                        holder1.live_kids_item_comment_layout = (RelativeLayout)convertView.findViewById(R.id.live_kids_item_comment_layout);
+                        holder1.live_kids_comment_num = (TextView)convertView.findViewById(R.id.live_kids_comment_num);
+                        holder1.live_kids_like_people_num = (TextView)convertView.findViewById(R.id.live_kids_like_people_num);
+                        convertView.setTag(holder1);
+                    }
+                    else
+                    {
+                        holder1 = (NoViewHolder) convertView.getTag();
+                        holder1.live_kids_item_timelayout.setVisibility(View.GONE);
+                        holder1.live_kids_item_userlayout.setVisibility(View.GONE);
+                    }
+
+                    map = list.get(position);
+                    holder1.live_kids_comment_num.setText(map.get("comment_count").toString());
+                    holder1.live_kids_like_people_num.setText(map.get("like_count").toString());
+                    if(dateList.get(position).equals(""))
+                    {
+                        holder1.live_kids_item_userlayout.setVisibility(View.VISIBLE);
+                        holder1.live_kids_item_username.setText(map.get("username").toString());
+                        holder1.live_kids_item_time_text.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
 //                holder.live_kids_item_text_week.setText(DateUtils.getLocalweek(map.get("dateline").toString()));
-                MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl(map.get("avatar").toString()),  holder.live_kids_item_user_img,options,null);
-            }
-            else{
-                holder.live_kids_item_timelayout.setVisibility(View.VISIBLE);
-                holder.live_kids_item_datenum.setText(dateList.get(position));
-                holder.live_kids_item_date.setText(DateUtils.getYearMonthDay(map.get("dateline").toString()));
-                holder.live_kids_item_week.setText(DateUtils.getLocalweek(map.get("dateline").toString()));
-            }
-            holder.live_kids_item_details.setText((CharSequence) map.get("message"));
+                        MotorApplication.imageLoader.displayImage(UrlUtils.avatarUrl(map.get("avatar").toString()),  holder1.live_kids_item_user_img,options,null);
+                    }
+                    else{
+                        holder1.live_kids_item_timelayout.setVisibility(View.VISIBLE);
+                        holder1.live_kids_item_datenum.setText(dateList.get(position));
+                        holder1.live_kids_item_date.setText(DateUtils.getYearMonthDay(map.get("dateline").toString()));
+                        holder1.live_kids_item_week.setText(DateUtils.getLocalweek(map.get("dateline").toString()));
+                    }
 
-            if(!map.get("location").toString().equals("null"))
-            {
+                    holder1.live_kids_item_details.setText((CharSequence) map.get("message"));
+
+                    if(!map.get("location").toString().equals("null"))
+                    {
 //            	holder.live_kids_item_position.setVisibility(View.VISIBLE);
-                holder.live_kids_item_position_text.setText((CharSequence) map.get("location"));
-            }
-            else {
-                holder.live_kids_item_position_text.setText(R.string.unknownposition);
-            }
-            int num = carList.get(position).size();
-            if(num > 0)
-            {
-                holder.mUpvPhotos.setVisibility(View.VISIBLE);
-                holder.live_kids_item_img_cover.setVisibility(View.VISIBLE);
-                final int m = position;
-                holder.mUpvPhotos.setPhotos(carList.get(position).subList(0, num-1));
-                //浏览监听
-                holder.mUpvPhotos.setOnPagerPhotoItemClickListener(new UserPhotosView.onPagerPhotoItemClickListener() {
-
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        // TODO Auto-generated method stub
-                        Intent intent = new Intent(Live_Kids_Own.this,
-                                ImageBrowserActivity.class);
-                        intent.putExtra(ImageBrowserActivity.IMAGE_TYPE,
-                                ImageBrowserActivity.TYPE_ALBUM);
-                        intent.putExtra("position", position);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("carlist", new ArrayList<String>(carList.get(m)));
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.zoom_enter, 0);
+                        holder1.live_kids_item_position_text.setText((CharSequence) map.get("location"));
                     }
-                });
-                String imageUrl = UrlUtils.imageUrl(carList.get(position).get(carList.get(position).size()-1));
-                holder.live_kids_item_img.setVisibility(View.VISIBLE);
-                MyMapApplication.imageLoader.displayImage(imageUrl, holder.live_kids_item_img,Originaloptions,new SimpleImageLoadingListener(){
-                    @Override
-                    public void onLoadingStarted(String imageUri, View view) {
-                        // TODO Auto-generated method stub
-                        super.onLoadingStarted(imageUri, view);
-                        holder.progressBarView.setProgressNotInUiThread(0);
-                        holder.progressBarView.setVisibility(View.VISIBLE);
+                    else {
+                        holder1.live_kids_item_position_text.setText(R.string.unknownposition);
                     }
 
-                    @Override
-                    public void onLoadingFailed(String imageUri, View view,
-                                                FailReason failReason) {
-                        // TODO Auto-generated method stub
-                        super.onLoadingFailed(imageUri, view, failReason);
-                        holder.progressBarView.setVisibility(View.GONE);
+                    break;
+                case HAVE_PHOTO_ITEM:
+                    if(convertView == null) {
+                        convertView = LayoutInflater.from(context).inflate(R.layout.live_kids_item_havephoto, null);
+                        holder2 = new PhotoViewHolder();
+                        holder2.progressBarView = (ProgressBarView) convertView.findViewById(R.id.live_kids_item_progress_View);
+                        holder2.live_kids_item_img = (ScaleImageView) convertView.findViewById(R.id.live_kids_item_img);
+                        holder2.live_kids_item_img_cover = (ScaleImageView) convertView.findViewById(R.id.live_kids_item_img_cover);
+                        holder2.live_kids_item_username = (TextView) convertView.findViewById(R.id.live_kids_item_username);
+                        holder2.live_kids_item_details = (TextView) convertView.findViewById(R.id.live_kids_item_details);
+                        holder2.live_kids_item_time_text = (TextView) convertView.findViewById(R.id.live_kids_item_time_text);
+                        holder2.live_kids_item_position_text = (TextView) convertView.findViewById(R.id.live_kids_item_position_text);
+                        holder2.live_kids_item_user_img = (ImageView) convertView.findViewById(R.id.live_kids_item_user_img);
+                        holder2.live_kids_item_timelayout = (LinearLayout) convertView.findViewById(R.id.live_kids_item_timelayout);
+                        holder2.live_kids_item_userlayout = (LinearLayout) convertView.findViewById(R.id.live_kids_item_userlayout);
+                        holder2.live_kids_item_datenum = (TextView) convertView.findViewById(R.id.live_kids_item_datenum);
+                        holder2.live_kids_item_date = (TextView) convertView.findViewById(R.id.live_kids_item_date);
+                        holder2.live_kids_item_week = (TextView) convertView.findViewById(R.id.live_kids_item_week);
+
+                        holder2.live_kids_item_comment_layout = (RelativeLayout)convertView.findViewById(R.id.live_kids_item_comment_layout);
+                        holder2.live_kids_comment_num = (TextView)convertView.findViewById(R.id.live_kids_comment_num);
+                        holder2.live_kids_like_people_num = (TextView)convertView.findViewById(R.id.live_kids_like_people_num);
+
+                        holder2.live_kids_item_img.setImageHeight(900);
+                        holder2.live_kids_item_img.setImageWidth(screenWidth);
+                        holder2.live_kids_item_img_cover.setImageHeight(900);
+                        holder2.live_kids_item_img_cover.setImageWidth(screenWidth);
+                        convertView.setTag(holder2);
+                    }
+                    else
+                    {
+                        holder2 = (PhotoViewHolder) convertView.getTag();
+                        holder2.live_kids_item_timelayout.setVisibility(View.GONE);
+                        holder2.live_kids_item_userlayout.setVisibility(View.GONE);
+
+
+                    }
+                    map = list.get(position);
+                    holder2.live_kids_comment_num.setText(map.get("comment_count").toString());
+                    holder2.live_kids_like_people_num.setText(map.get("like_count").toString());
+                    if(dateList.get(position).equals(""))
+                    {
+                        holder2.live_kids_item_userlayout.setVisibility(View.VISIBLE);
+                        holder2.live_kids_item_username.setText(map.get("username").toString());
+                        holder2.live_kids_item_time_text.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
+                        MotorApplication.imageLoader.displayImage(UrlUtils.avatarUrl(map.get("avatar").toString()),  holder2.live_kids_item_user_img,options,null);
+                    }
+                    else{
+                        holder2.live_kids_item_timelayout.setVisibility(View.VISIBLE);
+                        holder2.live_kids_item_datenum.setText(dateList.get(position));
+                        holder2.live_kids_item_date.setText(DateUtils.getYearMonthDay(map.get("dateline").toString()));
+                        holder2.live_kids_item_week.setText(DateUtils.getLocalweek(map.get("dateline").toString()));
                     }
 
-                    @Override
-                    public void onLoadingComplete(String imageUri, View view,
-                                                  Bitmap loadedImage) {
-                        // TODO Auto-generated method stub
-                        super.onLoadingComplete(imageUri, view, loadedImage);
-                        holder.progressBarView.setVisibility(View.GONE);
-                        holder.progressBarView.setProgressNotInUiThread(100);
+                    holder2.live_kids_item_details.setText((CharSequence) map.get("message"));
+
+                    if(!map.get("location").toString().equals("null"))
+                    {
+                        holder2.live_kids_item_position_text.setText((CharSequence) map.get("location"));
+                    }
+                    else {
+                        holder2.live_kids_item_position_text.setText(R.string.unknownposition);
                     }
 
-                },new ImageLoadingProgressListener() {
 
-                    @Override
-                    public void onProgressUpdate(String imageUri, View view, int current,
-                                                 int total) {
-                        // TODO Auto-generated method stub
-                        if((System.currentTimeMillis() - time)>1000)
-                        {
-                            time = System.currentTimeMillis();
-                            holder.progressBarView.setProgressNotInUiThread(Math.round(100.0f * current / total));
+
+                    String imageUrl = UrlUtils.imageUrl_avatar(carList.get(position).get(carList.get(position).size()-1),480);
+                    MyMapApplication.imageLoader.displayImage(imageUrl, holder2.live_kids_item_img,Originaloptions2,new SimpleImageLoadingListener(){
+                        @Override
+                        public void onLoadingStarted(String imageUri, View view) {
+                            // TODO Auto-generated method stub
+                            super.onLoadingStarted(imageUri, view);
+                            holder2.progressBarView.setProgressNotInUiThread(0);
+                            holder2.progressBarView.setVisibility(View.VISIBLE);
                         }
 
+                        @Override
+                        public void onLoadingFailed(String imageUri, View view,
+                                                    FailReason failReason) {
+                            // TODO Auto-generated method stub
+                            super.onLoadingFailed(imageUri, view, failReason);
+                            holder2.progressBarView.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view,
+                                                      Bitmap loadedImage) {
+                            // TODO Auto-generated method stub
+                            super.onLoadingComplete(imageUri, view, loadedImage);
+                            holder2.progressBarView.setVisibility(View.GONE);
+                            holder2.progressBarView.setProgressNotInUiThread(100);
+                        }
+
+                    },new ImageLoadingProgressListener() {
+
+                        @Override
+                        public void onProgressUpdate(String imageUri, View view, int current,
+                                                     int total) {
+                            // TODO Auto-generated method stub
+                            if((System.currentTimeMillis() - time)>1000)
+                            {
+                                time = System.currentTimeMillis();
+                                holder2.progressBarView.setProgressNotInUiThread(Math.round(100.0f * current / total));
+                            }
+
+                        }
+                    });
+
+
+
+                    final int m = position;
+
+                    holder2.live_kids_item_img_cover.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            Intent intent = new Intent(Live_Kids_Own.this,
+                                    ImageBrowserActivity.class);
+                            intent.putExtra(ImageBrowserActivity.IMAGE_TYPE,
+                                    ImageBrowserActivity.TYPE_ALBUM);
+                            intent.putExtra("position", carList.get(m).size()-1);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("carlist", new ArrayList<String>(carList.get(m)));
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.zoom_enter, 0);
+                        }
+                    });
+                    break;
+                case HAVE_SAMLLPHOTO_ITEM:
+                    if(convertView == null) {
+                        convertView = LayoutInflater.from(context).inflate(R.layout.live_kids_item_havesmallphoto, null);
+                        holder3 = new SmallViewHolder();
+                        holder3.progressBarView = (ProgressBarView) convertView.findViewById(R.id.live_kids_item_progress_View);
+                        holder3.live_kids_item_img = (ScaleImageView) convertView.findViewById(R.id.live_kids_item_img);
+                        holder3.live_kids_item_img_cover = (ScaleImageView) convertView.findViewById(R.id.live_kids_item_img_cover);
+                        holder3.live_kids_item_username = (TextView) convertView.findViewById(R.id.live_kids_item_username);
+                        holder3.live_kids_item_details = (TextView) convertView.findViewById(R.id.live_kids_item_details);
+                        holder3.live_kids_item_time_text = (TextView) convertView.findViewById(R.id.live_kids_item_time_text);
+                        holder3.live_kids_item_position_text = (TextView) convertView.findViewById(R.id.live_kids_item_position_text);
+                        holder3.live_kids_item_user_img = (ImageView) convertView.findViewById(R.id.live_kids_item_user_img);
+                        holder3.live_kids_item_timelayout = (LinearLayout) convertView.findViewById(R.id.live_kids_item_timelayout);
+                        holder3.live_kids_item_userlayout = (LinearLayout) convertView.findViewById(R.id.live_kids_item_userlayout);
+                        holder3.live_kids_item_datenum = (TextView) convertView.findViewById(R.id.live_kids_item_datenum);
+                        holder3.live_kids_item_date = (TextView) convertView.findViewById(R.id.live_kids_item_date);
+                        holder3.live_kids_item_week = (TextView) convertView.findViewById(R.id.live_kids_item_week);
+                        holder3.mUpvPhotos = (UserPhotosView) convertView.findViewById(R.id.otherprofile_upv_photos);
+
+                        holder3.live_kids_item_comment_layout = (RelativeLayout)convertView.findViewById(R.id.live_kids_item_comment_layout);
+                        holder3.live_kids_comment_num = (TextView)convertView.findViewById(R.id.live_kids_comment_num);
+                        holder3.live_kids_like_people_num = (TextView)convertView.findViewById(R.id.live_kids_like_people_num);
+
+                        holder3.live_kids_item_img.setImageHeight(540);
+                        holder3.live_kids_item_img.setImageWidth(screenWidth);
+                        holder3.live_kids_item_img_cover.setImageHeight(540);
+                        holder3.live_kids_item_img_cover.setImageWidth(screenWidth);
+                        convertView.setTag(holder3);
                     }
-                });
-                int width = WidthHeightList.get(position).get(WidthHeightList.get(position).size()-1).get("width");
-                int height = WidthHeightList.get(position).get(WidthHeightList.get(position).size()-1).get("height");
-                int Endheight = screenWidth * height / width;
-                holder.live_kids_item_img.setImageHeight(Endheight);
-                holder.live_kids_item_img.setImageWidth(screenWidth);
+                    else
+                    {
+                        holder3 = (SmallViewHolder) convertView.getTag();
+                        holder3.live_kids_item_timelayout.setVisibility(View.GONE);
+                        holder3.live_kids_item_userlayout.setVisibility(View.GONE);
 
-
-                holder.live_kids_item_img_cover.setImageHeight(Endheight);
-                holder.live_kids_item_img_cover.setImageWidth(screenWidth);
-                holder.live_kids_item_img_cover.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        Intent intent = new Intent(Live_Kids_Own.this,
-                                ImageBrowserActivity.class);
-                        intent.putExtra(ImageBrowserActivity.IMAGE_TYPE,
-                                ImageBrowserActivity.TYPE_ALBUM);
-                        intent.putExtra("position", carList.get(m).size()-1);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("carlist", new ArrayList<String>(carList.get(m)));
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.zoom_enter, 0);
                     }
-                });
+                    map = list.get(position);
+                    holder3.live_kids_comment_num.setText(map.get("comment_count").toString());
+                    holder3.live_kids_like_people_num.setText(map.get("like_count").toString());
+                    if(dateList.get(position).equals(""))
+                    {
+                        holder3.live_kids_item_userlayout.setVisibility(View.VISIBLE);
+                        holder3.live_kids_item_username.setText(map.get("username").toString());
+                        holder3.live_kids_item_time_text.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
+                        MotorApplication.imageLoader.displayImage(UrlUtils.avatarUrl(map.get("avatar").toString()),  holder3.live_kids_item_user_img,options,null);
+                    }
+                    else{
+                        holder3.live_kids_item_timelayout.setVisibility(View.VISIBLE);
+                        holder3.live_kids_item_datenum.setText(dateList.get(position));
+                        holder3.live_kids_item_date.setText(DateUtils.getYearMonthDay(map.get("dateline").toString()));
+                        holder3.live_kids_item_week.setText(DateUtils.getLocalweek(map.get("dateline").toString()));
+                    }
+
+                    holder3.live_kids_item_details.setText((CharSequence) map.get("message"));
+
+                    if(!map.get("location").toString().equals("null"))
+                    {
+                        holder3.live_kids_item_position_text.setText((CharSequence) map.get("location"));
+                    }
+                    else {
+                        holder3.live_kids_item_position_text.setText(R.string.unknownposition);
+                    }
+                    final int m3 = position;
+                    holder3.mUpvPhotos.setPhotos(carList.get(position).subList(0, carList.get(position).size()-1));
+                    //浏览监听
+                    holder3.mUpvPhotos.setOnPagerPhotoItemClickListener(new UserPhotosView.onPagerPhotoItemClickListener() {
+
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            // TODO Auto-generated method stub
+                            Intent intent = new Intent(Live_Kids_Own.this,
+                                    ImageBrowserActivity.class);
+                            intent.putExtra(ImageBrowserActivity.IMAGE_TYPE,
+                                    ImageBrowserActivity.TYPE_ALBUM);
+                            intent.putExtra("position", position);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("carlist", new ArrayList<String>(carList.get(m3)));
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.zoom_enter, 0);
+                        }
+                    });
+
+                    String imageUrl3 = UrlUtils.imageUrl_avatar(carList.get(position).get(carList.get(position).size()-1),480);
+
+                    MyMapApplication.imageLoader.displayImage(imageUrl3, holder3.live_kids_item_img,Originaloptions3,new SimpleImageLoadingListener(){
+                        @Override
+                        public void onLoadingStarted(String imageUri, View view) {
+                            // TODO Auto-generated method stub
+                            super.onLoadingStarted(imageUri, view);
+                            holder3.progressBarView.setProgressNotInUiThread(0);
+                            holder3.progressBarView.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onLoadingFailed(String imageUri, View view,
+                                                    FailReason failReason) {
+                            // TODO Auto-generated method stub
+                            super.onLoadingFailed(imageUri, view, failReason);
+                            holder3.progressBarView.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view,
+                                                      Bitmap loadedImage) {
+                            // TODO Auto-generated method stub
+                            super.onLoadingComplete(imageUri, view, loadedImage);
+                            holder3.progressBarView.setVisibility(View.GONE);
+                            holder3.progressBarView.setProgressNotInUiThread(100);
+                        }
+
+                    },new ImageLoadingProgressListener() {
+
+                        @Override
+                        public void onProgressUpdate(String imageUri, View view, int current,
+                                                     int total) {
+                            // TODO Auto-generated method stub
+                            if((System.currentTimeMillis() - time)>1000)
+                            {
+                                time = System.currentTimeMillis();
+                                holder3.progressBarView.setProgressNotInUiThread(Math.round(100.0f * current / total));
+                            }
+
+                        }
+                    });
+
+
+                    holder3.live_kids_item_img_cover.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            Intent intent = new Intent(Live_Kids_Own.this,
+                                    ImageBrowserActivity.class);
+                            intent.putExtra(ImageBrowserActivity.IMAGE_TYPE,
+                                    ImageBrowserActivity.TYPE_ALBUM);
+                            intent.putExtra("position", carList.get(m3).size()-1);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("carlist", new ArrayList<String>(carList.get(m3)));
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.zoom_enter, 0);
+                        }
+                    });
+                    break;
             }
             return convertView;
         }
@@ -919,24 +1149,61 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
 
     }
     //此类为上面getview里面view的引用，方便快速滑动
-    class ViewHolder{
+    class PhotoViewHolder{
         ScaleImageView live_kids_item_img;
         ScaleImageView live_kids_item_img_cover;
         TextView live_kids_item_username;
         TextView live_kids_item_details;
         TextView live_kids_item_time_text;
         TextView live_kids_item_position_text;
-        //		ImageView live_kids_item_position;
         ImageView live_kids_item_user_img;
-        UserPhotosView mUpvPhotos;// 照片
         ProgressBarView progressBarView;
-
         LinearLayout live_kids_item_timelayout;
         LinearLayout live_kids_item_userlayout;
         TextView live_kids_item_datenum;
         TextView live_kids_item_date;
         TextView live_kids_item_week;
-//        TextView live_kids_item_text_week;
+
+        RelativeLayout live_kids_item_comment_layout;
+        TextView live_kids_comment_num;
+        TextView live_kids_like_people_num;
+    }
+
+    class NoViewHolder{
+        TextView live_kids_item_username;
+        TextView live_kids_item_details;
+        TextView live_kids_item_time_text;
+        TextView live_kids_item_position_text;
+        ImageView live_kids_item_user_img;
+        LinearLayout live_kids_item_timelayout;
+        LinearLayout live_kids_item_userlayout;
+        TextView live_kids_item_datenum;
+        TextView live_kids_item_date;
+        TextView live_kids_item_week;
+
+        RelativeLayout live_kids_item_comment_layout;
+        TextView live_kids_comment_num;
+        TextView live_kids_like_people_num;
+    }
+    class SmallViewHolder{
+        ScaleImageView live_kids_item_img;
+        ScaleImageView live_kids_item_img_cover;
+        TextView live_kids_item_username;
+        TextView live_kids_item_details;
+        TextView live_kids_item_time_text;
+        TextView live_kids_item_position_text;
+        ImageView live_kids_item_user_img;
+        UserPhotosView mUpvPhotos;// 照片
+        ProgressBarView progressBarView;
+        LinearLayout live_kids_item_timelayout;
+        LinearLayout live_kids_item_userlayout;
+        TextView live_kids_item_datenum;
+        TextView live_kids_item_date;
+        TextView live_kids_item_week;
+
+        RelativeLayout live_kids_item_comment_layout;
+        TextView live_kids_comment_num;
+        TextView live_kids_like_people_num;
     }
 
     /**
@@ -1016,9 +1283,9 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
     protected void onPause() {
         super.onPause();
         mapView.onPause();
-        CacheModel.cacheLiveData("kidslinkedlistown",list,carList,WidthHeightList,LocationList,Live_Kids_Own.this);
-        int height = scrollView.getScrollY();
-        CacheModel.cacheScrollviewHeight("scrollviewheightown",height,Live_Kids_Own.this);
+        CacheModel.cacheLiveData("kidslinkedlistown", list, carList, WidthHeightList, LocationList, Live_Kids_Own.this);
+//        int height = scrollView.getScrollY();
+//        CacheModel.cacheScrollviewHeight("scrollviewheightown",height,Live_Kids_Own.this);
     }
 
     /**
@@ -1082,7 +1349,7 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                 break;
 
 		}
-		
+
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 	@Override
@@ -1092,9 +1359,9 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
 		{
 			Live_Kids_Own.this.finish();
             overridePendingTransition(0, R.anim.bottom_out);
-			
+
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
 }

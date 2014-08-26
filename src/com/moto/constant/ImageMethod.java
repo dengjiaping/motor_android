@@ -1,6 +1,8 @@
 package com.moto.constant;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
+
 import com.moto.img.ImageFetcher;
 import com.moto.main.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -24,13 +26,14 @@ public class ImageMethod {
 		.showImageOnLoading(R.drawable.male)
 		.showImageForEmptyUri(R.drawable.male)
 		.showImageOnFail(R.drawable.male)
-        .delayBeforeLoading(10000)
-		.cacheInMemory(true)
-		.displayer(new RoundedBitmapDisplayer(360))
-		.cacheOnDisc(true)
-		.imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-		.considerExifParams(true)
-		.bitmapConfig(Bitmap.Config.RGB_565)
+                .delayBeforeLoading(10000)
+                .cacheInMemory(true)
+                .displayer(new RoundedBitmapDisplayer(360))
+                .cacheOnDisc(true)
+                .cacheOnDisk(true)
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
 		.build();
 		return options;
 	}
@@ -38,18 +41,18 @@ public class ImageMethod {
 	public static DisplayImageOptions GetOriginalOptions() {
 		// TODO Auto-generated method stub
 		options = new DisplayImageOptions.Builder()
-        //		.showImageOnLoading(R.drawable.default_icon)
-        //		.showImageForEmptyUri(R.drawable.default_icon)
-        //		.showImageOnFail(R.drawable.default_icon)
-		.cacheInMemory(true)
-        .delayBeforeLoading(1000)
-        .resetViewBeforeLoading(false)  // default
-        .cacheInMemory(true) // default
-        .cacheOnDisc(true)
-		.imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-		.considerExifParams(true)
-		.bitmapConfig(Bitmap.Config.RGB_565)
-		.build();
+        .showImageOnLoading(R.drawable.bg_profile)
+        .showImageForEmptyUri(R.drawable.bg_profile)
+        .showImageOnFail(R.drawable.bg_profile)
+                .cacheInMemory(true)
+                .delayBeforeLoading(1000)
+                .cacheInMemory(true) // default
+                .cacheOnDisk(true)
+                .cacheOnDisc(true)
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+        .build();
 		return options;
 	}
 	

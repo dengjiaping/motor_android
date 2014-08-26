@@ -114,6 +114,7 @@
             android:id="@+id/live_item_progress_View"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:visibility="gone"
             android:layout_centerInParent="true"
             />
     </RelativeLayout>

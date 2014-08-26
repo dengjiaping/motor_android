@@ -98,9 +98,10 @@ public class CustomListView extends ListView implements OnScrollListener {
 
 		measureView(headView);
 		headContentHeight = headView.getMeasuredHeight();
+//        headContentHeight = 0;
 		headContentWidth = headView.getMeasuredWidth();
 
-		headView.setPadding(0, -1 * headContentHeight, 0, 0);
+		headView.setPadding(0, 30, 0, 0);
 		headView.invalidate();
 
 		Log.v("size", "width:" + headContentWidth + " height:" + headContentHeight);
@@ -279,7 +280,7 @@ public class CustomListView extends ListView implements OnScrollListener {
 			break;
 
 		case REFRESHING:
-			headView.setPadding(0, 0, 0, 0);
+			headView.setPadding(0, 115, 0, 0);
 			progressBar.setVisibility(View.VISIBLE);
 			arrowImageView.clearAnimation();
 			arrowImageView.setVisibility(View.GONE);
@@ -288,7 +289,7 @@ public class CustomListView extends ListView implements OnScrollListener {
 
 			break;
 		case DONE:
-			headView.setPadding(0, -1 * headContentHeight, 0, 0);
+			headView.setPadding(0, 30, 0, 0);
 
 			progressBar.setVisibility(View.GONE);
 			arrowImageView.clearAnimation();

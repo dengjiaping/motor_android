@@ -151,7 +151,7 @@ public class ScaleImageView extends ImageView {
                 
                 width = height * iw / ih;
                 height -= marg;
-                setMeasuredDimension(MeasureSpec.EXACTLY, height);
+                setMeasuredDimension(width, height);
             }
             
         }

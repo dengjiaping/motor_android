@@ -33,7 +33,7 @@ public class Moto_RootActivity extends FragmentActivity implements NetWorkModelL
 	public ImageView leftBarButton;
     public ImageView rightBarButton;
     public TextView rightBarTextView;
-    protected String path = "http://motor-env-e94pufmw8k.elasticbeanstalk.com/";
+    protected String path = "http://www.jichedang.net/";
 	
 	public enum barButtonIconType {
 	       barButtonIconType_None, 

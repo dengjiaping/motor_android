@@ -4,10 +4,13 @@ import android.content.Context;
 
 import com.activeandroid.ActiveAndroid;
 import com.baidu.frontia.FrontiaApplication;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.FIFOLimitedMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
@@ -23,6 +26,8 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
+
+import java.io.File;
 
 /*
  * 如果您的工程中实现了Application的继承类，那么，您需要将父类改为com.baidu.frontia.FrontiaApplication。
@@ -42,21 +47,23 @@ public class MotorApplication extends FrontiaApplication {
         httpClient = this.createHttpClient();
 	}
 	/**初始化图片加载类配置信息**/
+
     public void initImageLoader(Context context) {
         // This configuration tuning is custom. You can tune every option, you may tune some of them,
         // or you can create default configuration by
         //  ImageLoaderConfiguration.createDefault(this);
         // method.
+        File cacheDir = StorageUtils.getCacheDirectory(context);
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-            .threadPriority(Thread.NORM_PRIORITY - 2)//加载图片的线程数
-            .memoryCacheSize(2 * 1024 * 1024)
-                .diskCacheSize(50 * 1024 * 1024)
-            .memoryCacheSizePercentage(15) // default
-            .denyCacheImageMultipleSizesInMemory() //解码图像的大尺寸将在内存中缓存先前解码图像的小尺寸。
-            .discCacheFileNameGenerator(new Md5FileNameGenerator())//设置磁盘缓存文件名称
-            .tasksProcessingOrder(QueueProcessingType.LIFO)//设置加载显示图片队列进程
-            .writeDebugLogs() // Remove for release app
-            .build();
+                .memoryCache(new FIFOLimitedMemoryCache(4 * 1024 * 1024))
+                .diskCache(new UnlimitedDiscCache(cacheDir)) // default
+                .threadPriority(Thread.NORM_PRIORITY - 2)//加载图片的线程数
+                .denyCacheImageMultipleSizesInMemory() //解码图像的大尺寸将在内存中缓存先前解码图像的小尺寸。
+                .discCacheFileNameGenerator(new Md5FileNameGenerator())//设置磁盘缓存文件名称
+                .tasksProcessingOrder(QueueProcessingType.LIFO)//设置加载显示图片队列进程
+                .writeDebugLogs() // Remove for release app
+                .threadPoolSize(5)
+                .build();
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config);
     }

@@ -9,12 +9,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -262,14 +261,13 @@ public class LiveActivity extends Moto_RootActivity{
 			public void onSuccess(String data) {
 				// TODO Auto-generated method stub
 				super.onSuccess(data);
-                Log.e("sss",data);
                 try {
 					if(isrefresh)
 					{
 						live_list.clear();
 						carList.clear();
-						like_list.clear();
-                        comment_list.clear();
+//						like_list.clear();
+//                        comment_list.clear();
 //						isfirst = false;
 					}
 					JSONObject jsonObject1 = new JSONObject(data);
@@ -283,23 +281,23 @@ public class LiveActivity extends Moto_RootActivity{
 							live_list.add(GetMap(jsonObject2));
 						}
 						
-						String like_num = jsonObject1.getString("count_list");
-						JSONArray num_Array = new JSONArray(like_num);
-						int num = num_Array.length();
-						for(int i = 0; i < num; i++)
-						{
-							JSONObject jsonObject = num_Array.getJSONObject(i);
-							like_list.add(jsonObject.getString("like_count"));
-						}
-
-                        String comment_details = jsonObject1.getString("comment_list");
-                        JSONArray comment_Array = new JSONArray(comment_details);
-                        int comment_num = comment_Array.length();
-                        for(int i = 0; i < comment_num; i++)
-                        {
-                            JSONObject jsonObject = comment_Array.getJSONObject(i);
-                            comment_list.add(jsonObject.getString("comment_count"));
-                        }
+//						String like_num = jsonObject1.getString("count_list");
+//						JSONArray num_Array = new JSONArray(like_num);
+//						int num = num_Array.length();
+//						for(int i = 0; i < num; i++)
+//						{
+//							JSONObject jsonObject = num_Array.getJSONObject(i);
+//							like_list.add(jsonObject.getString("like_count"));
+//						}
+//
+//                        String comment_details = jsonObject1.getString("comment_list");
+//                        JSONArray comment_Array = new JSONArray(comment_details);
+//                        int comment_num = comment_Array.length();
+//                        for(int i = 0; i < comment_num; i++)
+//                        {
+//                            JSONObject jsonObject = comment_Array.getJSONObject(i);
+//                            comment_list.add(jsonObject.getString("comment_count"));
+//                        }
 
 						if (!isload) {
 							if (isrefresh)
@@ -345,8 +343,8 @@ public class LiveActivity extends Moto_RootActivity{
 
 		live_list = CacheModel.getCacheLiveDate("linkedlist",LiveActivity.this);
 		carList = CacheModel.getPhotoCacheLiveDate("linkedlist",LiveActivity.this);
-		like_list = CacheModel.getLikeCacheLiveDate("linkedlist", LiveActivity.this);
-        comment_list = CacheModel.getCommentCacheLiveDate("linkedlist",LiveActivity.this);
+//		like_list = CacheModel.getLikeCacheLiveDate("linkedlist", LiveActivity.this);
+//        comment_list = CacheModel.getCommentCacheLiveDate("linkedlist",LiveActivity.this);
 		myListView = (CustomListView)findViewById(R.id.live_listview);
 
 
@@ -356,11 +354,21 @@ public class LiveActivity extends Moto_RootActivity{
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-                Log.e("aaa","ddd");
 				ChangeScrollviewAlpha(myListView, navigationBar);
                 return  false;
 			}
 		});
+
+        myListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i2, int i3) {
+            }
+        });
 		
 		liveNetworkModel = new LiveNetworkModel(this, this);
 		
@@ -383,6 +391,8 @@ public class LiveActivity extends Moto_RootActivity{
 			String location = jsonObject.getString("location");
 			String avatar = jsonObject.getString("avatar");
             String status = jsonObject.getString("status");
+            String like_count = jsonObject.getString("like_count");
+            String comment_count = jsonObject.getString("comment_count");
 			map.put("author", author);
 			map.put("subject", subject);
 			map.put("message", message);
@@ -391,6 +401,8 @@ public class LiveActivity extends Moto_RootActivity{
 			map.put("tid", tid);
 			map.put("location", location);
 			map.put("avatar", avatar);
+            map.put("like_count",like_count);
+            map.put("comment_count",comment_count);
 			carList.add(StringUtils.hashToArray(jsonObject.getString("photoname").toString()));
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -466,168 +478,159 @@ public class LiveActivity extends Moto_RootActivity{
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent)
 		{
-			final ViewHolder holder;
+			final ViewHolder holder1;
+            final ViewHolder holder2;
             int type = getItemViewType(position);
 			// TODO Auto-generated method stub
-            if(convertView == null)
-            {
-                if(type == NO_PHOTO_ITEM) {
-
-                    convertView = LayoutInflater.from(context).inflate(R.layout.live_item_nophoto, null);
-                    holder = new ViewHolder();
-                    holder.user_img = (ImageView) convertView.findViewById(R.id.user_img);
-                    holder.user_name = (EmojiconTextView) convertView.findViewById(R.id.live_username);
-//                    holder.img = (ScaleImageView) convertView.findViewById(R.id.live_thing_img);
-                    holder.detail = (EmojiconTextView) convertView.findViewById(R.id.live_detail_thing);
-                    holder.time = (EmojiconTextView) convertView.findViewById(R.id.live_time_text);
-                    holder.live_like_people_num = (TextView) convertView.findViewById(R.id.live_like_people_num);
-                    holder.live_item_time = (TextView) convertView.findViewById(R.id.live_item_time);
-//                    holder.live_item_layout = (RelativeLayout) convertView.findViewById(R.id.live_item_layout);
-//                    holder.progressBarView = (ProgressBarView) convertView.findViewById(R.id.live_item_progress_View);
-                    holder.live_item_like_layout = (RelativeLayout) convertView.findViewById(R.id.live_item_like_layout);
-                    holder.live_like_img = (ImageView) convertView.findViewById(R.id.live_like_img);
-
-                    holder.live_comment_num = (TextView) convertView.findViewById(R.id.live_comment_num);
-                    holder.live_item_status_img = (ImageView) convertView.findViewById(R.id.live_item_status_img);
-                }
-                else
-                {
-                    convertView = LayoutInflater.from(context).inflate(R.layout.live_item_havephoto, null);
-                    holder = new ViewHolder();
-                    holder.user_img = (ImageView) convertView.findViewById(R.id.user_img);
-                    holder.user_name = (EmojiconTextView) convertView.findViewById(R.id.live_username);
-                    holder.img = (ScaleImageView) convertView.findViewById(R.id.live_thing_img);
-                    holder.detail = (EmojiconTextView) convertView.findViewById(R.id.live_detail_thing);
-                    holder.time = (EmojiconTextView) convertView.findViewById(R.id.live_time_text);
-                    holder.live_like_people_num = (TextView) convertView.findViewById(R.id.live_like_people_num);
-                    holder.live_item_time = (TextView) convertView.findViewById(R.id.live_item_time);
-                    holder.live_item_layout = (RelativeLayout) convertView.findViewById(R.id.live_item_layout);
-                    holder.progressBarView = (ProgressBarView) convertView.findViewById(R.id.live_item_progress_View);
-                    holder.live_item_like_layout = (RelativeLayout) convertView.findViewById(R.id.live_item_like_layout);
-                    holder.live_like_img = (ImageView) convertView.findViewById(R.id.live_like_img);
-
-                    holder.live_comment_num = (TextView) convertView.findViewById(R.id.live_comment_num);
-                    holder.live_item_status_img = (ImageView) convertView.findViewById(R.id.live_item_status_img);
-                }
-            	convertView.setTag(holder);
-            }
-            else {
-            	holder = (ViewHolder) convertView.getTag();
-            }
-
             switch (type)
             {
                 case NO_PHOTO_ITEM:
-                    map = list.get(position);
-                    holder.live_item_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
-                    holder.live_like_people_num.setText(like_list.get(position));
-                    if(comment_list.size()>0)
+                    if(convertView == null)
                     {
-                        holder.live_comment_num.setText(comment_list.get(position));
+                        convertView = LayoutInflater.from(context).inflate(R.layout.live_item_nophoto, null);
+                        holder1 = new ViewHolder();
+                        holder1.user_img = (ImageView) convertView.findViewById(R.id.user_img);
+                        holder1.user_name = (EmojiconTextView) convertView.findViewById(R.id.live_username);
+                        holder1.detail = (EmojiconTextView) convertView.findViewById(R.id.live_detail_thing);
+                        holder1.time = (EmojiconTextView) convertView.findViewById(R.id.live_time_text);
+                        holder1.live_like_people_num = (TextView) convertView.findViewById(R.id.live_like_people_num);
+                        holder1.live_item_time = (TextView) convertView.findViewById(R.id.live_item_time);
+                        holder1.live_item_like_layout = (RelativeLayout) convertView.findViewById(R.id.live_item_like_layout);
+                        holder1.live_like_img = (ImageView) convertView.findViewById(R.id.live_like_img);
+
+                        holder1.live_comment_num = (TextView) convertView.findViewById(R.id.live_comment_num);
+                        holder1.live_item_status_img = (ImageView) convertView.findViewById(R.id.live_item_status_img);
+                        convertView.setTag(holder1);
+                    }
+                    else
+                    {
+                        holder1 = (ViewHolder) convertView.getTag();
                     }
 
-                    holder.user_name.setText((CharSequence)map.get("author"));
-                    holder.detail.setText((CharSequence) map.get("message"));
-                    holder.time.setText(map.get("subject").toString());
+                    map = list.get(position);
+                    holder1.live_item_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
+                    holder1.live_like_people_num.setText(map.get("like_count").toString());
+                    holder1.live_comment_num.setText(map.get("comment_count").toString());
+
+                    holder1.user_name.setText((CharSequence)map.get("author"));
+                    holder1.detail.setText((CharSequence) map.get("message"));
+                    holder1.time.setText(map.get("subject").toString());
                     //判断结束或者正在直播
                     if(map.get("status").equals("0"))
                     {
-                        holder.live_item_status_img.setBackgroundResource(R.drawable.over);
+                        holder1.live_item_status_img.setBackgroundResource(R.drawable.over);
                     }
                     if(!map.get("avatar").toString().equals("null"))
                     {
-                        MotorApplication.imageLoader.displayImage(UrlUtils.avatarUrl(map.get("avatar").toString()),  holder.user_img,options,null);
+                        MotorApplication.imageLoader.displayImage(UrlUtils.avatarUrl(map.get("avatar").toString()),  holder1.user_img,options,null);
                     }
 
-                    holder.live_item_like_layout.setOnClickListener(new OnClickListener() {
-
-                        @Override
-                        public void onClick(View v) {
-                            // TODO Auto-generated method stub
-                            SendLikeMessage(position, map.get("tid").toString(), holder.live_like_people_num.getText().toString());
-                        }
-                    });
+//                    holder1.live_item_like_layout.setOnClickListener(new OnClickListener() {
+//
+//                        @Override
+//                        public void onClick(View v) {
+//                            // TODO Auto-generated method stub
+//                            SendLikeMessage(position, map.get("tid").toString(), holder1.live_like_people_num.getText().toString());
+//                        }
+//                    });
                     break;
                 case HAVE_PHOTO_ITEM:
-                    map = list.get(position);
-                    holder.live_item_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
-                    holder.live_like_people_num.setText(like_list.get(position));
-                    if(comment_list.size()>0)
-                    {
-                        holder.live_comment_num.setText(comment_list.get(position));
-                    }
+                    if(convertView == null) {
+                        convertView = LayoutInflater.from(context).inflate(R.layout.live_item_havephoto, null);
+                        holder2 = new ViewHolder();
+                        holder2.user_img = (ImageView) convertView.findViewById(R.id.user_img);
+                        holder2.user_name = (EmojiconTextView) convertView.findViewById(R.id.live_username);
+                        holder2.img = (ScaleImageView) convertView.findViewById(R.id.live_thing_img);
+                        holder2.detail = (EmojiconTextView) convertView.findViewById(R.id.live_detail_thing);
+                        holder2.time = (EmojiconTextView) convertView.findViewById(R.id.live_time_text);
+                        holder2.live_like_people_num = (TextView) convertView.findViewById(R.id.live_like_people_num);
+                        holder2.live_item_time = (TextView) convertView.findViewById(R.id.live_item_time);
 
-                    holder.user_name.setText((CharSequence)map.get("author"));
-                    holder.detail.setText((CharSequence) map.get("message"));
-                    holder.time.setText(map.get("subject").toString());
+                        holder2.progressBarView = (ProgressBarView) convertView.findViewById(R.id.live_item_progress_View);
+                        holder2.live_item_like_layout = (RelativeLayout) convertView.findViewById(R.id.live_item_like_layout);
+                        holder2.live_like_img = (ImageView) convertView.findViewById(R.id.live_like_img);
+
+                        holder2.live_comment_num = (TextView) convertView.findViewById(R.id.live_comment_num);
+                        holder2.live_item_status_img = (ImageView) convertView.findViewById(R.id.live_item_status_img);
+                        convertView.setTag(holder2);
+                    }
+                    else
+                    {
+                        holder2 = (ViewHolder) convertView.getTag();
+                    }
+                    map = list.get(position);
+                    holder2.live_item_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
+                    holder2.live_like_people_num.setText(map.get("like_count").toString());
+                    holder2.live_comment_num.setText(map.get("comment_count").toString());
+
+                    holder2.user_name.setText((CharSequence)map.get("author"));
+                    holder2.detail.setText((CharSequence) map.get("message"));
+                    holder2.time.setText(map.get("subject").toString());
                     //判断结束或者正在直播
                     if(map.get("status").equals("0"))
                     {
-                        holder.live_item_status_img.setBackgroundResource(R.drawable.over);
+                        holder2.live_item_status_img.setBackgroundResource(R.drawable.over);
                     }
-//                    if(carList.get(position).size() > 0)
-//                    {
-//                        holder.live_item_layout.setVisibility(View.VISIBLE);
-                        MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl_avatar(carList.get(position).get(carList.get(position).size() - 1), 640),  holder.img,Originaloptions,new SimpleImageLoadingListener(){
+                    MotorApplication.imageLoader.displayImage(UrlUtils.imageUrl_avatar(carList.get(position).get(0), 480),  holder2.img,Originaloptions,new SimpleImageLoadingListener(){
 
-                            @Override
-                            public void onLoadingStarted(String imageUri, View view) {
-                                // TODO Auto-generated method stub
-                                super.onLoadingStarted(imageUri, view);
-                                holder.progressBarView.setVisibility(View.VISIBLE);
-                                holder.progressBarView.setProgressNotInUiThread(0);
+                        @Override
+                        public void onLoadingStarted(String imageUri, View view) {
+                            // TODO Auto-generated method stub
+                            super.onLoadingStarted(imageUri, view);
+                            holder2.progressBarView.setVisibility(View.VISIBLE);
+                            holder2.progressBarView.setProgressNotInUiThread(0);
 
+                        }
+
+                        @Override
+                        public void onLoadingFailed(String imageUri, View view,
+                                                    FailReason failReason) {
+                            // TODO Auto-generated method stub
+                            super.onLoadingFailed(imageUri, view, failReason);
+                            holder2.progressBarView.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view,
+                                                      Bitmap loadedImage) {
+                            // TODO Auto-generated method stub
+                            super.onLoadingComplete(imageUri, view, loadedImage);
+                            holder2.progressBarView.setProgressNotInUiThread(100);
+                            holder2.progressBarView.setVisibility(View.GONE);
+
+                        }
+
+                    },new ImageLoadingProgressListener() {
+
+                        @Override
+                        public void onProgressUpdate(String imageUri, View view, int current,
+                                                     int total) {
+                            // TODO Auto-generated method stub
+                            if((System.currentTimeMillis() - time)>1000)
+                            {
+                                time = System.currentTimeMillis();
+                                holder2.progressBarView.setProgressNotInUiThread(Math.round(100.0f * current / total));
                             }
 
-                            @Override
-                            public void onLoadingFailed(String imageUri, View view,
-                                                        FailReason failReason) {
-                                // TODO Auto-generated method stub
-                                super.onLoadingFailed(imageUri, view, failReason);
-                                holder.progressBarView.setVisibility(View.GONE);
-                            }
+                        }
+                    });
 
-                            @Override
-                            public void onLoadingComplete(String imageUri, View view,
-                                                          Bitmap loadedImage) {
-                                // TODO Auto-generated method stub
-                                super.onLoadingComplete(imageUri, view, loadedImage);
-                                holder.progressBarView.setProgressNotInUiThread(100);
-                                holder.progressBarView.setVisibility(View.GONE);
-
-                            }
-
-                        },new ImageLoadingProgressListener() {
-
-                            @Override
-                            public void onProgressUpdate(String imageUri, View view, int current,
-                                                         int total) {
-                                // TODO Auto-generated method stub
-                                if((System.currentTimeMillis() - time)>1000)
-                                {
-                                    time = System.currentTimeMillis();
-                                    holder.progressBarView.setProgressNotInUiThread(Math.round(100.0f * current / total));
-                                }
-
-                            }
-                        });
-
-                        holder.img.setImageHeight(80);
-                        holder.img.setImageWidth(100);
+                    holder2.img.setImageHeight(80);
+                    holder2.img.setImageWidth(100);
 //                    }
                     if(!map.get("avatar").toString().equals("null"))
                     {
-                        MotorApplication.imageLoader.displayImage(UrlUtils.avatarUrl(map.get("avatar").toString()),  holder.user_img,options,null);
+                        MotorApplication.imageLoader.displayImage(UrlUtils.avatarUrl(map.get("avatar").toString()),  holder2.user_img,options,null);
                     }
 
-                    holder.live_item_like_layout.setOnClickListener(new OnClickListener() {
-
-                        @Override
-                        public void onClick(View v) {
-                            // TODO Auto-generated method stub
-                            SendLikeMessage(position, map.get("tid").toString(), holder.live_like_people_num.getText().toString());
-                        }
-                    });
+//                    holder2.live_item_like_layout.setOnClickListener(new OnClickListener() {
+//
+//                        @Override
+//                        public void onClick(View v) {
+//                            // TODO Auto-generated method stub
+//                            SendLikeMessage(position, map.get("tid").toString(), holder2.live_like_people_num.getText().toString());
+//                        }
+//                    });
                     break;
             }
 
@@ -641,7 +644,6 @@ public class LiveActivity extends Moto_RootActivity{
 		ImageView user_img;
         EmojiconTextView user_name;
 		ScaleImageView img;
-		RelativeLayout live_item_layout;
 		ProgressBarView progressBarView;
         EmojiconTextView detail;
         EmojiconTextView time;
@@ -654,75 +656,75 @@ public class LiveActivity extends Moto_RootActivity{
         ImageView live_item_status_img;
 	}
 	
-	private void SendLikeMessage(int position, String tid, String numString){
-		TokenShared = getSharedPreferences("usermessage", 0);
-		tokenString = TokenShared.getString("token", "");
-		if(tokenString.equals(""))
-		{
-			ToastClass.SetToast(LiveActivity.this, "登录之后才能够点赞哟");
-		}
-		else {
-			likenum = Integer.parseInt(numString);
-			this.position = position;
-			RequestParams param;
-			param = new RequestParams();
-			param.put("token", tokenString);
-			param.put("pid", tid);
-			liveNetworkModel = new LiveNetworkModel(this, this);
-			liveNetworkModel.likelivepost(param);
-		}
-	}
-	
-	
-	@Override
-	public void handleNetworkDataWithSuccess(JSONObject JSONObject)
-    throws JSONException {
-		// TODO Auto-generated method stub
-		super.handleNetworkDataWithSuccess(JSONObject);
-		String status = JSONObject.getString("status");
-		if(status.equals("like it!"))
-		{
-			like_list.set(position, ++likenum +"");
-		}
-		else if(status.equals("unlike it!")){
-			like_list.set(position, --likenum +"");
-		}
-		handler.obtainMessage(Constant.MSG_SUCCESS)
-		.sendToTarget();
-	}
-    
-	@Override
-	public void handleNetworkDataWithFail(JSONObject jsonObject)
-    throws JSONException {
-		// TODO Auto-generated method stub
-		super.handleNetworkDataWithFail(jsonObject);
-		// 获取一个Message对象，设置what为1
-		Message msg = Message.obtain();
-		msg.obj = "点赞失败";
-		msg.what = Constant.MSG_FALTH;
-		// 发送这个消息到消息队列中
-		handler.sendMessage(msg);
-	}
-    
-	@Override
-	public void handleNetworkDataGetFail(String message) throws JSONException {
-		// TODO Auto-generated method stub
-		super.handleNetworkDataGetFail(message);
-		// 获取一个Message对象，设置what为1
-		Message msg = Message.obtain();
-		msg.obj = message;
-		msg.what = Constant.MSG_FALTH;
-		// 发送这个消息到消息队列中
-		handler.sendMessage(msg);
-	}
-    
-	@Override
-	public void handleNetworkDataStart() throws JSONException {
-		// TODO Auto-generated method stub
-		super.handleNetworkDataStart();
-		handler.obtainMessage(Constant.MSG_TESTSTART)
-		.sendToTarget();
-	}
+//	private void SendLikeMessage(int position, String tid, String numString){
+//		TokenShared = getSharedPreferences("usermessage", 0);
+//		tokenString = TokenShared.getString("token", "");
+//		if(tokenString.equals(""))
+//		{
+//			ToastClass.SetToast(LiveActivity.this, "登录之后才能够点赞哟");
+//		}
+//		else {
+//			likenum = Integer.parseInt(numString);
+//			this.position = position;
+//			RequestParams param;
+//			param = new RequestParams();
+//			param.put("token", tokenString);
+//			param.put("pid", tid);
+//			liveNetworkModel = new LiveNetworkModel(this, this);
+//			liveNetworkModel.likelivepost(param);
+//		}
+//	}
+//
+//
+//	@Override
+//	public void handleNetworkDataWithSuccess(JSONObject JSONObject)
+//    throws JSONException {
+//		// TODO Auto-generated method stub
+//		super.handleNetworkDataWithSuccess(JSONObject);
+//		String status = JSONObject.getString("status");
+//		if(status.equals("like it!"))
+//		{
+//			like_list.set(position, ++likenum +"");
+//		}
+//		else if(status.equals("unlike it!")){
+//			like_list.set(position, --likenum +"");
+//		}
+//		handler.obtainMessage(Constant.MSG_SUCCESS)
+//		.sendToTarget();
+//	}
+//
+//	@Override
+//	public void handleNetworkDataWithFail(JSONObject jsonObject)
+//    throws JSONException {
+//		// TODO Auto-generated method stub
+//		super.handleNetworkDataWithFail(jsonObject);
+//		// 获取一个Message对象，设置what为1
+//		Message msg = Message.obtain();
+//		msg.obj = "点赞失败";
+//		msg.what = Constant.MSG_FALTH;
+//		// 发送这个消息到消息队列中
+//		handler.sendMessage(msg);
+//	}
+//
+//	@Override
+//	public void handleNetworkDataGetFail(String message) throws JSONException {
+//		// TODO Auto-generated method stub
+//		super.handleNetworkDataGetFail(message);
+//		// 获取一个Message对象，设置what为1
+//		Message msg = Message.obtain();
+//		msg.obj = message;
+//		msg.what = Constant.MSG_FALTH;
+//		// 发送这个消息到消息队列中
+//		handler.sendMessage(msg);
+//	}
+//
+//	@Override
+//	public void handleNetworkDataStart() throws JSONException {
+//		// TODO Auto-generated method stub
+//		super.handleNetworkDataStart();
+//		handler.obtainMessage(Constant.MSG_TESTSTART)
+//		.sendToTarget();
+//	}
     
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

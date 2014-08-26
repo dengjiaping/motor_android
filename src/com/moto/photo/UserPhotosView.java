@@ -170,7 +170,7 @@ public class UserPhotosView extends LinearLayout implements OnClickListener {
 			ImageView photo = (ImageView) root
 					.findViewById(R.id.userphoto_avatar_item_riv_avatar);
 			final ProgressBarView progressBarView = (ProgressBarView)root.findViewById(R.id.userphoto_avatar_item_progress_View);
-			MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl_avatar(mPhotos.get(i),320,0),  photo,Originaloptions,new SimpleImageLoadingListener(){
+			MyMapApplication.imageLoader.displayImage(UrlUtils.imageUrl_avatar(mPhotos.get(i),100),  photo,Originaloptions,new SimpleImageLoadingListener(){
 				@Override
 				public void onLoadingStarted(String imageUri, View view) {
 					// TODO Auto-generated method stub

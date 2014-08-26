@@ -34,7 +34,7 @@ public class MotoNetWorkModel {
  * 网络服务请求的route路径
  *  	
  */	
-	private final static String api_url = "http://motor-env-e94pufmw8k.elasticbeanstalk.com/api/";
+	private final static String api_url = "http://www.jcd.club/api/";
 	public String route;
 	
 

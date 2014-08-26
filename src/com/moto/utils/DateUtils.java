@@ -17,7 +17,27 @@ public class DateUtils {
     //根据传入的UTC时间获取天数,无毫秒
     public static long getLocalDistDatas(String utcTimestart,String utcTimeend)
     {
-        return getDistDates(timestampToLocalDate(utcTimestart),timestampToLocalDate(utcTimeend));
+        return getDistDates(timestampToLocalyear(utcTimestart),timestampToLocalyear(utcTimeend));
+    }
+
+    /**
+     * UTC转为本地时间
+     * @param timestamp
+     * @return Data
+     */
+
+    public static Date timestampToLocalyear(String timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        Date date = new Date();
+        try {
+            date = sdf.parse(timestamp);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return date;
     }
 
     //根据传入的UTC时间获取星期几，无毫秒
@@ -35,7 +55,9 @@ public class DateUtils {
     public static long getDistDates(Date startDate,Date endDate)
     {
         long totalDate = 0;
+
         Calendar calendar = Calendar.getInstance();
+
         calendar.setTime(startDate);
         long timestart = calendar.getTimeInMillis();
         calendar.setTime(endDate);

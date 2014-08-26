@@ -20,14 +20,14 @@ import java.util.ArrayList;
 
 public class MyActivity extends Activity{
 	protected Intent intent;
-	protected String mypath = "http://motor-env-e94pufmw8k.elasticbeanstalk.com/";
+	protected String mypath = "http://www.jichedang.net/";
     //	protected String mypath = "http://192.168.137.1/moto/api/app/api.php";
 	protected ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 	protected String imgPath = "http://motor.qiniudn.com/";
 	protected RequestParams param;
 	public static String uptoken = "7mGeCoNe_ecBsW210i5a0VDu4Yz8nZ5Ph6xUlV2E:ICehYqwmdzj4bJ5D8Ia8SyjA4to=:ewogICJkZWFkbGluZSIgOiAxNzA5MjA3MTcxLAogICJzY29wZSIgOiAibW90b3IiCn0=";
 	protected String actionUrl = "http://up.qiniu.com/";
-    protected String path = "http://motor-env-e94pufmw8k.elasticbeanstalk.com/";
+    protected String path = "http://www.jichedang.net/";
     // 将Bitmap转换成InputStream
     protected InputStream BitmapToInputStream(Bitmap bm) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -19,18 +19,17 @@ import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
 
 import com.activeandroid.query.Delete;
-import com.activeandroid.query.Select;
 import com.baidu.android.pushservice.PushManager;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.moto.constant.DialogMethod;
 import com.moto.main.Moto_RootActivity;
+import com.moto.main.MotorApplication;
 import com.moto.main.R;
 import com.moto.model.DataBaseModel;
 import com.moto.model.NetWorkModelListener;
 import com.moto.model.UpdateNetworkModel;
 import com.moto.mydialog.errorDialog;
-import com.moto.mymap.MyMapApplication;
 import com.moto.switchbutton.SwitchButton;
 import com.moto.toast.ToastClass;
 import com.moto.utils.SystemSoundPlayer;
@@ -158,8 +157,8 @@ public class User_SystemSetting extends Moto_RootActivity implements OnClickList
 				protected Integer doInBackground(Integer... params) {
 					// TODO Auto-generated method stub
 					try {
-						MyMapApplication.imageLoader.clearDiscCache();
-						MyMapApplication.imageLoader.clearMemoryCache();
+						MotorApplication.imageLoader.clearDiscCache();
+                        MotorApplication.imageLoader.clearMemoryCache();
 //						MyMapApplication.imageLoader.destroy();
 						Thread.sleep(5 * 1000);
 					} catch (InterruptedException e) {

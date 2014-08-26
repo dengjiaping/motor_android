@@ -36,7 +36,7 @@ public class tabActivity extends Activity implements NetWorkModelListener{
 	protected String defaultPath = "http://www.h3oteam.pw/moto/uc_server/images/noavatar_middle.gif";
 	protected RequestParams param;
 	protected String actionUrl = "http://up.qiniu.com/";
-    protected String path = "http://motor-env-e94pufmw8k.elasticbeanstalk.com/";
+    protected String path = "http://www.jichedang.net/";
 	public LinearLayout navigationBar;
 	
 	@Override
