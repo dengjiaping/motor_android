@@ -1,4 +1,9 @@
 package com.moto.utils;
+import org.apache.commons.codec.binary.Base64;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,18 +12,12 @@ import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.commons.codec.binary.Base64;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class StringUtils {
 
-	public static LinkedList<String> hashToArray(String hash){
-		LinkedList<String>list = new LinkedList<String>();
+	public static ArrayList<String> hashToArray(String hash){
+        ArrayList<String>list = new ArrayList<String>();
 		JSONArray array = null;
 		try {
 			array = new JSONArray(hash);
@@ -38,8 +37,8 @@ public class StringUtils {
 		return list;
 	}
 	
-	public static LinkedList<HashMap<String,Integer>> hashToWidthHeightArray(String hash){
-		LinkedList<HashMap<String,Integer>>list = new LinkedList<HashMap<String,Integer>>();
+	public static ArrayList<HashMap<String,Integer>> hashToWidthHeightArray(String hash){
+        ArrayList<HashMap<String,Integer>>list = new ArrayList<HashMap<String,Integer>>();
 		JSONArray array = null;
 		JSONObject jsonObject = null;
 		HashMap<String, Integer> map = null;
@@ -88,7 +87,7 @@ public class StringUtils {
     /**
      * 将对象保存到SharedPreferences
      */
-    public static String PhotoLinkedlistToBase(List<LinkedList<String>> list){
+    public static String PhotoLinkedlistToBase(List<ArrayList<String>> list){
         
          ByteArrayOutputStream baos = new ByteArrayOutputStream(3000);
          ObjectOutputStream oos=null;
@@ -166,7 +165,7 @@ public class StringUtils {
     /**
      * 将对象保存到SharedPreferences
      */
-    public static String WidthHeightLinkedlistToBase(List<LinkedList<HashMap<String,Integer>>> WidthHeightList){
+    public static String WidthHeightLinkedlistToBase(List<ArrayList<HashMap<String,Integer>>> WidthHeightList){
         
          ByteArrayOutputStream baos = new ByteArrayOutputStream(3000);
          ObjectOutputStream oos=null;
@@ -185,7 +184,7 @@ public class StringUtils {
     /**
      * 从SharedPreferences中读取对象
      */
-   public static LinkedList<HashMap<String, Object>> readLinkedlistFromBase(String base){
+   public static ArrayList<HashMap<String, Object>> readLinkedlistFromBase(String base){
     // 对Base64格式的字符串进行解码
     byte[] base64Bytes = Base64.decodeBase64(base .getBytes());
     ByteArrayInputStream bais = new ByteArrayInputStream(base64Bytes);
@@ -195,7 +194,7 @@ public class StringUtils {
 	  // 从ObjectInputStream中读取Product对象
 	  //   AddNewWord addWord= (AddNewWord ) ois.readObject();
 	  List<HashMap<String, Object>> list = (List<HashMap<String, Object>>)ois.readObject();
-	  return new LinkedList<HashMap<String,Object>>(list) ;
+	  return new ArrayList<HashMap<String,Object>>(list) ;
     } catch (StreamCorruptedException e) {
     	// TODO Auto-generated catch block
     	e.printStackTrace();
@@ -212,7 +211,7 @@ public class StringUtils {
    /**
     * 从SharedPreferences中读取对象
     */
-  public static LinkedList<LinkedList<String>> readPhotoLinkedlistFromBase(String base){
+  public static ArrayList<ArrayList<String>> readPhotoLinkedlistFromBase(String base){
    // 对Base64格式的字符串进行解码
        byte[] base64Bytes = Base64.decodeBase64(base .getBytes());
          ByteArrayInputStream bais = new ByteArrayInputStream(base64Bytes);
@@ -221,8 +220,8 @@ public class StringUtils {
   ois = new ObjectInputStream(bais);
    // 从ObjectInputStream中读取Product对象
 //  AddNewWord addWord= (AddNewWord ) ois.readObject();
-  List<LinkedList<String>> list = (List<LinkedList<String>>)ois.readObject();
-  return new LinkedList<LinkedList<String>>(list) ;
+  List<ArrayList<String>> list = (List<ArrayList<String>>)ois.readObject();
+  return new ArrayList<ArrayList<String>>(list) ;
  } catch (StreamCorruptedException e) {
   // TODO Auto-generated catch block
   e.printStackTrace();
@@ -266,7 +265,7 @@ public class StringUtils {
  /**
   * 从SharedPreferences中读取对象
   */
-public static LinkedList<LinkedList<HashMap<String,Integer>>> readWidthHeightLinkedlistFromBase(String base){
+public static ArrayList<ArrayList<HashMap<String,Integer>>> readWidthHeightLinkedlistFromBase(String base){
  // 对Base64格式的字符串进行解码
  byte[] base64Bytes = Base64.decodeBase64(base .getBytes());
  ByteArrayInputStream bais = new ByteArrayInputStream(base64Bytes);
@@ -275,8 +274,8 @@ public static LinkedList<LinkedList<HashMap<String,Integer>>> readWidthHeightLin
 	  ois = new ObjectInputStream(bais);
 	  // 从ObjectInputStream中读取Product对象
 	  //   AddNewWord addWord= (AddNewWord ) ois.readObject();
-	  List<LinkedList<HashMap<String,Integer>>> list = (List<LinkedList<HashMap<String,Integer>>>)ois.readObject();
-	  return new LinkedList<LinkedList<HashMap<String,Integer>>>(list) ;
+	  List<ArrayList<HashMap<String,Integer>>> list = (List<ArrayList<HashMap<String,Integer>>>)ois.readObject();
+	  return new ArrayList<ArrayList<HashMap<String,Integer>>>(list) ;
  } catch (StreamCorruptedException e) {
  	// TODO Auto-generated catch block
  	e.printStackTrace();
@@ -293,7 +292,7 @@ public static LinkedList<LinkedList<HashMap<String,Integer>>> readWidthHeightLin
 /**
  * 从SharedPreferences中读取对象
  */
-public static LinkedList<String> readLikeLinkedlistFromBase(String base){
+public static ArrayList<String> readLikeLinkedlistFromBase(String base){
 // 对Base64格式的字符串进行解码
 byte[] base64Bytes = Base64.decodeBase64(base .getBytes());
 ByteArrayInputStream bais = new ByteArrayInputStream(base64Bytes);
@@ -303,7 +302,7 @@ try {
 	  // 从ObjectInputStream中读取Product对象
 	  //   AddNewWord addWord= (AddNewWord ) ois.readObject();
 	  List<String> list = (List<String>)ois.readObject();
-	  return new LinkedList<String>(list) ;
+	  return new ArrayList<String>(list) ;
 } catch (StreamCorruptedException e) {
 	// TODO Auto-generated catch block
 	e.printStackTrace();

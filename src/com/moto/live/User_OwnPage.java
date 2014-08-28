@@ -73,8 +73,8 @@ public class User_OwnPage extends Moto_RootActivity{
     private HashMap<String, Object> ownMessageMap = new HashMap<String, Object>();
     private HashMap<String, Object> ownMessageMapNum = new HashMap<String, Object>();
     private ArrayList<String> ownphotoMessage = new ArrayList<String>();
-    protected LinkedList<LinkedList<String>> ImgList = new LinkedList<LinkedList<String>>();
-    protected LinkedList<LinkedList<HashMap<String,Integer>>> WidthHeightList = new LinkedList<LinkedList<HashMap<String,Integer>>>();
+    protected ArrayList<ArrayList<String>> ImgList = new ArrayList<ArrayList<String>>();
+    protected ArrayList<ArrayList<HashMap<String,Integer>>> WidthHeightList = new ArrayList<ArrayList<HashMap<String,Integer>>>();
     private LinkedList<HashMap<String, Object>> list = new LinkedList<HashMap<String,Object>>();
     private ArrayList<String> carList = new ArrayList<String>();
     private HashMap<String, Object> map;

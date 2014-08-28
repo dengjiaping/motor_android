@@ -46,14 +46,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class UserActivity extends Moto_RootActivity implements OnClickListener{
 	private MyGridView listView;
 	private ScrollView user_scrollview;
-	private LinkedList<HashMap<String, Object>> list = new LinkedList<HashMap<String,Object>>();
-	protected LinkedList<LinkedList<String>> ImgList = new LinkedList<LinkedList<String>>();
-	protected LinkedList<LinkedList<HashMap<String,Integer>>> WidthHeightList = new LinkedList<LinkedList<HashMap<String,Integer>>>();
+	private ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
+	protected ArrayList<ArrayList<String>> ImgList = new ArrayList<ArrayList<String>>();
+	protected ArrayList<ArrayList<HashMap<String,Integer>>> WidthHeightList = new ArrayList<ArrayList<HashMap<String,Integer>>>();
 	private HashMap<String, Object> map;
 	private HashMap<String, Object> ownMessageMap = new HashMap<String, Object>();
 	private ArrayList<String> ownphotoMessage = new ArrayList<String>();
@@ -268,10 +267,10 @@ public class UserActivity extends Moto_RootActivity implements OnClickListener{
 	
 	class MyAdapter extends BaseAdapter{
 		private Context context;
-		private LinkedList<HashMap<String, Object>> list;
+		private ArrayList<HashMap<String, Object>> list;
 		private HashMap<String, Object> map;
 		
-		public MyAdapter(Context context, LinkedList<HashMap<String, Object>> list)
+		public MyAdapter(Context context, ArrayList<HashMap<String, Object>> list)
 		{
 			this.context = context;
 			this.list = list;

@@ -1,6 +1,5 @@
 package com.moto.live;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -52,24 +50,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class LiveActivity extends Moto_RootActivity{
 	
     //	private TextView edit_live;
     //	private TextView continue_live;
-	private LinkedList<HashMap<String, Object>> live_list = new LinkedList<HashMap<String,Object>>();
-	private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
+	private ArrayList<HashMap<String, Object>> live_list = new ArrayList<HashMap<String,Object>>();
+	private ArrayList<ArrayList<String>> carList = new ArrayList<ArrayList<String>>();
 	private HashMap<String, Object> map;
-	private LinkedList<String> like_list = new LinkedList<String>();
-    private LinkedList<String> comment_list = new LinkedList<String>();
+//	private ArrayList<String> like_list = new ArrayList<String>();
+//    private ArrayList<String> comment_list = new ArrayList<String>();
 	private Handler handler;
 	private MyAdapter adapter;
 	private CustomListView myListView;
 //	private CustomScrollView scrollView;
 	private boolean isrefresh = false;
-	private boolean isfirst = true;
     private boolean isload = false;
 	private String uriString = path+"api/live/readbireflive";
     //	private ProgressBar progressBar_loading;
@@ -89,7 +86,7 @@ public class LiveActivity extends Moto_RootActivity{
 		super.onCreate(savedInstanceState);
 		addContentView(R.layout.live, R.string.live, barButtonIconType.barButtonIconType_None, barButtonIconType.barButtonIconType_refresh);
         init();
-		adapter = new MyAdapter(LiveActivity.this,LiveActivity.this, live_list);
+		adapter = new MyAdapter(LiveActivity.this, live_list);
 		myListView.setAdapter(adapter);
 		handler = new Handler(){
             
@@ -109,21 +106,24 @@ public class LiveActivity extends Moto_RootActivity{
                         break;
                         
                     case Constant.MSG_SUCCESSAGAIN:
+
                         isrefresh = false;
                         isload = false;
                         //					progressBar_loading.setVisibility(View.GONE);
-                        adapter.notifyDataSetChanged();
-                        myListView.onLoadComplete();
+
+                        myListView.onLoadMoreComplete();
                         myListView.onRefreshComplete();
 //                        scrollView.onRefreshComplete();
 //                        scrollView.onLoadComplete();
+
                         SystemSoundPlayer.getInstance(LiveActivity.this).playSendSound();
+                        adapter.notifyDataSetChanged();
                         break;
                     case Constant.MSG_NULL:
                         isrefresh = false;
                         isload = false;
                         //					progressBar_loading.setVisibility(View.GONE);
-                        myListView.onLoadComplete();
+                        myListView.onLoadMoreComplete();
                         myListView.onRefreshComplete();
 //                        scrollView.onRefreshComplete();
 //                        scrollView.onLoadComplete();
@@ -149,7 +149,8 @@ public class LiveActivity extends Moto_RootActivity{
 //        //必须在这里面添加head或者foot
 //        scrollView.addHeadFootView();
 //
-        myListView.setonRefreshListener(new CustomListView.OnRefreshListener() {
+        myListView.setOnRefreshListener(new CustomListView.OnRefreshListener() {
+            @Override
             public void onRefresh() {
                 new AsyncTask<Void, Void, Void>() {
                     protected Void doInBackground(Void... params) {
@@ -171,8 +172,9 @@ public class LiveActivity extends Moto_RootActivity{
                 }.execute();
             }
         });
-        myListView.setonLoadListener(new CustomListView.OnLoadListener() {
-            public void onLoad() {
+        myListView.setOnLoadListener(new CustomListView.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
                 new AsyncTask<Void, Void, Void>() {
                     protected Void doInBackground(Void... params) {
                         try {
@@ -211,8 +213,8 @@ public class LiveActivity extends Moto_RootActivity{
 	public void rightBarButtonItemEvent() {
 		// TODO Auto-generated method stub
 		super.rightBarButtonItemEvent();
-//		scrollView.state = scrollView.REFRESHING;
-//		scrollView.changeHeaderViewByState();
+        myListView.mHeadState = myListView.REFRESHING;
+        myListView.changeHeadViewByState();
 		isrefresh = true;
 		GetAsyData();
 
@@ -231,7 +233,7 @@ public class LiveActivity extends Moto_RootActivity{
             }
             else
             {
-                String time = live_list.get(like_list.size()-1).get("dateline").toString();
+                String time = live_list.get(live_list.size()-1).get("dateline").toString();
                 param.put("timestamp", DateUtils.getUTCTimestamp(time));
             }
 
@@ -239,6 +241,7 @@ public class LiveActivity extends Moto_RootActivity{
         else
         {
             param.put("timestamp", DateUtils.getUTCCurrentTimestamp());
+
         }
 
 		RequstClient.post(uriString, param, new LoadCacheResponseLoginouthandler(
@@ -264,8 +267,8 @@ public class LiveActivity extends Moto_RootActivity{
                 try {
 					if(isrefresh)
 					{
-						live_list.clear();
-						carList.clear();
+						live_list = new ArrayList<HashMap<String, Object>>();
+						carList = new ArrayList<ArrayList<String>>();
 //						like_list.clear();
 //                        comment_list.clear();
 //						isfirst = false;
@@ -347,29 +350,13 @@ public class LiveActivity extends Moto_RootActivity{
 //        comment_list = CacheModel.getCommentCacheLiveDate("linkedlist",LiveActivity.this);
 		myListView = (CustomListView)findViewById(R.id.live_listview);
 
-
-
-//		scrollView = (CustomScrollView)findViewById(R.id.live_myscrollview);
-        myListView.setOnTouchListener(new View.OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				ChangeScrollviewAlpha(myListView, navigationBar);
-                return  false;
-			}
-		});
-
-        myListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+		myListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView absListView, int i, int i2, int i3) {
+            public boolean onTouch(View view, MotionEvent event) {
+                ChangeListviewAlpha(myListView, navigationBar);
+                return false;
             }
         });
-		
 		liveNetworkModel = new LiveNetworkModel(this, this);
 		
 		if(live_list.size() == 0)
@@ -417,10 +404,9 @@ public class LiveActivity extends Moto_RootActivity{
 	class MyAdapter extends BaseAdapter{
         
 		private Context context;
-		private LinkedList<HashMap<String, Object>> list;
+		private ArrayList<HashMap<String, Object>> list;
 		private HashMap<String, Object> map;
         //		private ImageLoader imageLoader;
-		private Activity activity;
 		long time = 0;
 
         //定义两个int常量标记不同的Item视图
@@ -430,11 +416,10 @@ public class LiveActivity extends Moto_RootActivity{
 
 
 
-        public MyAdapter(Activity activity, Context context, LinkedList<HashMap<String, Object>> list)
+        public MyAdapter(Context context, ArrayList<HashMap<String, Object>> list)
 		{
 			this.context = context;
 			this.list = list;
-			this.activity = activity;
             //			imageLoader = new ImageLoader(context);
 			
 		}
@@ -460,7 +445,7 @@ public class LiveActivity extends Moto_RootActivity{
         @Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return list.size();
+			return this.list.size();
 		}
         
 		@Override
@@ -755,7 +740,7 @@ public class LiveActivity extends Moto_RootActivity{
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		CacheModel.cacheLiveData("linkedlist",live_list,carList,like_list,comment_list,LiveActivity.this);
+		CacheModel.cacheLiveData("linkedlist",live_list,carList,LiveActivity.this);
 	}
 	
 	

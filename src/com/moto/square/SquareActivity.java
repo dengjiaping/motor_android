@@ -61,8 +61,8 @@ public class SquareActivity extends Moto_RootActivity{
 	private NoScrollListview listview;
 	private CustomScrollView scrollView;
     private ShimmerTextView waitText;
-	private LinkedList<HashMap<String, Object>> list = new LinkedList<HashMap<String,Object>>();
-	private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
+	private ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
+	private ArrayList<ArrayList<String>> carList = new ArrayList<ArrayList<String>>();
     private LinkedList<String> countList = new LinkedList<String>();
 	private HashMap<String, Object> map;
 	private boolean isRefresh = false;
@@ -548,11 +548,11 @@ public class SquareActivity extends Moto_RootActivity{
 	class MyAdapter extends BaseAdapter{
 
 		private Context context;
-		LinkedList<HashMap<String, Object>> list;
+        ArrayList<HashMap<String, Object>> list;
 		private HashMap<String, Object> map;
 		long time = 0;
 
-		public MyAdapter(Context context, LinkedList<HashMap<String, Object>> list)
+		public MyAdapter(Context context, ArrayList<HashMap<String, Object>> list)
 		{
 			this.context = context;
 			this.list = list;

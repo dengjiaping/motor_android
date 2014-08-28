@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -34,8 +35,8 @@ public class InformResponseActivity extends Moto_RootActivity {
     private HashMap<String,String> map;
     private Handler handler;
     private Intent intent;
-    private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
-    private LinkedList<LinkedList<HashMap<String,Integer>>> WidthHeightList = new LinkedList<LinkedList<HashMap<String,Integer>>>();
+    private ArrayList<ArrayList<String>> carList = new ArrayList<ArrayList<String>>();
+    private ArrayList<ArrayList<HashMap<String,Integer>>> WidthHeightList = new ArrayList<ArrayList<HashMap<String,Integer>>>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

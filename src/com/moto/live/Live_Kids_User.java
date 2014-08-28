@@ -13,6 +13,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -75,7 +76,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class Live_Kids_User extends Moto_RootActivity implements OnMarkerClickListener,
 OnInfoWindowClickListener, InfoWindowAdapter{
@@ -91,11 +91,11 @@ OnInfoWindowClickListener, InfoWindowAdapter{
     private RelativeLayout comment;
     private RelativeLayout live_kids_share;
     private RelativeLayout live_kids_collect;
-    private LinkedList<String> dateList = new LinkedList<String>();
-    private LinkedList<HashMap<String, Object>> list = new LinkedList<HashMap<String,Object>>();
+    private ArrayList<String> dateList = new ArrayList<String>();
+    private ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
     private ArrayList<HashMap<String, Object>> LocationList = new ArrayList<HashMap<String,Object>>();
-    private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
-    private LinkedList<LinkedList<HashMap<String,Integer>>> WidthHeightList = new LinkedList<LinkedList<HashMap<String,Integer>>>();
+    private ArrayList<ArrayList<String>> carList = new ArrayList<ArrayList<String>>();
+    private ArrayList<ArrayList<HashMap<String,Integer>>> WidthHeightList = new ArrayList<ArrayList<HashMap<String,Integer>>>();
     private HashMap<String, Object> map;
     private CustomListView myListView;
     private SharedPreferences TokenShared;
@@ -191,7 +191,8 @@ OnInfoWindowClickListener, InfoWindowAdapter{
     
 	protected void scrollListener()
 	{
-        myListView.setonRefreshListener(new CustomListView.OnRefreshListener() {
+        myListView.setOnRefreshListener(new CustomListView.OnRefreshListener() {
+            @Override
             public void onRefresh() {
                 new AsyncTask<Void, Void, Void>() {
                     protected Void doInBackground(Void... params) {
@@ -214,8 +215,9 @@ OnInfoWindowClickListener, InfoWindowAdapter{
                 }.execute();
             }
         });
-        myListView.setonLoadListener(new CustomListView.OnLoadListener() {
-            public void onLoad() {
+        myListView.setOnLoadListener(new CustomListView.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
                 new AsyncTask<Void, Void, Void>() {
                     protected Void doInBackground(Void... params) {
                         try {
@@ -237,6 +239,8 @@ OnInfoWindowClickListener, InfoWindowAdapter{
                 }.execute();
             }
         });
+
+
 
         user_img.setOnClickListener(new OnClickListener() {
             @Override
@@ -299,7 +303,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 //                        scrollView.onRefreshComplete();
 //                        scrollView.onLoadComplete();
                         myListView.onRefreshComplete();
-                        myListView.onLoadComplete();
+                        myListView.onLoadMoreComplete();
                         break;
                         //获取成功
                         
@@ -323,7 +327,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 //                        scrollView.onRefreshComplete();
 //                        scrollView.onLoadComplete();
                         myListView.onRefreshComplete();
-                        myListView.onLoadComplete();
+                        myListView.onLoadMoreComplete();
                         break;
                     case Constant.MSG_NULL:
                         isRefresh = false;
@@ -332,7 +336,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 //                        scrollView.onRefreshComplete();
 //                        scrollView.onLoadComplete();
                         myListView.onRefreshComplete();
-                        myListView.onLoadComplete();
+                        myListView.onLoadMoreComplete();
                         break;
                     case Constant.MSG_FALTH:
                         isRefresh = false;
@@ -563,16 +567,14 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 		live_kids_user_bottom = (LinearLayout)findViewById(R.id.live_kids_user_bottom);
 		live_kids_user_bottom.setVisibility(View.VISIBLE);
 		live_kids_user_bottom.getBackground().setAlpha(20);//设置透明度
-		
-//		scrollView = (CustomScrollView)findViewById(R.id.live_kids_scrollview);
-//		scrollView.setOnTouchListener(new OnTouchListener() {
-//
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				ChangeScrollviewAlpha(scrollView, navigationBar);
-//				return false;
-//			}
-//		});
+
+        myListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                ChangeListviewAlpha(myListView, navigationBar);
+                return false;
+            }
+        });
 		comment = (RelativeLayout)findViewById(R.id.live_kids_comment);
 		live_kids_collect = (RelativeLayout)findViewById(R.id.live_kids_record);
 
@@ -615,8 +617,6 @@ OnInfoWindowClickListener, InfoWindowAdapter{
         {
             param.put("timestamp", DateUtils.getUTCStartTimestamp());
         }
-
-        Log.e("aaaaaa",tid+"   "+ DateUtils.getUTCStartTimestamp());
 		
 		RequstClient.post(uriString, param, new LoadCacheResponseLoginouthandler(
                                                                                  Live_Kids_User.this,
@@ -641,10 +641,10 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 				try {
 					if(isRefresh)
 					{
-						list.clear();
-						LocationList.clear();
-						WidthHeightList.clear();
-						carList.clear();
+						list = new ArrayList<HashMap<String, Object>>();
+						LocationList = new ArrayList<HashMap<String, Object>>();
+						WidthHeightList = new ArrayList<ArrayList<HashMap<String, Integer>>>();
+						carList = new ArrayList<ArrayList<String>>();
 					}
 					JSONObject jsonObject = new JSONObject(data);
 					if (jsonObject.getString("is").equals("1")) {
@@ -795,7 +795,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 	class MyAdapter extends BaseAdapter{
         
 		private Context context;
-		private LinkedList<HashMap<String, Object>> list;
+		private ArrayList<HashMap<String, Object>> list;
 		private HashMap<String, Object> map;
 		private long time = 0;
         //定义三个int常量标记不同的Item视图
@@ -804,7 +804,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
         public static final int NO_PHOTO_ITEM = 1;
 
         public static final int HAVE_SAMLLPHOTO_ITEM = 2;
-		public MyAdapter(Context context, LinkedList<HashMap<String, Object>> list)
+		public MyAdapter(Context context, ArrayList<HashMap<String, Object>> list)
 		{
 			this.context = context;
 			this.list = list;

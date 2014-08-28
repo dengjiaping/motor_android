@@ -14,6 +14,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -40,6 +41,7 @@ import com.amap.api.maps2d.model.PolylineOptions;
 import com.loopj.android.http.RequestParams;
 import com.moto.asydata.LoadCacheResponseLoginouthandler;
 import com.moto.asydata.LoadDatahandler;
+import com.moto.asydata.RequnstClientOwn;
 import com.moto.asydata.RequstClient;
 import com.moto.constant.Constant;
 import com.moto.constant.ImageMethod;
@@ -69,7 +71,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerClickListener,
         AMap.OnInfoWindowClickListener, AMap.InfoWindowAdapter {
@@ -86,11 +87,11 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
     private String avatar = "";
     private ImageView user_img;
     private TextView live_title;
-    private LinkedList<String> dateList = new LinkedList<String>();
-    private LinkedList<HashMap<String, Object>> list = new LinkedList<HashMap<String,Object>>();
+    private ArrayList<String> dateList = new ArrayList<String>();
+    private ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
     private ArrayList<HashMap<String, Object>> LocationList = new ArrayList<HashMap<String,Object>>();
-    private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
-    private LinkedList<LinkedList<HashMap<String,Integer>>> WidthHeightList = new LinkedList<LinkedList<HashMap<String,Integer>>>();
+    private ArrayList<ArrayList<String>> carList = new ArrayList<ArrayList<String>>();
+    private ArrayList<ArrayList<HashMap<String,Integer>>> WidthHeightList = new ArrayList<ArrayList<HashMap<String,Integer>>>();
     private HashMap<String, Object> map;
     private CustomListView myListView;
     private MyAdapter adapter;
@@ -239,7 +240,7 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
 
 
                         myListView.onRefreshComplete();
-                        myListView.onLoadComplete();
+                        myListView.onLoadMoreComplete();
 
                         break;
                     //获取成功
@@ -253,14 +254,14 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                         adapter.notifyDataSetChanged();
                         loadingProgressBar.setVisibility(View.GONE);
                         myListView.onRefreshComplete();
-                        myListView.onLoadComplete();
+                        myListView.onLoadMoreComplete();
                         break;
                     case Constant.MSG_NULL:
                         isRefresh = false;
                         isload = false;
                         loadingProgressBar.setVisibility(View.GONE);
                         myListView.onRefreshComplete();
-                        myListView.onLoadComplete();
+                        myListView.onLoadMoreComplete();
                         break;
 
                     case Constant.MSG_SUCCESSAGAIN:
@@ -286,14 +287,56 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                         String str = (String) msg.obj;
                         ToastClass.SetToast(Live_Kids_Own.this, str);
                         myListView.onRefreshComplete();
-                        myListView.onLoadComplete();
+                        myListView.onLoadMoreComplete();
+                        break;
+                    case Constant.MSG_TIMEOUT:
+                        if(!ToastClass.GetTid(Live_Kids_Own.this).equals("-1")
+                                && !ToastClass.GetTid(Live_Kids_Own.this).equals(""))
+                        {
+                            Intent intent = new Intent();
+                            intent.setClass(Live_Kids_Own.this, WriteLiveActivity.class);
+                            startActivity(intent);
+                        }
+                        //在无网状态下、tid=-1即新建直播
+                        else if( ToastClass.GetTid(Live_Kids_Own.this).equals("-1"))
+                        {
+                            final CustomDialog.Builder builder = new CustomDialog.Builder(Live_Kids_Own.this);
+                            builder.setTitle
+                                    ("创建您的直播：");
+                            builder.setPositiveButton("创建", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    //设置你的操作事项
+                                    if(builder.subject.getText().toString().replaceAll(" ", "").equals(""))
+                                    {
+                                        ToastClass.SetToast(Live_Kids_Own.this, "请输入主题!");
+                                    }
+                                    else {
+                                        Intent intent = new Intent();
+                                        intent.putExtra("subject", builder.subject.getText().toString());
+                                        intent.setClass(Live_Kids_Own.this, WriteLiveActivity.class);
+                                        startActivityForResult(intent, 301);
+                                    }
+                                }
+                            });
+
+                            builder.setNegativeButton("取消",
+                                    new android.content.DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                            builder.create().show();
+                        }
                         break;
                 }
                 super.handleMessage(msg);
             }
 
         };
-        myListView.setonRefreshListener(new CustomListView.OnRefreshListener() {
+        myListView.setOnRefreshListener(new CustomListView.OnRefreshListener() {
+            @Override
             public void onRefresh() {
                 new AsyncTask<Void, Void, Void>() {
                     protected Void doInBackground(Void... params) {
@@ -315,8 +358,9 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                 }.execute();
             }
         });
-        myListView.setonLoadListener(new CustomListView.OnLoadListener() {
-            public void onLoad() {
+        myListView.setOnLoadListener(new CustomListView.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
                 new AsyncTask<Void, Void, Void>() {
                     protected Void doInBackground(Void... params) {
                         try {
@@ -450,16 +494,13 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
 		live_title = (TextView)findViewById(R.id.live_kids_title);
 		user_img = (ImageView)findViewById(R.id.live_kids_user_img);
 		myListView = (CustomListView)findViewById(R.id.live_kids_listview);
-//		scrollView = (CustomScrollView)findViewById(R.id.live_kids_scrollview);
-//
-//		scrollView.setOnTouchListener(new OnTouchListener() {
-//
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				ChangeScrollviewAlpha(scrollView, navigationBar);
-//				return false;
-//			}
-//		});
+        myListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                ChangeListviewAlpha(myListView, navigationBar);
+                return false;
+            }
+        });
 
         live_kids_bottom = (RelativeLayout)findViewById(R.id.live_kids_bottom);
         live_kids_bottom.setVisibility(View.VISIBLE);
@@ -482,7 +523,7 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
 		// TODO Auto-generated method stub
         param = new RequestParams();
 		param.put("token", tokenString);
-		RequstClient.post(checkUri, param, new LoadCacheResponseLoginouthandler(
+		RequnstClientOwn.post(checkUri, param, new LoadCacheResponseLoginouthandler(
                 Live_Kids_Own.this,
                 new LoadDatahandler() {
 
@@ -528,9 +569,10 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                         // 获取一个Message对象，设置what为1
                         Message msg = Message.obtain();
                         msg.obj = message;
-                        msg.what = Constant.MSG_TESTFALTH;
+                        msg.what = Constant.MSG_TIMEOUT;
                         // 发送这个消息到消息队列中
                         handler.sendMessage(msg);
+
 
                     }
 
@@ -590,10 +632,10 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
                         try {
                             if(isRefresh)
                             {
-                                list.clear();
-                                LocationList.clear();
-                                WidthHeightList.clear();
-                                carList.clear();
+                                list = new ArrayList<HashMap<String, Object>>();
+                                LocationList = new ArrayList<HashMap<String, Object>>();
+                                WidthHeightList = new ArrayList<ArrayList<HashMap<String, Integer>>>();
+                                carList = new ArrayList<ArrayList<String>>();
                             }
                             JSONObject jsonObject = new JSONObject(data);
                             if (jsonObject.getString("is").equals("1")) {
@@ -691,6 +733,9 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
             String avatar = jsonObject.getString("avatar");
             String location = jsonObject.getString("location");
             String username = jsonObject.getString("username");
+            String like_count = jsonObject.getString("like_count");
+            String comment_count = jsonObject.getString("comment_count");
+
             map.put("author", author);
             map.put("message", message);
             map.put("dateline", dateline);
@@ -699,6 +744,8 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
             map.put("avatar", avatar);
             this.avatar = avatar;
             map.put("location", location);
+            map.put("like_count",like_count);
+            map.put("comment_count",comment_count);
             carList.add(StringUtils.hashToArray(jsonObject.getString("photoname").toString()));
             WidthHeightList.add(StringUtils.hashToWidthHeightArray(jsonObject.getString("photoinfo")));
             //			map.put("date", DateUtils.getDate(DateUtils.GetData(dateline)));
@@ -743,7 +790,7 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
     class MyAdapter extends BaseAdapter{
 
         private Context context;
-        private LinkedList<HashMap<String, Object>> list;
+        private ArrayList<HashMap<String, Object>> list;
         private HashMap<String, Object> map;
         private long time = 0;
         //定义三个int常量标记不同的Item视图
@@ -752,7 +799,7 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
         public static final int NO_PHOTO_ITEM = 1;
 
         public static final int HAVE_SAMLLPHOTO_ITEM = 2;
-        public MyAdapter(Context context, LinkedList<HashMap<String, Object>> list)
+        public MyAdapter(Context context, ArrayList<HashMap<String, Object>> list)
         {
             this.context = context;
             this.list = list;

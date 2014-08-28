@@ -12,6 +12,7 @@ public class Constant {
 	public static final int MSG_TESTFALTH = 8;
     public static final int MSG_HAVENOTHING = 9;   //还没有任何数据
     public static final int MSG_GETIMGESUCCESS = 10;
+    public static final int MSG_TIMEOUT = 13;   //时间超出了范围
 
     public static final int MSG_HAVENETWORK = 11;  //有网络
     public static final int MSG_IMGFINISH = 12;    //选择图片

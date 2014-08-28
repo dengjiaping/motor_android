@@ -41,8 +41,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class User_collect extends Moto_RootActivity{
     
@@ -50,8 +50,8 @@ public class User_collect extends Moto_RootActivity{
     private Handler handler;
 	private MyAdapter adapter;
     private DisplayImageOptions options;
-    private LinkedList<HashMap<String, Object>> collect_list = new LinkedList<HashMap<String,Object>>();
-    private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
+    private ArrayList<HashMap<String, Object>> collect_list = new ArrayList<HashMap<String,Object>>();
+    private ArrayList<ArrayList<String>> carList = new ArrayList<ArrayList<String>>();
     private HashMap<String, Object> map;
     private DisplayImageOptions Originaloptions;
     private String tokenString;
@@ -144,14 +144,14 @@ public class User_collect extends Moto_RootActivity{
     class MyAdapter extends BaseAdapter{
 
         private Context context;
-        private LinkedList<HashMap<String, Object>> list;
+        private ArrayList<HashMap<String, Object>> list;
         private HashMap<String, Object> map;
         //		private ImageLoader imageLoader;
         private Activity activity;
         long time = 0;
 
 
-        public MyAdapter(Activity activity, Context context, LinkedList<HashMap<String, Object>> list)
+        public MyAdapter(Activity activity, Context context, ArrayList<HashMap<String, Object>> list)
         {
             this.context = context;
             this.list = list;

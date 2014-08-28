@@ -54,15 +54,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class Theme_Post extends Moto_RootActivity{
     
 	private NoScrollListview listview;
-	private LinkedList<HashMap<String, Object>> GroupList = new LinkedList<HashMap<String,Object>>();
-	private LinkedList<LinkedList<HashMap<String, Object>>> ChildList = new LinkedList<LinkedList<HashMap<String,Object>>>();
-	private LinkedList<HashMap<String, Object>> list;
-    private LinkedList<LinkedList<String>> carList = new LinkedList<LinkedList<String>>();
+	private ArrayList<HashMap<String, Object>> GroupList = new ArrayList<HashMap<String,Object>>();
+	private ArrayList<ArrayList<HashMap<String, Object>>> ChildList = new ArrayList<ArrayList<HashMap<String,Object>>>();
+	private ArrayList<HashMap<String, Object>> list;
+    private ArrayList<ArrayList<String>> carList = new ArrayList<ArrayList<String>>();
     private DisplayImageOptions Originaloptions;
 	private HashMap<String, Object> map;
 	private int count = 0;
@@ -370,7 +369,7 @@ public class Theme_Post extends Moto_RootActivity{
                         JSONArray array_post = new JSONArray(post_post_list);
                         for(int i = 0; i < array_post.length(); i++)
                         {
-                            list = new LinkedList<HashMap<String,Object>>();
+                            list = new ArrayList<HashMap<String,Object>>();
                             JSONArray post_kids = new JSONArray(array_post.get(i).toString());
                             
                             for (int j = 0; j < post_kids.length(); j++) {
@@ -502,12 +501,12 @@ public class Theme_Post extends Moto_RootActivity{
 	class MyAdapter extends BaseAdapter{
         
 		private Context context;
-		private LinkedList<HashMap<String, Object>> GroupList;
-		private LinkedList<LinkedList<HashMap<String, Object>>> ChildList;
+		private ArrayList<HashMap<String, Object>> GroupList;
+		private ArrayList<ArrayList<HashMap<String, Object>>> ChildList;
 		private HashMap<String, Object> map;
-		private LinkedList<HashMap<String, Object>> list;
+		private ArrayList<HashMap<String, Object>> list;
         long time = 0;
-		public MyAdapter(Activity activity, Context context, LinkedList<HashMap<String, Object>> GroupList, LinkedList<LinkedList<HashMap<String, Object>>> ChildList)
+		public MyAdapter(Activity activity, Context context, ArrayList<HashMap<String, Object>> GroupList, ArrayList<ArrayList<HashMap<String, Object>>> ChildList)
 		{
 			this.context = context;
 			this.GroupList = GroupList;
