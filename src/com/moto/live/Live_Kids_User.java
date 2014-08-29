@@ -499,7 +499,7 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 	//为listview设置适配器并添加监听
 	protected void SetListAdapter()
 	{
-		adapter = new MyAdapter(this, list);
+		adapter = new MyAdapter(this);
 		myListView.setAdapter(adapter);
 		myListView.setOnItemClickListener(new OnItemClickListener() {
             
@@ -795,7 +795,6 @@ OnInfoWindowClickListener, InfoWindowAdapter{
 	class MyAdapter extends BaseAdapter{
         
 		private Context context;
-		private ArrayList<HashMap<String, Object>> list;
 		private HashMap<String, Object> map;
 		private long time = 0;
         //定义三个int常量标记不同的Item视图
@@ -804,10 +803,9 @@ OnInfoWindowClickListener, InfoWindowAdapter{
         public static final int NO_PHOTO_ITEM = 1;
 
         public static final int HAVE_SAMLLPHOTO_ITEM = 2;
-		public MyAdapter(Context context, ArrayList<HashMap<String, Object>> list)
+		public MyAdapter(Context context)
 		{
 			this.context = context;
-			this.list = list;
 		}
         
 		@Override

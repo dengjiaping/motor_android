@@ -177,7 +177,7 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
             live_title.setText(list.get(0).get("author").toString());
         }
 
-        adapter = new MyAdapter(this, list);
+        adapter = new MyAdapter(this);
         myListView.setAdapter(adapter);
 
 
@@ -790,7 +790,6 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
     class MyAdapter extends BaseAdapter{
 
         private Context context;
-        private ArrayList<HashMap<String, Object>> list;
         private HashMap<String, Object> map;
         private long time = 0;
         //定义三个int常量标记不同的Item视图
@@ -799,10 +798,9 @@ public class Live_Kids_Own extends Moto_RootActivity implements AMap.OnMarkerCli
         public static final int NO_PHOTO_ITEM = 1;
 
         public static final int HAVE_SAMLLPHOTO_ITEM = 2;
-        public MyAdapter(Context context, ArrayList<HashMap<String, Object>> list)
+        public MyAdapter(Context context)
         {
             this.context = context;
-            this.list = list;
         }
 
         @Override

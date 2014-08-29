@@ -86,7 +86,7 @@ public class LiveActivity extends Moto_RootActivity{
 		super.onCreate(savedInstanceState);
 		addContentView(R.layout.live, R.string.live, barButtonIconType.barButtonIconType_None, barButtonIconType.barButtonIconType_refresh);
         init();
-		adapter = new MyAdapter(LiveActivity.this, live_list);
+		adapter = new MyAdapter(LiveActivity.this);
 		myListView.setAdapter(adapter);
 		handler = new Handler(){
             
@@ -404,7 +404,6 @@ public class LiveActivity extends Moto_RootActivity{
 	class MyAdapter extends BaseAdapter{
         
 		private Context context;
-		private ArrayList<HashMap<String, Object>> list;
 		private HashMap<String, Object> map;
         //		private ImageLoader imageLoader;
 		long time = 0;
@@ -416,10 +415,9 @@ public class LiveActivity extends Moto_RootActivity{
 
 
 
-        public MyAdapter(Context context, ArrayList<HashMap<String, Object>> list)
+        public MyAdapter(Context context)
 		{
 			this.context = context;
-			this.list = list;
             //			imageLoader = new ImageLoader(context);
 			
 		}
@@ -445,7 +443,7 @@ public class LiveActivity extends Moto_RootActivity{
         @Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return this.list.size();
+			return live_list.size();
 		}
         
 		@Override
@@ -492,7 +490,7 @@ public class LiveActivity extends Moto_RootActivity{
                         holder1 = (ViewHolder) convertView.getTag();
                     }
 
-                    map = list.get(position);
+                    map = live_list.get(position);
                     holder1.live_item_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
                     holder1.live_like_people_num.setText(map.get("like_count").toString());
                     holder1.live_comment_num.setText(map.get("comment_count").toString());
@@ -543,7 +541,7 @@ public class LiveActivity extends Moto_RootActivity{
                     {
                         holder2 = (ViewHolder) convertView.getTag();
                     }
-                    map = list.get(position);
+                    map = live_list.get(position);
                     holder2.live_item_time.setText(com.moto.utils.DateUtils.timestampToDeatil(map.get("dateline").toString()));
                     holder2.live_like_people_num.setText(map.get("like_count").toString());
                     holder2.live_comment_num.setText(map.get("comment_count").toString());
